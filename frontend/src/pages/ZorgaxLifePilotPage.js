@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import './ZorgaxLifePilotPage.css';
+import { conversionContext, trackConversionOnce } from '../analytics/conversionAnalytics';
 
 const API_BASE = '/api/zorgax/digital-business';
 
@@ -159,6 +160,7 @@ function ZorgaxLifePilotPage() {
   }
 
   async function startOnboarding() {
+    trackConversionOnce('pilot_interest', conversionContext({ placement: 'life_pilot', action: 'confirm_objective', mode }));
     if (mode === 'demo') {
       setMessage('✓ Demo onboarding pronta. In modalità live il consenso viene registrato sull’ownerId autenticato.');
       return;

@@ -37,10 +37,8 @@ if (typeof Storage !== 'undefined') {
 const MARKETPLACE_DEMO_IMAGE_BASE =
   'https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/main/frontend/public/images/marketplace';
 
-// The new category-card visual is currently stored on the feature branch.
-// Once the branch is merged into main, this can use MARKETPLACE_DEMO_IMAGE_BASE.
 const MARKETPLACE_CATEGORY_CARD_VISUAL =
-  'https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/feat/marketplace-category-card-visuals/frontend/public/images/marketplace/marketplace-category-card-visuals.png';
+  `${MARKETPLACE_DEMO_IMAGE_BASE}/marketplace-category-card-visuals.png`;
 
 const marketplaceDemoVisualStyle = document.createElement('style');
 

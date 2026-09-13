@@ -63,7 +63,7 @@ function FirstMission({ identityStatus, visitedLandmarks }) {
             Verifica il tuo personaggio
           </a>
           <small className="metaverse-muted">
-            Accedendo autorizzi il collegamento del personaggio al tuo account. Sceglierai separatamente quali informazioni rendere pubbliche. Non è una verifica legale dell’identità.
+            Accedendo autorizzi il collegamento del personaggio al tuo account. La pubblicazione di altre informazioni richiede un consenso separato. Non è una verifica legale dell’identità.
           </small>
         </div>
       )}

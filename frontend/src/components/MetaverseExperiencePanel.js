@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { METAVERSE_EVENTS, trackMetaverseEvent } from '../analytics/metaverseAnalytics';
+import { conversionContext, trackConversion } from '../analytics/conversionAnalytics';
 import MetaverseCircularMarketplace from './MetaverseCircularMarketplace';
 
 const PORTALS = [
@@ -27,6 +28,36 @@ function SystemCheck() {
   return <section className="metaverse-panel"><h3>Requisiti e controllo sistema</h3><div className={`metaverse-readiness ${ready ? 'is-ready' : 'needs-attention'}`}>{ready ? 'Browser pronto per Neon Plaza' : 'Alcune funzionalità potrebbero essere limitate'}</div><ul className="metaverse-check-list">{checks.map((check) => <li key={check.label}><span>{check.ok ? '✅' : '⚠️'}</span>{check.label}</li>)}</ul><details className="metaverse-requirements"><summary>Specifiche minime consigliate</summary><p>Browser moderno aggiornato, JavaScript attivo, almeno 2 GB di RAM, schermo da 320 px e connessione stabile da 2 Mbps.</p><p>Non sono richiesti GPU dedicata, visore VR o wallet. Per un’esperienza migliore: 4 GB di RAM e connessione da 5 Mbps.</p></details></section>;
 }
 
+function FirstMission({ identityStatus, visitedLandmarks }) {
+  const complete = visitedLandmarks.length > 0;
+  const linked = identityStatus === 'account-linked' || identityStatus === 'verified';
+  return (
+    <section className="metaverse-panel" aria-live="polite">
+      <div className="metaverse-kicker">ZORGAX · PRIMA MISSIONE</div>
+      <h3>{complete ? 'Missione completata ✨' : 'Raggiungi il primo portale'}</h3>
+      <p className="metaverse-muted">
+        {complete
+          ? 'Hai esplorato Neon Plaza. Ora puoi continuare oppure creare un profilo per ritrovare il tuo percorso.'
+          : 'Muovi il personaggio con le frecce o WASD e raggiungi uno dei portali luminosi.'}
+      </p>
+      <div className="metaverse-progress" aria-label={complete ? 'Missione completata' : 'Missione in corso'}>
+        <span style={{ width: complete ? '100%' : '15%' }} />
+      </div>
+      {complete && !linked && (
+        <a
+          className="metaverse-primary"
+          href="/social-login?returnTo=%2Fmetaverse"
+          onClick={() => trackConversion('signup_start', conversionContext({ placement: 'metaverse_first_mission', action: 'save_progress' }))}
+          style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 12 }}
+        >
+          Salva il percorso — crea il profilo
+        </a>
+      )}
+      {complete && linked && <small className="metaverse-muted">Il percorso è collegato al tuo profilo MyZubster.</small>}
+    </section>
+  );
+}
+
 function MetaverseExperiencePanel({ identityStatus, online, nearby, messages, sessionId, visitedLandmarks }) {
   const myMessages = messages.filter((message) => message.sessionId === sessionId).length;
   const badges = [
@@ -37,7 +68,7 @@ function MetaverseExperiencePanel({ identityStatus, online, nearby, messages, se
     { id: 'verified', label: 'Identità collegata', icon: '✅', unlocked: identityStatus === 'account-linked' }
   ];
   const trackPortal = (portal) => { if (portal.event) trackMetaverseEvent(portal.event, { source: 'neon-plaza', destination: portal.href, surface: 'metaverse-portal-list' }); };
-  return <><section className="metaverse-panel"><h3>Dashboard sessione</h3><div className="metaverse-stat-grid"><div><strong>{online}</strong><small>online</small></div><div><strong>{nearby}</strong><small>vicini</small></div><div><strong>{myMessages}</strong><small>messaggi</small></div><div><strong>{visitedLandmarks.length}</strong><small>zone visitate</small></div></div><div className="metaverse-progress" aria-label={`${visitedLandmarks.length} zone visitate`}><span style={{ width: `${Math.min(100, visitedLandmarks.length * 20)}%` }} /></div><div className="metaverse-achievements">{badges.map((badge) => <span key={badge.id} className={badge.unlocked ? 'is-unlocked' : 'is-locked'} title={badge.unlocked ? 'Sbloccato in questa esperienza' : 'Non ancora sbloccato'}>{badge.icon} {badge.label}</span>)}</div><small className="metaverse-muted">Questi sono progressi di esperienza, non attestazioni professionali o ricompense finanziarie.</small></section><MetaverseCircularMarketplace /><section className="metaverse-panel"><h3>Portali MyZubster</h3><div className="metaverse-portal-list">{PORTALS.map((portal) => <a href={portal.href} key={portal.label} onClick={() => trackPortal(portal)} target={portal.external ? '_blank' : undefined} rel={portal.external ? 'noreferrer' : undefined}><span>{portal.icon}</span><div><strong>{portal.label}</strong><small>{portal.description}</small></div></a>)}</div></section><SystemCheck /></>;
+  return <><section className="metaverse-panel"><h3>Dashboard sessione</h3><div className="metaverse-stat-grid"><div><strong>{online}</strong><small>online</small></div><div><strong>{nearby}</strong><small>vicini</small></div><div><strong>{myMessages}</strong><small>messaggi</small></div><div><strong>{visitedLandmarks.length}</strong><small>zone visitate</small></div></div><div className="metaverse-progress" aria-label={`${visitedLandmarks.length} zone visitate`}><span style={{ width: `${Math.min(100, visitedLandmarks.length * 20)}%` }} /></div><div className="metaverse-achievements">{badges.map((badge) => <span key={badge.id} className={badge.unlocked ? 'is-unlocked' : 'is-locked'} title={badge.unlocked ? 'Sbloccato in questa esperienza' : 'Non ancora sbloccato'}>{badge.icon} {badge.label}</span>)}</div><small className="metaverse-muted">Questi sono progressi di esperienza, non attestazioni professionali o ricompense finanziarie.</small></section><FirstMission identityStatus={identityStatus} visitedLandmarks={visitedLandmarks} /><MetaverseCircularMarketplace /><section className="metaverse-panel"><h3>Portali MyZubster</h3><div className="metaverse-portal-list">{PORTALS.map((portal) => <a href={portal.href} key={portal.label} onClick={() => trackPortal(portal)} target={portal.external ? '_blank' : undefined} rel={portal.external ? 'noreferrer' : undefined}><span>{portal.icon}</span><div><strong>{portal.label}</strong><small>{portal.description}</small></div></a>)}</div></section><SystemCheck /></>;
 }
 
 export default MetaverseExperiencePanel;

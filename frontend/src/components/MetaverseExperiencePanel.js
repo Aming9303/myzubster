@@ -44,16 +44,35 @@ function FirstMission({ identityStatus, visitedLandmarks }) {
         <span style={{ width: complete ? '100%' : '15%' }} />
       </div>
       {complete && !linked && (
-        <a
-          className="metaverse-primary"
-          href="/social-login?returnTo=%2Fmetaverse"
-          onClick={() => trackConversion('signup_start', conversionContext({ placement: 'metaverse_first_mission', action: 'save_progress' }))}
-          style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 12 }}
-        >
-          Salva il percorso — crea il profilo
-        </a>
+        <div>
+          <ul className="metaverse-check-list">
+            <li><span>💾</span>Salva progressi e missioni</li>
+            <li><span>🪪</span>Pubblica il nome del personaggio scelto</li>
+            <li><span>🌱</span>Collega contributi e pilot autorizzati</li>
+          </ul>
+          <a
+            className="metaverse-primary"
+            href="/social-login?returnTo=%2Fmetaverse"
+            onClick={() => {
+              const context = conversionContext({ placement: 'metaverse_first_mission', action: 'verify_character' });
+              trackConversion('character_verification_started', context);
+              trackConversion('signup_start', context);
+            }}
+            style={{ display: 'block', textAlign: 'center', textDecoration: 'none', marginTop: 12 }}
+          >
+            Verifica il tuo personaggio
+          </a>
+          <small className="metaverse-muted">
+            Accedendo autorizzi il collegamento del personaggio al tuo account. Sceglierai separatamente quali informazioni rendere pubbliche. Non è una verifica legale dell’identità.
+          </small>
+        </div>
       )}
-      {complete && linked && <small className="metaverse-muted">Il percorso è collegato al tuo profilo MyZubster.</small>}
+      {complete && linked && (
+        <div>
+          <strong>✅ Personaggio collegato al tuo account</strong>
+          <small className="metaverse-muted">Puoi salvare il percorso e partecipare con il nome pubblico scelto. Questo stato non certifica identità legale o competenze.</small>
+        </div>
+      )}
     </section>
   );
 }

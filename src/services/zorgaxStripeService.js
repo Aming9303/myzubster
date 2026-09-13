@@ -23,8 +23,8 @@ function stripeRequest(method, path, params) {
       response.on('data', chunk => { data += chunk; });
       response.on('end', () => {
         let parsed;
-        try { parsed=data ? JSON.parse(data) : {}; }
-        catch (_error) { return reject(new Error('Risposta Stripe non valida')); }
+        try { parsed=data ? JSON.parse(data) : {};
+        } catch (_error) { return reject(new Error('Risposta Stripe non valida')); }
         if (response.statusCode < 200 || response.statusCode >= 300) {
           const error=new Error(parsed?.error?.message || `Stripe HTTP ${response.statusCode}`);
           error.statusCode=response.statusCode;

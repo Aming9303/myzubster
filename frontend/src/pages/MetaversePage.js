@@ -9,6 +9,7 @@ import {
   syncMetaverse
 } from '../api/metaverse';
 import MetaverseExperiencePanel from '../components/MetaverseExperiencePanel';
+import { conversionContext, trackConversion, trackConversionOnce } from '../analytics/conversionAnalytics';
 import './MetaversePage.css';
 
 const STORAGE_KEY = 'myz-metaverse-profile-v1';
@@ -190,6 +191,10 @@ function MetaversePage() {
   const [visitedLandmarks, setVisitedLandmarks] = useState([]);
 
   useEffect(() => {
+    trackConversionOnce('metaverse_loaded', conversionContext({ surface: 'neon_plaza' }));
+  }, []);
+
+  useEffect(() => {
     let active = true;
     getMetaverseWorld()
       .then((result) => {
@@ -206,6 +211,7 @@ function MetaversePage() {
   }, []);
 
   const enter = async (nextProfile) => {
+    trackConversionOnce('first_interaction', conversionContext({ surface: 'avatar_creator', action: 'enter_world' }));
     setBusy(true);
     setError('');
     try {
@@ -224,6 +230,7 @@ function MetaversePage() {
       setSessionId(result.sessionId);
       setPlayers(Object.fromEntries(result.players.map((player) => [player.id, player])));
       if (Number.isInteger(result.totalCharacters)) setTotalCharacters(result.totalCharacters);
+      trackConversionOnce('mission_started', conversionContext({ surface: 'neon_plaza', mission: 'visit_first_portal', mode: authenticated ? 'account' : 'guest' }));
       setStatus('online');
     } catch (joinError) {
       setError(joinError.message);
@@ -344,7 +351,13 @@ function MetaversePage() {
     const landmark = LANDMARKS.find((item) => Math.hypot(item.x - me.x, item.y - me.y) < 14);
     setLastLandmark(landmark ? landmark.label : 'Neon Plaza');
     if (landmark) {
-      setVisitedLandmarks((current) => current.includes(landmark.id) ? current : [...current, landmark.id]);
+      setVisitedLandmarks((current) => {
+        if (current.includes(landmark.id)) return current;
+        if (current.length === 0) {
+          trackConversionOnce('mission_completed', conversionContext({ surface: 'neon_plaza', mission: 'visit_first_portal', landmark: landmark.id }));
+        }
+        return [...current, landmark.id];
+      });
     }
   }, [me]);
 

@@ -9,7 +9,7 @@ import {
   syncMetaverse
 } from '../api/metaverse';
 import MetaverseExperiencePanel from '../components/MetaverseExperiencePanel';
-import { conversionContext, trackConversion, trackConversionOnce } from '../analytics/conversionAnalytics';
+import { conversionContext, trackConversionOnce } from '../analytics/conversionAnalytics';
 import './MetaversePage.css';
 
 const STORAGE_KEY = 'myz-metaverse-profile-v1';

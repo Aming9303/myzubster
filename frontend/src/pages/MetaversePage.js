@@ -226,6 +226,9 @@ function MetaversePage() {
         github: result.player.github || null
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(joinedProfile));
+      if (isAccountLinked(joinedProfile.identityStatus)) {
+        trackConversionOnce('character_verification_completed', conversionContext({ surface: 'neon_plaza', method: 'account_linked' }));
+      }
       setProfile(joinedProfile);
       setSessionId(result.sessionId);
       setPlayers(Object.fromEntries(result.players.map((player) => [player.id, player])));

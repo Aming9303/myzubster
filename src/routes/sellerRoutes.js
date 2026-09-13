@@ -4,6 +4,7 @@ const https = require('https');
 const SellerMembership = require('../models/SellerMembership');
 const { authenticate } = require('../middleware/auth');
 const { activateZorgaxInvoice } = require('../services/zorgaxStripeService');
+const { logConversionEvent } = require('../services/conversionFunnel');
 
 const router = express.Router();
 const monthlyPrice = () => Math.max(0, Number(process.env.MARKETPLACE_SELLER_MONTHLY_EUR || 9.90));
@@ -114,6 +115,7 @@ router.post('/subscribe', authenticate, async (req,res) => {
   try {
     const amount=monthlyPrice(); const billingReference=`SELLER-${crypto.randomUUID()}`;
     const membership=await SellerMembership.findOneAndUpdate({userId:req.userId},{ $set:{plan:'SELLER_MONTHLY',status:'PENDING_PAYMENT',priceAmount:amount,priceCurrency:'EUR',billingReference,paymentReference:'',paymentProvider:'MANUAL',verifiedBy:null,verifiedAt:null}},{new:true,upsert:true,runValidators:true,setDefaultsOnInsert:true});
+    logConversionEvent('seller_signup_started', { userId:req.userId, path:req.originalUrl, provider:'MANUAL', plan:'SELLER_MONTHLY', amount, currency:'EUR' });
     res.status(201).json({success:true,membership,plan:plan(),paymentRequired:true,stripeCheckoutAvailable:stripeConfigured(),message:'Richiesta Seller creata. L’account si attiva solo dopo verifica reale del pagamento; questa API non simula né conferma pagamenti.'});
   } catch(error) { res.status(400).json({success:false,message:error.message||'Richiesta Seller non creata'}); }
 });
@@ -153,6 +155,7 @@ router.post('/checkout', authenticate, async (req,res) => {
     membership.stripeCheckoutSessionId=session.id;
     if(typeof session.customer==='string') membership.stripeCustomerId=session.customer;
     await membership.save();
+    logConversionEvent('seller_checkout_started', { userId:req.userId, path:req.originalUrl, provider:'STRIPE', plan:'SELLER_MONTHLY', amount, currency:'EUR', metadata:{ trialEligible } });
     res.status(201).json({success:true,checkoutUrl:session.url,sessionId:session.id,membership,plan:plan()});
   } catch(error) {
     console.error('Stripe Seller checkout error:', { message:error.message, statusCode:error.statusCode, code:error.stripeCode, param:error.stripeParam });
@@ -172,17 +175,24 @@ router.post('/webhook', async (req,res) => {
       const userId=object.metadata?.userId||object.client_reference_id;
       if(object.subscription) { const subscription=await stripeRequest('GET',`/v1/subscriptions/${encodeURIComponent(object.subscription)}`); await syncStripeSubscription(subscription,event.id,userId); }
       await SellerMembership.findOneAndUpdate({userId},{ $set:{paymentProvider:'STRIPE',stripeCheckoutSessionId:object.id,stripeCustomerId:typeof object.customer==='string'?object.customer:undefined,stripeLastEventId:event.id}},{new:true});
+      logConversionEvent('seller_checkout_succeeded', { userId, path:'/api/marketplace/seller/webhook', provider:'STRIPE', plan:'SELLER_MONTHLY', amount:object.amount_total == null ? null : object.amount_total / 100, currency:String(object.currency || 'EUR').toUpperCase(), metadata:{ trialOrZeroAmount:object.amount_total === 0 } });
     } else if(['customer.subscription.created','customer.subscription.updated','customer.subscription.deleted'].includes(event.type)) {
       if(object.metadata?.product==='zorgax') return res.json({received:true,product:'zorgax'});
-      await syncStripeSubscription(object,event.id);
+      const membership = await syncStripeSubscription(object,event.id);
+      if (membership?.status === 'ACTIVE') logConversionEvent('seller_subscription_activated', { userId:membership.userId, path:'/api/marketplace/seller/webhook', provider:'STRIPE', plan:'SELLER_MONTHLY', amount:membership.priceAmount, currency:membership.priceCurrency });
     } else if(event.type==='invoice.paid' && object.subscription) {
       const zorgaxSubscription=await activateZorgaxInvoice(object);
       if(zorgaxSubscription) {
         console.info('[zorgax-funnel]', JSON.stringify({event:'zorgax_stripe_payment_succeeded',plan:zorgaxSubscription.plan,path:'/api/marketplace/seller/webhook'}));
         return res.json({received:true,product:'zorgax',activated:true,plan:zorgaxSubscription.plan});
       }
-      const subscription=await stripeRequest('GET',`/v1/subscriptions/${encodeURIComponent(object.subscription)}`); await syncStripeSubscription(subscription,event.id);
-    } else if(event.type==='invoice.payment_failed' && object.subscription) await SellerMembership.findOneAndUpdate({stripeSubscriptionId:object.subscription},{ $set:{status:'SUSPENDED',stripeSubscriptionStatus:'payment_failed',stripeLastEventId:event.id}},{new:true});
+      const subscription=await stripeRequest('GET',`/v1/subscriptions/${encodeURIComponent(object.subscription)}`);
+      const membership = await syncStripeSubscription(subscription,event.id);
+      if (membership) logConversionEvent('seller_payment_succeeded', { userId:membership.userId, path:'/api/marketplace/seller/webhook', provider:'STRIPE', plan:'SELLER_MONTHLY', amount:Number(object.amount_paid || 0) / 100, currency:String(object.currency || membership.priceCurrency || 'EUR').toUpperCase() });
+    } else if(event.type==='invoice.payment_failed' && object.subscription) {
+      const membership = await SellerMembership.findOneAndUpdate({stripeSubscriptionId:object.subscription},{ $set:{status:'SUSPENDED',stripeSubscriptionStatus:'payment_failed',stripeLastEventId:event.id}},{new:true});
+      if (membership) logConversionEvent('seller_payment_failed', { userId:membership.userId, path:'/api/marketplace/seller/webhook', provider:'STRIPE', plan:'SELLER_MONTHLY', amount:Number(object.amount_due || 0) / 100, currency:String(object.currency || membership.priceCurrency || 'EUR').toUpperCase() });
+    }
     res.json({received:true});
   } catch(error) { console.error('Stripe Seller/Zorgax webhook error:',error.message); res.status(500).json({success:false,message:'Webhook Stripe non elaborato'}); }
 });
@@ -203,6 +213,7 @@ router.patch('/moderation/:userId/activate', authenticate, requireModerator, asy
     const now=new Date(); const expiresAt=new Date(now); expiresAt.setMonth(expiresAt.getMonth()+1);
     const membership=await SellerMembership.findOneAndUpdate({userId:req.params.userId,status:'PENDING_PAYMENT'},{ $set:{status:'ACTIVE',paymentProvider:'MANUAL',paymentReference,verifiedBy:req.userId,verifiedAt:now,startsAt:now,expiresAt}},{new:true,runValidators:true});
     if(!membership) return res.status(404).json({success:false,message:'Richiesta Seller in attesa non trovata'});
+    logConversionEvent('seller_payment_succeeded', { userId:membership.userId, path:req.originalUrl, provider:'MANUAL', plan:'SELLER_MONTHLY', amount:membership.priceAmount, currency:membership.priceCurrency, metadata:{ verified:true } });
     res.json({success:true,membership,revenueRecorded:{amount:membership.priceAmount,currency:membership.priceCurrency,basis:'payment_verified_by_authorized_moderator'}});
   } catch(error) { res.status(400).json({success:false,message:error.message||'Account Seller non attivato'}); }
 });

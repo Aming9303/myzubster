@@ -16,6 +16,19 @@ MyZubster turns authorized real-world observations — photos, places, environme
   <a href="https://github.com/MyZubster-Ecosystem/myzubster"><strong>⭐ Star on GitHub</strong></a>
 </p>
 
+## 🚀 Start here — Star · Fork your profile · Contribute
+
+New to MyZubster? You can participate in under five minutes:
+
+1. **⭐ Star this repository** if you want to follow the project and help other developers, researchers and communities discover it.
+2. **🍴 Fork your profile template** from [Choose Your MyZubster Profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md). Pick the closest of the 14 community/profile templates, fork it, rename it and make it your own.
+3. **🧩 Contribute** through [`CONTRIBUTING.md`](CONTRIBUTING.md): code, documentation, design, testing, research, authorized observations or a focused pull request.
+4. **🤝 Join the community** through [`JOIN.md`](JOIN.md), the [Community Marketplace](https://www.myzubster.com/community-marketplace.html) or [Zorgax](https://www.myzubster.com/zorgax).
+
+**Main technical gateway:** [MyZubsterGateway](https://github.com/MyZubster-Ecosystem/MyZubsterGateway) · **Core repository:** [MyZubster](https://github.com/MyZubster-Ecosystem/myzubster) · **Profile templates:** [Choose your profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md)
+
+> A fork is your independent working repository. Use a pull request back to the original template only when you want to improve the reusable template for everyone.
+
 ## What can you do with MyZubster?
 
 | Goal | Start here |
@@ -40,7 +53,7 @@ PROJECT / MARKETPLACE / COMMUNITY / PUBLIC OUTPUT
 
 A GitHub ⭐ is a simple way to follow the project and help other developers, researchers and communities discover it. Star the repository if you want to track MyZubster's open-source development, evidence-first pilots, Zorgax automation and community infrastructure.
 
-**Quick paths:** [5-minute demo: Zorgax → Marketplace](docs/DEMO-ZORGAX-MARKETPLACE.md) · [Join](JOIN.md) · [Contribute](CONTRIBUTING.md) · [How it works](#️-how-myzubster-works) · [Public evidence](SHOWCASE.md) · [Website](https://www.myzubster.com/)
+**Quick paths:** [5-minute demo: Zorgax → Marketplace](docs/DEMO-ZORGAX-MARKETPLACE.md) · [Choose your profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md) · [Join](JOIN.md) · [Contribute](CONTRIBUTING.md) · [How it works](#️-how-myzubster-works) · [Public evidence](SHOWCASE.md) · [Website](https://www.myzubster.com/)
 
 > **Current state:** MVP / active development and validation. Some components are operational, others experimental or in active implementation. A roadmap, issue, PR, merge, discussion or automated test is not by itself proof of deployment, partnership, adoption, funding or external payment.
 
@@ -411,6 +424,7 @@ Open pull requests and fork branches are independent open-source contributions; 
 
 | I want to… | Start here |
 |---|---|
+| Choose a profile template and fork it | [Choose Your MyZubster Profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md) |
 | Understand MyZubster | This README → **How MyZubster works** |
 | Open MyZubster Telegram Bot | [@myzubster_bot](https://t.me/myzubster_bot) |
 | Open Flytek Raver Bot | [@FlytekRaverBot](https://t.me/FlytekRaverBot) |

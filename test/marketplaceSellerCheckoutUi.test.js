@@ -28,6 +28,14 @@ describe('Marketplace seller checkout UI', () => {
     expect(page).toContain("cohort:'Cohort Founding Seller'");
   });
 
+  test('explains the 30-day Seller trial and preserves the free account on cancellation', () => {
+    expect(page).toContain("Stripe richiede un metodo di pagamento, ma oggi non addebita nulla");
+    expect(page).toContain("Dal {nextDay}° giorno: 9,90 €/mese");
+    expect(page).toContain("Il tuo account MyZubster resta sempre gratuito");
+    expect(page).toContain("apiAction('/api/marketplace/seller/cancel',{})");
+    expect(page).toContain("Non continuare dopo il mese gratuito");
+  });
+
   test('tracks a cancelled Stripe Checkout return', () => {
     expect(page).toContain("params.get('seller')==='cancelled'");
     expect(page).toContain("trackConversionOnce('seller_checkout_return_cancelled'");

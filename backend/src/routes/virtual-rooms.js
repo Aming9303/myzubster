@@ -13,6 +13,7 @@ const {
   getSessionToken,
   publicRoom,
   publicSession,
+  findCurrentSessionForRoom,
   findSession
 } = require('../services/virtualRoomLifecycle');
 const { appendSessionEvent, listSessionEvents } = require('../services/virtualSessionEvents');
@@ -56,10 +57,14 @@ router.get('/rooms/:idOrSlug', optionalAuthenticate, async (req, res) => {
   try {
     const room = await findRoom(req.params.idOrSlug);
     if (!room) return res.status(404).json({ success: false, error: 'Room not found' });
+    if (room.accessPolicy === 'authenticated' && !req.userId) {
+      return res.status(404).json({ success: false, error: 'Room not found' });
+    }
     if (room.accessPolicy === 'private' && String(req.userId || '') !== String(room.hostUserId) && req.userRole !== 'admin') {
       return res.status(404).json({ success: false, error: 'Room not found' });
     }
-    return res.json({ success: true, room: publicRoom(room) });
+    const session = await findCurrentSessionForRoom(room.roomId);
+    return res.json({ success: true, room: publicRoom(room), session: publicSession(session) });
   } catch (error) {
     console.error('Virtual room read error:', error?.name || 'Error');
     return res.status(500).json({ success: false, error: 'Unable to read room' });

@@ -52,6 +52,15 @@ describe('Marketplace seller checkout UI', () => {
     expect(page.indexOf('DEMO_SELLERS.map')).toBeLessThan(page.indexOf('listings.map'));
   });
 
+  test('maps every event demo popup to an uploaded visual', () => {
+    expect(page).toContain("'demo-event-tech':'/images/marketplace/demo/sound-system-collective.jpg'");
+    expect(page).toContain("'demo-subculture-wear':'/images/marketplace/demo/upcycled-accessories.jpg'");
+    expect(page).toContain("'demo-event-sound-rental':'/images/marketplace/demo/sound-system-collective.jpg'");
+    expect(page).toContain("'demo-dj-package':'/images/marketplace/demo/dj-crew.jpg'");
+    expect(page).toContain("'demo-event-machines':'/images/marketplace/demo/underground-audio-gear.jpg'");
+    expect(page).toContain('!DEMO_IMAGES[selectedDemo.id]');
+  });
+
   test('keeps wallet details outside the primary conversion path', () => {
     expect(page.indexOf('<WalletHubPanel compact/>')).toBeGreaterThan(page.indexOf('listings.map'));
   });

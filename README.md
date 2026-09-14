@@ -59,6 +59,25 @@ MyZubster now includes the first working layer of an **internal community where 
 | **🎨 Artists** | Music, photography, illustration, performance, crafts, workshops and project identity. |
 | **🌿 Wellbeing** | Movement, nature, social activities and responsible community wellbeing practices. |
 
+### Visual examples from the MyZubster Marketplace
+
+These are the same demonstration images used in the Marketplace category pop-ups. They show how a real need or offer can become a clear community listing.
+
+<table>
+<tr>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/tecnico-pc-computer-guasto.png" alt="Community request for a developer or computer technician"><br><b>Technology support</b><br>Someone describes a computer problem and finds technical help.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/produce-kefir.png" alt="Responsible kefir culture exchange"><br><b>Kefir and food culture</b><br>A responsible local exchange connects knowledge, starter cultures and people.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/plants-piantine-orto.png" alt="Plants and local agriculture listing"><br><b>Agriculture and plants</b><br>Growers can offer plants, seeds, produce or practical knowledge.</td>
+</tr>
+<tr>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/arte-dipinto-originale.png" alt="Independent artist marketplace listing"><br><b>Art and creativity</b><br>Artists can present original work and connect with interested people.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/benessere-rasta-treccine.png" alt="Non-medical wellbeing and personal care service"><br><b>Wellbeing services</b><br>People can offer responsible non-medical personal-care services.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/animals-cerco-dog-sitter.jpg" alt="Community request for a dog sitter"><br><b>Pets and mutual help</b><br>A pet owner can publish a practical request and find local support.</td>
+</tr>
+</table>
+
+The images are illustrative demos. They do not prove that a real provider, buyer, exchange, booking or payment exists.
+
 A community profile can describe:
 
 - the person's main area;

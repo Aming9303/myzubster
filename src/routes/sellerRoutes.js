@@ -11,12 +11,8 @@ const monthlyPrice = () => {
   const raw = process.env.MARKETPLACE_SELLER_MONTHLY_EUR;
   return raw == null || raw === '' ? 9.90 : Number(raw);
 };
-const trialDays = () => {
-  const enabled = String(process.env.MARKETPLACE_SELLER_TRIAL_ENABLED || '').trim().toLowerCase() === 'true';
-  if (!enabled) return 0;
-  const configured = Number(process.env.MARKETPLACE_SELLER_TRIAL_DAYS ?? 0);
-  return Number.isFinite(configured) ? Math.max(0, Math.min(90, Math.floor(configured))) : 0;
-};
+const SELLER_TRIAL_DAYS = 30;
+const trialDays = () => SELLER_TRIAL_DAYS;
 
 function stripeConfigured() {
   return Boolean(process.env.STRIPE_SECRET_KEY && process.env.STRIPE_WEBHOOK_SECRET);
@@ -35,6 +31,9 @@ function plan() {
     currency: 'EUR',
     interval: 'month',
     trialDays: trialDays(),
+    paymentMethodRequired: true,
+    firstChargeAfterTrial: true,
+    accountAfterCancellation: 'MYZUBSTER_FREE',
     benefits: ['pubblicazione annunci', 'gestione stock', 'richieste e messaggistica privata', 'reputazione da scambi completati'],
     paymentStatus: stripeConfigured() ? 'stripe_checkout_available' : 'external_verification_required'
   };
@@ -112,8 +111,12 @@ async function syncStripeSubscription(subscription, eventId, fallbackUserId) {
 
 router.get('/plan', (_req, res) => res.json({ success:true, plan:plan() }));
 router.get('/me', authenticate, async (req, res) => {
-  try { const membership=await SellerMembership.findOne({userId:req.userId}).lean(); const active=Boolean(membership && membership.status==='ACTIVE' && membership.expiresAt && membership.expiresAt>new Date()); res.json({success:true,active,membership,plan:plan(),stripeConfigured:stripeConfigured()}); }
-  catch (_error) { res.status(500).json({success:false,message:'Stato Seller non disponibile'}); }
+  try {
+    const membership=await SellerMembership.findOne({userId:req.userId}).lean();
+    const active=Boolean(membership && membership.status==='ACTIVE' && membership.expiresAt && membership.expiresAt>new Date());
+    const trialEligible=!membership?.stripeSubscriptionId&&!membership?.verifiedAt&&!membership?.startsAt;
+    res.json({success:true,active,membership,trialEligible,plan:plan(),stripeConfigured:stripeConfigured()});
+  } catch (_error) { res.status(500).json({success:false,message:'Stato Seller non disponibile'}); }
 });
 
 router.post('/subscribe', authenticate, async (req,res) => {

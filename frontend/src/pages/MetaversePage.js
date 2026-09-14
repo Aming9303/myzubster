@@ -4,6 +4,7 @@ import {
   joinMetaverse,
   leaveMetaverse,
   moveMetaversePlayer,
+  recordMetaverseLandmark,
   sendMetaverseChat,
   sendMetaverseEmote,
   syncMetaverse
@@ -251,7 +252,10 @@ function MetaversePage() {
         trackConversionOnce('character_verification_completed', conversionContext({ surface: 'neon_plaza', method: 'account_linked' }));
       }
       setProfile(joinedProfile);
-      setVisitedLandmarks(savedMissionProgress(joinedProfile.characterName));
+      const restoredProgress = isAccountLinked(joinedProfile.identityStatus)
+        ? result.missionProgress?.visitedLandmarks
+        : savedMissionProgress(joinedProfile.characterName);
+      setVisitedLandmarks(sanitizeVisitedLandmarks(restoredProgress));
       setSessionId(result.sessionId);
       setPlayers(Object.fromEntries(result.players.map((player) => [player.id, player])));
       if (Number.isInteger(result.totalCharacters)) setTotalCharacters(result.totalCharacters);
@@ -391,7 +395,16 @@ function MetaversePage() {
         if (current.length === 0) {
           trackConversionOnce('mission_completed', conversionContext({ surface: 'neon_plaza', mission: 'visit_first_portal', landmark: landmark.id }));
         }
-        return [...current, landmark.id];
+        const next = [...current, landmark.id];
+        if (isAccountLinked(me.identityStatus)) {
+          recordMetaverseLandmark(landmark.id)
+            .then((result) => {
+              const serverProgress = result.missionProgress?.visitedLandmarks || [];
+              setVisitedLandmarks((latest) => sanitizeVisitedLandmarks([...latest, ...serverProgress]));
+            })
+            .catch(() => {});
+        }
+        return next;
       });
     }
   }, [me]);

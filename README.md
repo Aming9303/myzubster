@@ -44,6 +44,68 @@ A GitHub ⭐ is a simple way to follow the project and help other developers, re
 
 > **Current state:** MVP / active development and validation. Some components are operational, others experimental or in active implementation. A roadmap, issue, PR, merge, discussion or automated test is not by itself proof of deployment, partnership, adoption, funding or external payment.
 
+## 🫶 Internal mutual-support community
+
+MyZubster now includes the first working layer of an **internal community where people can offer skills, express needs and build projects together**. It connects the Marketplace and Zorgax around a simple principle:
+
+> **What you know how to do becomes a resource for someone else.**
+
+| Community area | What it can offer |
+|---|---|
+| **💻 Developers** | Websites, apps, automation, MyZubster configuration and digital tools for every community category. |
+| **🔊 Ravers and underground cultures** | Sound systems, DJs, visuals, event production, communication and support for legal, safe and authorized events. |
+| **🌾 Farmers** | Cultivation knowledge, seeds, local production, land-based projects and circular-economy practices. |
+| **🥛 Kefir and fermentation** | Responsible exchange of starters and food-culture knowledge, without medical or therapeutic claims. |
+| **🎨 Artists** | Music, photography, illustration, performance, crafts, workshops and project identity. |
+| **🌿 Wellbeing** | Movement, nature, social activities and responsible community wellbeing practices. |
+
+### Visual examples from the MyZubster Marketplace
+
+These are the same demonstration images used in the Marketplace category pop-ups. They show how a real need or offer can become a clear community listing.
+
+<table>
+<tr>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/tecnico-pc-computer-guasto.png" alt="Community request for a developer or computer technician"><br><b>Technology support</b><br>Someone describes a computer problem and finds technical help.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/produce-kefir.png" alt="Responsible kefir culture exchange"><br><b>Kefir and food culture</b><br>A responsible local exchange connects knowledge, starter cultures and people.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/plants-piantine-orto.png" alt="Plants and local agriculture listing"><br><b>Agriculture and plants</b><br>Growers can offer plants, seeds, produce or practical knowledge.</td>
+</tr>
+<tr>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/arte-dipinto-originale.png" alt="Independent artist marketplace listing"><br><b>Art and creativity</b><br>Artists can present original work and connect with interested people.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/benessere-rasta-treccine.png" alt="Non-medical wellbeing and personal care service"><br><b>Wellbeing services</b><br>People can offer responsible non-medical personal-care services.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/animals-cerco-dog-sitter.jpg" alt="Community request for a dog sitter"><br><b>Pets and mutual help</b><br>A pet owner can publish a practical request and find local support.</td>
+</tr>
+</table>
+
+The images are illustrative demos. They do not prove that a real provider, buyer, exchange, booking or payment exists.
+
+A community profile can describe:
+
+- the person's main area;
+- skills and resources they can offer;
+- help or resources they need;
+- projects or pilots they want to join;
+- optional participation in seed exchange, the pet community or responsible kefir donation.
+
+People can publish both **offers** and **requests for help** through community Marketplace categories such as development/configuration, events and sound systems, agriculture, art, wellbeing and volunteering. One person can be both a contributor and someone receiving support.
+
+```text
+PERSON / GROUP
+      ↓
+SKILLS + RESOURCES + NEEDS
+      ↓
+COMMUNITY PROFILE / LISTING
+      ↓
+ZORGAX GUIDANCE
+      ↓
+COMPATIBLE PEOPLE / SERVICES / PROJECTS
+      ↓
+HUMAN CONTACT, CONSENT AND COLLABORATION
+```
+
+Zorgax includes an **“Enter the Community”** guided path that helps users describe what they can contribute, what they need and which people or project areas may be relevant. Zorgax is a routing and assistance layer: it does not automatically prove identity, create consent, authorize events, promise payment or establish partnerships.
+
+**Current MVP entry point:** [Community Map & Marketplace](https://www.myzubster.com/community-marketplace.html) · [Talk to Zorgax](https://www.myzubster.com/zorgax)
+
 ## 💳 MYZ payments, Google authentication & Zorgax onboarding — 11 Sep 2026
 
 MyZubster now has a verified internal utility-credit flow that connects a real Stripe payment to MYZ accounting and then to a concrete ecosystem redemption. `MYZ` is an **internal utility/accounting credit**, not a blockchain token, investment product or fiat-redeemable asset.

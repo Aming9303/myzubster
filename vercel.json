@@ -102,6 +102,7 @@
     {"src":"/manifest.json","dest":"/frontend/manifest.json"},
     {"src":"/favicon.svg","dest":"/frontend/favicon.svg"},
     {"src":"/static/(.*)","dest":"/frontend/static/$1"},
+    {"src":"/images/marketplace/demo/(.*)","dest":"https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/main/frontend/public/images/marketplace/demo/$1"},
     {"src":"/images/(.*)","dest":"/frontend/images/$1"},
     {"src":"/comics/(.*)","dest":"/api/index.js"},
     {"src":"/space-station/?","dest":"/public/space-station.html"},

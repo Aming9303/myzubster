@@ -54,7 +54,17 @@ const DEMO_IMAGES={
   'demo-art-original':'/images/marketplace/demo/arte-dipinto-originale.png',
   'demo-wellness-braids':'/images/marketplace/demo/benessere-rasta-treccine.png',
   'demo-wellness-nails':'/images/marketplace/demo/benessere-nail-art.png',
-  'demo-dog-sitter-request':'/images/marketplace/demo/animals-cerco-dog-sitter.jpg'
+  'demo-dog-sitter-request':'/images/marketplace/demo/animals-cerco-dog-sitter.jpg',
+  'demo-sound-system':'/images/marketplace/demo/sound-system-collective.jpg',
+  'demo-audio-gear':'/images/marketplace/demo/underground-audio-gear.jpg',
+  'demo-dj-package':'/images/marketplace/demo/dj-crew.jpg',
+  'demo-accessories':'/images/marketplace/demo/upcycled-accessories.jpg',
+  'demo-volunteering':'/images/marketplace/demo/community-garden-volunteers.jpg',
+  'demo-pet-adoption':'/images/marketplace/demo/responsible-pet-adoption.jpg',
+  'demo-university-course':'/images/marketplace/demo/corso-open-source.jpg',
+  'demo-thesis':'/images/marketplace/demo/tesi-demo.jpg',
+  'demo-research':'/images/marketplace/demo/ricerca-riproducibile-laboratorio.jpg',
+  'demo-internship':'/images/marketplace/demo/tirocinio-open-source.jpg'
 };
 
 function demoPaymentMode(price=''){if(price==='FREE')return'FREE';if(price==='BARTER')return'BARTER';if(/MYZ/i.test(price))return'MYZ';if(/EUR|€/i.test(price))return'EUR';return'OTHER'}

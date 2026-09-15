@@ -117,6 +117,29 @@ async function reportRoomMessage({ sessionId, messageId, actorUserId, reason }) 
   return { valid: true, status: 201, report: { id: report.reportId, reason: report.reason, status: report.status } };
 }
 
+function aggregateRoomReports(reports, messagesById) {
+  const grouped = new Map();
+  reports.forEach((report) => {
+    const current = grouped.get(report.messageId);
+    if (current) {
+      current.count += 1;
+      current.reasons.add(report.reason);
+      if (new Date(report.createdAt) < new Date(current.createdAt)) current.createdAt = report.createdAt;
+      return;
+    }
+    grouped.set(report.messageId, {
+      id: report.reportId,
+      count: 1,
+      reasons: new Set([report.reason]),
+      createdAt: report.createdAt,
+      message: messagesById.get(report.messageId) || null
+    });
+  });
+  return Array.from(grouped.values())
+    .map((report) => ({ ...report, reasons: Array.from(report.reasons).sort() }))
+    .sort((left, right) => right.count - left.count || new Date(left.createdAt) - new Date(right.createdAt));
+}
+
 async function listRoomMessageReports({ sessionId, actorUserId, actorRole }) {
   const context = await authorizedContext(sessionId, actorUserId);
   if (!context.valid) return context;
@@ -132,12 +155,7 @@ async function listRoomMessageReports({ sessionId, actorUserId, actorRole }) {
   return {
     valid: true,
     status: 200,
-    reports: reports.map((report) => ({
-      id: report.reportId,
-      reason: report.reason,
-      createdAt: report.createdAt,
-      message: byId.get(report.messageId) || null
-    })),
+    reports: aggregateRoomReports(reports, byId),
     history: resolved.map((report) => ({
       id: report.reportId,
       reason: report.reason,
@@ -151,13 +169,23 @@ async function resolveRoomMessageReport({ sessionId, reportId, actorUserId, acto
   const context = await authorizedContext(sessionId, actorUserId);
   if (!context.valid) return context;
   if (!canModerateRoomChat(actorUserId, context.session.hostUserId, actorRole)) return { valid: false, status: 403, error: 'Host capability required' };
-  const report = await VirtualRoomMessageReport.findOneAndUpdate(
-    { reportId: String(reportId), roomId: context.room.roomId, sessionId: context.session.sessionId, status: 'open' },
-    { $set: { status: 'resolved', resolution: 'dismissed', resolvedAt: new Date() } },
-    { new: true }
-  );
+  const report = await VirtualRoomMessageReport.findOne({
+    reportId: String(reportId),
+    roomId: context.room.roomId,
+    sessionId: context.session.sessionId,
+    status: 'open'
+  }).select('messageId');
   if (!report) return { valid: false, status: 404, error: 'Report not found' };
-  return { valid: true, status: 200 };
+  const result = await VirtualRoomMessageReport.updateMany(
+    {
+      roomId: context.room.roomId,
+      sessionId: context.session.sessionId,
+      messageId: report.messageId,
+      status: 'open'
+    },
+    { $set: { status: 'resolved', resolution: 'dismissed', resolvedAt: new Date() } }
+  );
+  return { valid: true, status: 200, resolvedCount: result.modifiedCount };
 }
 
 async function moderateReportedRoomMessage({ sessionId, reportId, actorUserId, actorRole }) {
@@ -259,6 +287,7 @@ module.exports = {
   cleanRoomMessage,
   publicRoomMessage,
   canModerateRoomChat,
+  aggregateRoomReports,
   deleteRoomMessage,
   reportRoomMessage,
   listRoomMessageReports,

@@ -62,6 +62,11 @@ function publicRoomMessage(value) {
   };
 }
 
+function publicRoomMessageWithReportState(value, reportedMessageIds) {
+  const message = publicRoomMessage(value);
+  return { ...message, reportedByMe: reportedMessageIds.has(message.id) };
+}
+
 async function authorizedContext(sessionId, actorUserId, requireLive = false) {
   if (!databaseAvailable()) return { valid: false, status: 503, error: 'Room chat storage unavailable' };
   const session = await VirtualSession.findOne({ sessionId: String(sessionId) });
@@ -114,7 +119,7 @@ async function reportRoomMessage({ sessionId, messageId, actorUserId, reason }) 
     },
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
-  return { valid: true, status: 201, report: { id: report.reportId, reason: report.reason, status: report.status } };
+  return { valid: true, status: 201, report: { id: report.reportId, messageId: message.messageId, reason: report.reason, status: report.status } };
 }
 
 function aggregateRoomReports(reports, messagesById) {
@@ -249,7 +254,23 @@ async function listRoomMessages({ sessionId, actorUserId, after }) {
     .limit(ROOM_CHAT_PAGE_SIZE)
     .lean();
   if (!cursor) messages.reverse();
-  return { valid: true, status: 200, messages: messages.map(publicRoomMessage), cursor: observedAt.toISOString(), retentionSeconds: ROOM_CHAT_RETENTION_MS / 1000 };
+  const reportedMessageIds = messages.length
+    ? await VirtualRoomMessageReport.distinct('messageId', {
+      roomId: context.room.roomId,
+      sessionId: context.session.sessionId,
+      reporterUserId: context.actor,
+      status: 'open',
+      messageId: { $in: messages.map((message) => message.messageId) }
+    })
+    : [];
+  const reportedByMe = new Set(reportedMessageIds);
+  return {
+    valid: true,
+    status: 200,
+    messages: messages.map((message) => publicRoomMessageWithReportState(message, reportedByMe)),
+    cursor: observedAt.toISOString(),
+    retentionSeconds: ROOM_CHAT_RETENTION_MS / 1000
+  };
 }
 
 async function createRoomMessage({ sessionId, actorUserId, text }) {
@@ -286,6 +307,7 @@ module.exports = {
   claimRoomChatWindow,
   cleanRoomMessage,
   publicRoomMessage,
+  publicRoomMessageWithReportState,
   canModerateRoomChat,
   aggregateRoomReports,
   deleteRoomMessage,

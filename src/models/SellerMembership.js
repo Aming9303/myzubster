@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const sellerMembershipSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true, index: true },
-  plan: { type: String, enum: ['SELLER_MONTHLY'], default: 'SELLER_MONTHLY' },
-  status: { type: String, enum: ['PENDING_PAYMENT','ACTIVE','EXPIRED','SUSPENDED','CANCELLED'], default: 'PENDING_PAYMENT', index: true },
-  priceAmount: { type: Number, min: 0, required: true },
+  plan: { type: String, enum: ['SELLER_FREE','SELLER_MONTHLY'], default: 'SELLER_FREE' },
+  status: { type: String, enum: ['PENDING_PAYMENT','ACTIVE','EXPIRED','SUSPENDED','CANCELLED'], default: 'ACTIVE', index: true },
+  priceAmount: { type: Number, min: 0, required: true, default: 0 },
   priceCurrency: { type: String, enum: ['EUR'], default: 'EUR' },
   billingReference: { type: String, trim: true, maxlength: 200 },
   paymentReference: { type: String, trim: true, maxlength: 300 },
-  paymentProvider: { type: String, enum: ['MANUAL','STRIPE'], default: 'MANUAL', index: true },
+  paymentProvider: { type: String, enum: ['NONE','MANUAL','STRIPE'], default: 'NONE', index: true },
   stripeCustomerId: { type: String, trim: true, maxlength: 255, index: true, sparse: true },
   stripeSubscriptionId: { type: String, trim: true, maxlength: 255, index: true, sparse: true },
   stripeCheckoutSessionId: { type: String, trim: true, maxlength: 255, index: true, sparse: true },

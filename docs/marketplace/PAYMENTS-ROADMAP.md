@@ -17,9 +17,9 @@ A free Seller account does not by itself mean that a Seller is identity-verified
 
 ---
 
-## Phase 1 — Free Marketplace
+## Phase 1 — Free Marketplace + Zorgax Listing Assistant
 
-**Objective:** remove payment friction from Seller onboarding.
+**Objective:** remove payment friction from Seller onboarding and make the first listing easy to create.
 
 Target flow:
 
@@ -28,7 +28,13 @@ Create account
     ↓
 Activate SELLER_FREE
     ↓
-Create eligible listings
+Tap "Create listing"
+    ↓
+Zorgax Listing Assistant popup
+    ↓
+Guided listing draft
+    ↓
+Seller reviews and confirms the information
     ↓
 Publish
     ↓
@@ -48,7 +54,49 @@ Product rules:
 - community/free exchange categories may have separate Marketplace rules;
 - reaching the free listing limit does **not** trigger an automatic charge.
 
-**Exit criteria:** a user can complete `account -> SELLER_FREE -> listing -> publish` without entering financial information.
+### Zorgax Listing Assistant
+
+When a Seller chooses **Create listing**, MyZubster should offer a contextual Zorgax popup that helps turn the Seller's description into a structured Marketplace draft.
+
+Zorgax may guide the Seller through fields such as:
+
+- title;
+- category;
+- description;
+- price or `FREE` / `BARTER` mode;
+- location;
+- availability / stock where applicable;
+- relevant characteristics;
+- images or missing-media reminders where supported;
+- category-specific Marketplace requirements and safety reminders.
+
+Zorgax should be an **assistant, not the source of truth**. It may propose wording and structure, but it must not invent product characteristics, certifications, measurements, ownership, condition, identity, business status, availability or other factual claims.
+
+Before publication, the Seller must receive an editable preview and explicitly confirm the listing.
+
+Target interaction:
+
+```text
+Seller: Create listing
+        ↓
+Zorgax: What would you like to offer?
+        ↓
+Seller describes item/service
+        ↓
+Zorgax proposes structured draft
+        ↓
+Missing fields / Marketplace rules checked
+        ↓
+Editable preview
+        ↓
+Seller confirms
+        ↓
+Publish
+```
+
+The assistant should also explain the free-listing state, for example `2/5 active free listings`, without presenting the limit as a payment authorization or automatically starting financial onboarding.
+
+**Exit criteria:** a user can complete `account -> SELLER_FREE -> Zorgax-assisted draft -> seller confirmation -> listing -> publish` without entering financial information, while also retaining the option to create/edit a listing manually.
 
 ---
 
@@ -61,6 +109,9 @@ Measure at minimum:
 - free Seller activations;
 - Sellers reaching 1, 3 and 5 active listings;
 - listing publication rate;
+- Zorgax Listing Assistant opened / draft generated / draft confirmed / abandoned;
+- time from Seller activation to first published listing;
+- manual vs Zorgax-assisted listing completion rate;
 - Marketplace requests per listing;
 - accepted requests;
 - completed exchanges;
@@ -272,6 +323,14 @@ PAID != SETTLED
 
 The UI, APIs, logs and Zorgax responses should preserve these distinctions.
 
+For listing creation, the same principle applies:
+
+```text
+ZORGAX_DRAFT != SELLER_CONFIRMED != PUBLISHED
+```
+
+A Zorgax-generated suggestion is not evidence that the underlying claim is true. Seller confirmation remains required before publication.
+
 ---
 
 ## Implementation priority
@@ -281,13 +340,18 @@ The UI, APIs, logs and Zorgax responses should preserve these distinctions.
 - finish `SELLER_FREE` runtime activation;
 - remove Stripe/payment requirement from basic Seller onboarding;
 - enforce and clearly display the initial free-listing policy;
-- instrument Seller/listing/request/completion metrics;
+- build the contextual **Zorgax Listing Assistant** popup for `Create listing`;
+- implement structured draft generation and editable preview;
+- require Seller confirmation before Zorgax-assisted publication;
+- preserve manual listing creation as an alternative;
+- instrument Seller/listing/Zorgax-assistant/request/completion metrics;
 - update Marketplace UI and Zorgax guidance;
-- add automated tests for the free Seller path.
+- add automated tests for the free Seller and assisted-listing paths.
 
 ### NEXT
 
-- analyze Marketplace usage;
+- analyze Marketplace usage and Zorgax-assisted conversion data;
+- improve category-specific listing guidance from observed usage;
 - design payment-state model;
 - define eligible payment categories;
 - design `Activate payments` UX;
@@ -306,6 +370,6 @@ The UI, APIs, logs and Zorgax responses should preserve these distinctions.
 
 ## Product promise
 
-> **Join for free. Experiment for free. Build real Marketplace activity first. Financial onboarding starts only when payments are actually needed.**
+> **Join for free. Let Zorgax help you create your first listing. Experiment for free. Build real Marketplace activity first. Financial onboarding starts only when payments are actually needed.**
 
 This roadmap describes intended product direction. Items not yet implemented or independently verified must not be represented as production capabilities.

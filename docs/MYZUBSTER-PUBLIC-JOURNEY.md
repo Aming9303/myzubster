@@ -1,6 +1,6 @@
 # MyZubster — Public Connected Journey
 
-This page connects the currently evidenced MyZubster journey from community discovery to Marketplace exchange, payment boundaries, kefir handover evidence, public knowledge, research and visual storytelling.
+This page connects the currently evidenced MyZubster journey from community discovery to Marketplace exchange, payment boundaries, kefir handover evidence, public knowledge, mentorship, research and visual storytelling.
 
 <p align="center">
   <a href="https://www.myzubster.com/fumetto"><img src="https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/main/public/comics/community/MyZubster-Community-Zorgax-Guide.jpg" alt="MyZubster Community and Zorgax visual guide" width="92%"></a>
@@ -33,12 +33,14 @@ FREE EXCHANGE ───────────────┐
                              ↓
                     KNOWLEDGE / FEEDBACK
                              ↓
-                 RESEARCH / REPRODUCTION
+                 LEARN / MENTOR / REPRODUCE
+                             ↓
+                 RESEARCH / INDEPENDENT REVIEW
                              ↓
                        SHARE AGAIN
 ```
 
-The knowledge loop is `SHARE → TRY → OBSERVE → IMPROVE → SHARE`.
+The knowledge loop is `SHARE → TRY → OBSERVE → IMPROVE → SHARE AGAIN`. A documented lesson can therefore become the starting point for another person's pilot, with Zorgax assisting the learning path while keeping human work and AI assistance distinguishable.
 
 ## Marketplace and payments
 
@@ -94,10 +96,19 @@ Important boundary: the blockchain proves integrity/timestamp evidence for the c
 
 The kefir repository is also the first concrete dataset for the broader MyZubster Knowledge Protocol. Evidence classes remain distinct: `PERSONAL_PRACTICE`, `TRADITIONAL_PRACTICE`, `OBSERVATION`, `EXTERNAL_SOURCE`, `VERIFIED_GUIDANCE`. Community repetition never silently upgrades a claim to verified guidance.
 
+Knowledge can now also be connected to a **learning/mentorship pathway**: someone documents what they actually learned while building or testing MyZubster, another participant tries to reproduce or extend it, and Zorgax assists explanation, decomposition and documentation. The resulting interaction becomes new evidence and feedback rather than automatic proof of mastery.
+
+**Learn / transmit with Zorgax:** https://github.com/MyZubster-Ecosystem/myzubster/blob/main/docs/KNOWLEDGE-MENTORSHIP-PILOTS.md
+
+Existing pilot nodes include Nicola and Yassen as separate cases. A Bologna sound-system pathway is documented as `PLANNED` only until participants, consent, scope and evidence exist; it can later use the `SOUNDSYSTEM → SND-###` namespace.
+
 - KF-006 public evidence page: https://www.myzubster.com/knowledge-kf-006.html
 - Knowledge Explorer: https://myzubster-knowledge.vercel.app/knowledge.html
 - Read-only summary API: https://myzubster-knowledge.vercel.app/api/knowledge?action=summary
 - Knowledge Protocol: https://github.com/DanielIoni-creator/Myzubster-fermentation-kefir/blob/main/MYZUBSTER-KNOWLEDGE-PROTOCOL.md
+- Mentorship & Pilot Pathway: https://github.com/MyZubster-Ecosystem/myzubster/blob/main/docs/KNOWLEDGE-MENTORSHIP-PILOTS.md
+- Nicola: https://github.com/DanielIoni-creator/Nicola
+- Yassen: https://github.com/DanielIoni-creator/Yassen
 
 ## University and reproducible research
 
@@ -108,6 +119,7 @@ Research is a separate layer: `Question → protocol → consent/evidence plan �
 - Research Lab: https://github.com/DanielIoni-creator/Myzubster-research-lab
 - Student Profiles: https://github.com/DanielIoni-creator/Myzubster-student-profile
 - Developer Support: https://github.com/DanielIoni-creator/Myzubster-developer-support
+- Knowledge Mentorship: https://github.com/MyZubster-Ecosystem/myzubster/blob/main/docs/KNOWLEDGE-MENTORSHIP-PILOTS.md
 
 No README, visual, issue or pilot record by itself establishes a formal university partnership, scientific validation, funding or institutional endorsement.
 
@@ -131,6 +143,6 @@ The Comic Universe is the narrative navigation layer around the evidence system.
 
 MyZubster deliberately keeps these layers separate:
 
-`LISTING ≠ PAYMENT ≠ HANDOVER ≠ RECEIPT ≠ RECORDED APP STATE ≠ ON-CHAIN COMMITMENT ≠ KNOWLEDGE VALIDATION ≠ SCIENTIFIC VALIDATION`.
+`LISTING ≠ PAYMENT ≠ HANDOVER ≠ RECEIPT ≠ RECORDED APP STATE ≠ ON-CHAIN COMMITMENT ≠ KNOWLEDGE RECORD ≠ LEARNING INTERACTION ≠ DEMONSTRATED COMPETENCE ≠ KNOWLEDGE VALIDATION ≠ SCIENTIFIC VALIDATION`.
 
 They can be connected by identifiers and provenance, but one state never silently proves the next.

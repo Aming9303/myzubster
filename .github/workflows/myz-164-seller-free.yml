@@ -8,8 +8,10 @@ on:
       - 'src/routes/listingRoutes.js'
       - 'src/services/freeSellerPolicy.js'
       - 'src/models/SellerMembership.js'
+      - 'frontend/src/pages/MarketplacePage.js'
       - 'tests/sellerMembership.test.js'
       - 'test/sellerMonetizationGuard.test.js'
+      - 'test/marketplaceSellerCheckoutUi.test.js'
       - '.github/workflows/myz-164-seller-free.yml'
   pull_request:
     branches: [main]
@@ -18,8 +20,10 @@ on:
       - 'src/routes/listingRoutes.js'
       - 'src/services/freeSellerPolicy.js'
       - 'src/models/SellerMembership.js'
+      - 'frontend/src/pages/MarketplacePage.js'
       - 'tests/sellerMembership.test.js'
       - 'test/sellerMonetizationGuard.test.js'
+      - 'test/marketplaceSellerCheckoutUi.test.js'
       - '.github/workflows/myz-164-seller-free.yml'
   workflow_dispatch:
 
@@ -28,7 +32,7 @@ permissions:
 
 jobs:
   seller-free-policy:
-    name: Seller Free policy regression
+    name: Seller Free backend + UI + E2E regression
     runs-on: ubuntu-latest
     env:
       NODE_ENV: test
@@ -46,5 +50,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run MYZ-164 regression tests
-        run: npx jest tests/sellerMembership.test.js test/sellerMonetizationGuard.test.js --runInBand
+      - name: Run MYZ-164 backend, UI and E2E regression tests
+        run: npx jest tests/sellerMembership.test.js test/sellerMonetizationGuard.test.js test/marketplaceSellerCheckoutUi.test.js --runInBand

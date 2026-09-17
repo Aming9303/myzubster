@@ -4,13 +4,37 @@ const User = require('../models/User');
 const MarketplaceListing = require('../models/MarketplaceListing');
 const SellerMembership = require('../models/SellerMembership');
 const { authenticate } = require('../middleware/auth');
+const { freeSellerPlan, canPublishCommercialListing } = require('../services/freeSellerPolicy');
 
 const ALLOWED_CURRENCIES = new Set(['ETH', 'BTC', 'XMR', 'MYZ', 'TARI', 'BARTER', 'FREE']);
 const ALLOWED_CATEGORIES = new Set(['health_products','electronics','kefir_culture_donation','seeds','plants','produce','tools','services','development_services','event_support','agriculture_support','arts','wellness','help_request','university_course','thesis_project','research_project','internship','volunteering','pet_adoption','pet_lost_found','pet_services']);
-const SELLER_MONTHLY_EUR = Math.max(0, Number(process.env.MARKETPLACE_SELLER_MONTHLY_EUR || 9.90));
 
 function containsPrivateKeyMaterial(value) { const text=String(value||'').toUpperCase(); return /PRIVATE KEY|BEGIN PGP PRIVATE|BEGIN OPENSSH PRIVATE|SEED PHRASE|MNEMONIC/.test(text); }
-async function activeSeller(userId) { const now=new Date(); return SellerMembership.findOne({ userId, status:'ACTIVE', expiresAt:{ $gt:now } }).lean(); }
+function isCommunityExchange(category, currency) { const normalized=String(currency||'').toUpperCase(); return category==='kefir_culture_donation' || (category==='seeds' && ['FREE','BARTER'].includes(normalized)); }
+async function activeSeller(userId) {
+ const membership=await SellerMembership.findOne({ userId, status:'ACTIVE' }).lean();
+ if(!membership)return null;
+ if(membership.plan==='SELLER_FREE')return membership;
+ if(membership.plan==='SELLER_MONTHLY' && (!membership.expiresAt || membership.expiresAt>new Date()))return membership;
+ return null;
+}
+async function activeCommercialListingCount(userId) {
+ return MarketplaceListing.countDocuments({
+  ownerId:userId,
+  status:'active',
+  $nor:[
+   { category:'kefir_culture_donation' },
+   { category:'seeds', currency:{ $in:['FREE','BARTER'] } }
+  ]
+ });
+}
+async function commercialPublishDecision(userId) {
+ const membership=await activeSeller(userId);
+ if(!membership)return { allowed:false, reason:'SELLER_ACTIVATION_REQUIRED', membership:null };
+ if(membership.plan==='SELLER_MONTHLY')return { allowed:true, membership, legacyPaid:true };
+ const activeCommercialListings=await activeCommercialListingCount(userId);
+ return { ...canPublishCommercialListing(membership, activeCommercialListings), membership, activeCommercialListings };
+}
 
 router.get('/', async (req,res)=>{ try { const {category,currency,location}=req.query; const query={status:'active'}; if(category)query.category=category; if(currency)query.currency=String(currency).toUpperCase(); if(location)query.location={$regex:String(location).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),$options:'i'}; const listings=await MarketplaceListing.find(query).sort({createdAt:-1}).limit(200).lean(); res.json({success:true,count:listings.length,listings:listings.map(item=>({...item,id:String(item._id)}))}); } catch(_error){res.status(500).json({success:false,message:'Marketplace non disponibile'});} });
 router.get('/mine',authenticate,async(req,res)=>{try{const listings=await MarketplaceListing.find({ownerId:req.userId}).sort({createdAt:-1}).lean();res.json({success:true,listings:listings.map(item=>({...item,id:String(item._id)}))});}catch(_error){res.status(500).json({success:false,message:'Impossibile recuperare i tuoi annunci'});}});
@@ -19,9 +43,15 @@ router.patch('/profile/me',authenticate,async(req,res)=>{try{const{pgpPublicKey=
 
 router.post('/create',authenticate,async(req,res)=>{try{
  const requestedCategory=String(req.body?.category||'');
- const communityExchange=requestedCategory==='kefir_culture_donation' || (requestedCategory==='seeds' && ['FREE','BARTER'].includes(String(req.body?.currency||'').toUpperCase()));
- const membership=communityExchange?true:await activeSeller(req.userId);
- if(!membership)return res.status(402).json({success:false,code:'SELLER_MEMBERSHIP_REQUIRED',message:'Per pubblicare annunci commerciali devi attivare un account Seller.',sellerPlan:{plan:'SELLER_MONTHLY',amount:SELLER_MONTHLY_EUR,currency:'EUR',interval:'month'}});
+ const requestedCurrency=String(req.body?.currency||(req.body?.exchangeMode==='gift'?'FREE':req.body?.exchangeMode==='barter'?'BARTER':'MYZ')).toUpperCase();
+ const communityExchange=isCommunityExchange(requestedCategory,requestedCurrency);
+ if(!communityExchange){
+  const decision=await commercialPublishDecision(req.userId);
+  if(!decision.allowed){
+   if(decision.reason==='FREE_SELLER_ACTIVE_LISTING_LIMIT')return res.status(409).json({success:false,code:decision.reason,message:`Hai raggiunto il limite di ${decision.limit} annunci commerciali attivi del piano Seller Free. Metti in pausa o chiudi un annuncio prima di pubblicarne un altro.`,sellerPlan:freeSellerPlan(),activeCommercialListings:decision.activeCommercialListings,paymentRequired:false,automaticCharge:false});
+   return res.status(403).json({success:false,code:'SELLER_ACTIVATION_REQUIRED',message:'Per pubblicare annunci commerciali attiva gratuitamente il profilo Seller.',sellerPlan:freeSellerPlan(),paymentRequired:false,paymentMethodRequired:false});
+  }
+ }
  const{title,category,price,currency,description,location,features,contact,stock,exchangeMode,species,variety,pet,kefir}=req.body||{};
  const normalizedCurrency=String(currency||(exchangeMode==='gift'?'FREE':exchangeMode==='barter'?'BARTER':'MYZ')).toUpperCase();
  if(!title||!category)return res.status(400).json({error:'Titolo e categoria sono obbligatori'});
@@ -37,7 +67,7 @@ router.post('/create',authenticate,async(req,res)=>{try{
  res.status(201).json({success:true,listing:{...listing.toObject(),id:String(listing._id)}});
 }catch(error){res.status(400).json({success:false,message:error.message||'Annuncio non creato'});}});
 
-router.patch('/:id/status',authenticate,async(req,res)=>{try{const status=String(req.body?.status||'');if(!['active','paused','closed'].includes(status))return res.status(400).json({error:'Stato non valido'});if(status==='active'){const existing=await MarketplaceListing.findOne({_id:req.params.id,ownerId:req.userId}).select('category currency').lean();if(!existing)return res.status(404).json({error:'Annuncio non trovato'});const communityExchange=existing.category==='kefir_culture_donation'||(existing.category==='seeds'&&['FREE','BARTER'].includes(existing.currency));if(!communityExchange&&!(await activeSeller(req.userId)))return res.status(402).json({success:false,code:'SELLER_MEMBERSHIP_REQUIRED',message:'Account Seller non attivo.'});}const listing=await MarketplaceListing.findOneAndUpdate({_id:req.params.id,ownerId:req.userId},{$set:{status}},{new:true,runValidators:true});if(!listing)return res.status(404).json({error:'Annuncio non trovato'});res.json({success:true,listing:{...listing.toObject(),id:String(listing._id)}});}catch(_error){res.status(400).json({success:false,message:'Impossibile aggiornare annuncio'});}});
+router.patch('/:id/status',authenticate,async(req,res)=>{try{const status=String(req.body?.status||'');if(!['active','paused','closed'].includes(status))return res.status(400).json({error:'Stato non valido'});if(status==='active'){const existing=await MarketplaceListing.findOne({_id:req.params.id,ownerId:req.userId}).select('category currency status').lean();if(!existing)return res.status(404).json({error:'Annuncio non trovato'});const communityExchange=isCommunityExchange(existing.category,existing.currency);if(!communityExchange&&existing.status!=='active'){const decision=await commercialPublishDecision(req.userId);if(!decision.allowed){if(decision.reason==='FREE_SELLER_ACTIVE_LISTING_LIMIT')return res.status(409).json({success:false,code:decision.reason,message:`Hai raggiunto il limite di ${decision.limit} annunci commerciali attivi del piano Seller Free.`,sellerPlan:freeSellerPlan(),activeCommercialListings:decision.activeCommercialListings,paymentRequired:false,automaticCharge:false});return res.status(403).json({success:false,code:'SELLER_ACTIVATION_REQUIRED',message:'Attiva gratuitamente il profilo Seller prima di riattivare un annuncio commerciale.',sellerPlan:freeSellerPlan(),paymentRequired:false,paymentMethodRequired:false});}}}const listing=await MarketplaceListing.findOneAndUpdate({_id:req.params.id,ownerId:req.userId},{$set:{status}},{new:true,runValidators:true});if(!listing)return res.status(404).json({error:'Annuncio non trovato'});res.json({success:true,listing:{...listing.toObject(),id:String(listing._id)}});}catch(_error){res.status(400).json({success:false,message:'Impossibile aggiornare annuncio'});}});
 router.delete('/:id',authenticate,async(req,res)=>{try{const listing=await MarketplaceListing.findOneAndDelete({_id:req.params.id,ownerId:req.userId});if(!listing)return res.status(404).json({error:'Annuncio non trovato'});res.json({success:true});}catch(_error){res.status(400).json({success:false,message:'Impossibile eliminare annuncio'});}});
 router.get('/:id',async(req,res)=>{try{const listing=await MarketplaceListing.findOne({_id:req.params.id,status:'active'}).lean();if(!listing)return res.status(404).json({error:'Annuncio non trovato'});res.json({success:true,listing:{...listing,id:String(listing._id)}});}catch(_error){res.status(404).json({error:'Annuncio non trovato'});}});
 module.exports=router;

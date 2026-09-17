@@ -2,29 +2,11 @@ name: MYZ-164 Seller Free policy
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'src/routes/sellerRoutes.js'
-      - 'src/routes/listingRoutes.js'
-      - 'src/services/freeSellerPolicy.js'
-      - 'src/models/SellerMembership.js'
-      - 'frontend/src/pages/MarketplacePage.js'
-      - 'tests/sellerMembership.test.js'
-      - 'test/sellerMonetizationGuard.test.js'
-      - 'test/marketplaceSellerCheckoutUi.test.js'
-      - '.github/workflows/myz-164-seller-free.yml'
+    branches:
+      - main
   pull_request:
-    branches: [main]
-    paths:
-      - 'src/routes/sellerRoutes.js'
-      - 'src/routes/listingRoutes.js'
-      - 'src/services/freeSellerPolicy.js'
-      - 'src/models/SellerMembership.js'
-      - 'frontend/src/pages/MarketplacePage.js'
-      - 'tests/sellerMembership.test.js'
-      - 'test/sellerMonetizationGuard.test.js'
-      - 'test/marketplaceSellerCheckoutUi.test.js'
-      - '.github/workflows/myz-164-seller-free.yml'
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -34,6 +16,7 @@ jobs:
   seller-free-policy:
     name: Seller Free backend + UI + E2E regression
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       NODE_ENV: test
       CI: true

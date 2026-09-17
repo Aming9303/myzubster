@@ -70,6 +70,29 @@ test('publishing is unlocked by free Seller activation with no payment method', 
     .expect(201);
 });
 
+test('Seller Free is limited to five active commercial listings without triggering payment', async () => {
+  const sellerToken = tokenFor(seller);
+  for (let index = 2; index <= 5; index += 1) {
+    await request(app)
+      .post('/api/listings/create')
+      .set('Authorization', `Bearer ${sellerToken}`)
+      .send({ title:`Free seller listing ${index}`, category:'tools', currency:'FREE' })
+      .expect(201);
+  }
+
+  const blocked = await request(app)
+    .post('/api/listings/create')
+    .set('Authorization', `Bearer ${sellerToken}`)
+    .send({ title:'Free seller listing 6', category:'tools', currency:'FREE' })
+    .expect(409);
+
+  expect(blocked.body.code).toBe('FREE_SELLER_ACTIVE_LISTING_LIMIT');
+  expect(blocked.body.activeCommercialListings).toBe(5);
+  expect(blocked.body.sellerPlan.activeListingLimit).toBe(5);
+  expect(blocked.body.paymentRequired).toBe(false);
+  expect(blocked.body.automaticCharge).toBe(false);
+});
+
 test('legacy Seller checkout is not used for initial activation', async () => {
   const sellerToken = tokenFor(seller);
   const response = await request(app)

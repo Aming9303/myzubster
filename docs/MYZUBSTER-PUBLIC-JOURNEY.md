@@ -57,6 +57,8 @@ The Marketplace connects offers and requests for skills, local resources, commun
 
 The Nicola/N4K48 kefir pilot is the first concrete bridge between a Marketplace handover and the MyZubster Knowledge Protocol.
 
+**Public KF-006 evidence page:** https://www.myzubster.com/knowledge-kf-006.html
+
 Application evidence:
 
 - Listing: `6aa9ee1b821964be0b43ff6e`
@@ -92,6 +94,7 @@ Important boundary: the blockchain proves integrity/timestamp evidence for the c
 
 The kefir repository is also the first concrete dataset for the broader MyZubster Knowledge Protocol. Evidence classes remain distinct: `PERSONAL_PRACTICE`, `TRADITIONAL_PRACTICE`, `OBSERVATION`, `EXTERNAL_SOURCE`, `VERIFIED_GUIDANCE`. Community repetition never silently upgrades a claim to verified guidance.
 
+- KF-006 public evidence page: https://www.myzubster.com/knowledge-kf-006.html
 - Knowledge Explorer: https://myzubster-knowledge.vercel.app/knowledge.html
 - Read-only summary API: https://myzubster-knowledge.vercel.app/api/knowledge?action=summary
 - Knowledge Protocol: https://github.com/DanielIoni-creator/Myzubster-fermentation-kefir/blob/main/MYZUBSTER-KNOWLEDGE-PROTOCOL.md
@@ -100,6 +103,7 @@ The kefir repository is also the first concrete dataset for the broader MyZubste
 
 Research is a separate layer: `Question → protocol → consent/evidence plan → GitHub work → Zorgax support → measurements → review/reproduction → conclusions with limitations`.
 
+- KF-006 public evidence page: https://www.myzubster.com/knowledge-kf-006.html
 - University & Research: https://github.com/DanielIoni-creator/myzubster-university-research
 - Research Lab: https://github.com/DanielIoni-creator/Myzubster-research-lab
 - Student Profiles: https://github.com/DanielIoni-creator/Myzubster-student-profile
@@ -115,6 +119,7 @@ No README, visual, issue or pilot record by itself establishes a formal universi
 
 The Comic Universe is the narrative navigation layer around the evidence system. Visuals explain how components connect; they are not evidence that an event, payment, partnership or scientific result occurred.
 
+- KF-006 public evidence page: https://www.myzubster.com/knowledge-kf-006.html
 - Interactive comic: https://www.myzubster.com/fumetto
 - Visual repository: https://github.com/MyZubster-Ecosystem/MyZubster-Visual
 - Nicola: https://github.com/DanielIoni-creator/Nicola

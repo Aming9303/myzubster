@@ -18,6 +18,7 @@ env:
   NODE_ENV: test
   CI: true
 
+# Keep the full repository CI as the release gate; MYZ-164 also has a focused Seller Free regression workflow.
 jobs:
   test:
     name: Test, lint and build

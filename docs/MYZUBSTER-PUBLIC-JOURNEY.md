@@ -2,10 +2,6 @@
 
 This page connects the currently evidenced MyZubster journey from community discovery to Marketplace exchange, payment boundaries, kefir handover evidence, public knowledge, mentorship, research and visual storytelling.
 
-<p align="center">
-  <a href="https://www.myzubster.com/fumetto"><img src="https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/main/public/comics/community/MyZubster-Community-Zorgax-Guide.jpg" alt="MyZubster Community and Zorgax visual guide" width="92%"></a>
-</p>
-
 ## One connected flow
 
 ```text
@@ -51,13 +47,13 @@ The Marketplace connects offers and requests for skills, local resources, commun
 - Marketplace repository: https://github.com/DanielIoni-creator/MyZubster-Marketplace
 - Core implementation: https://github.com/MyZubster-Ecosystem/myzubster
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/main/frontend/public/images/marketplace/demo/produce-kefir.png" alt="MyZubster kefir Marketplace visual" width="72%">
-</p>
-
 ## Nicola kefir pilot — real recorded handover + public commitment
 
 The Nicola/N4K48 kefir pilot is the first concrete bridge between a Marketplace handover and the MyZubster Knowledge Protocol.
+
+![Daniel H4X0R and Nicola n4k48 — kefir exchange](https://raw.githubusercontent.com/MyZubster-Ecosystem/MyZubster-Visual/main/visuals/knowledge-pilots/MyZubster%20-%20Daniel%20H4X0R%20scambio%20Kefir%20con%20Nicola%20n4k48%20-%20Cyberpunk.jpg)
+
+![Daniel H4X0R and Nicola n4k48 — Knowledge to MYZ](https://raw.githubusercontent.com/MyZubster-Ecosystem/MyZubster-Visual/main/visuals/knowledge-pilots/MyZubster%20-%20Daniel%20H4X0R%20Nicola%20n4k48%20-%20Knowledge%20to%20MYZ%20Cyberpunk.png)
 
 **Public KF-006 evidence page:** https://www.myzubster.com/knowledge-kf-006.html
 
@@ -85,7 +81,7 @@ Blockchain commitment evidence:
 
 The independent verifier in the core repository reproduced the exact v1 commitment from the handover record and matched it against transaction calldata `MZ-HANDOVER-V1:<hash>` with `VERIFY_EXIT=0`.
 
-Important boundary: the blockchain proves integrity/timestamp evidence for the commitment. It does **not** independently prove the physical event, participant identity, food safety, microbiology, health effects, successful fermentation, learning or scientific validity.
+Important boundary: the blockchain proves integrity/timestamp evidence for the commitment. It does **not** independently prove the physical event, participant identity, food safety, microbiology, health effects, successful fermentation, learning or scientific validity. The visual artwork is explanatory and is not part of that proof.
 
 - Kefir repository: https://github.com/DanielIoni-creator/Myzubster-fermentation-kefir
 - KF-006 evidence: https://github.com/DanielIoni-creator/Myzubster-fermentation-kefir/blob/main/knowledge/KF-006-NICOLA-PILOT.md
@@ -101,6 +97,16 @@ Knowledge can now also be connected to a **learning/mentorship pathway**: someon
 **Learn / transmit with Zorgax:** https://github.com/MyZubster-Ecosystem/myzubster/blob/main/docs/KNOWLEDGE-MENTORSHIP-PILOTS.md
 
 Existing pilot nodes include Nicola and Yassen as separate cases. A Bologna sound-system pathway is documented as `PLANNED` only until participants, consent, scope and evidence exist; it can later use the `SOUNDSYSTEM → SND-###` namespace.
+
+![Sound System Knowledge — planned pathway](https://raw.githubusercontent.com/MyZubster-Ecosystem/MyZubster-Visual/main/visuals/knowledge-pilots/MyZubster%20-%20Sound%20System%20Knowledge%20-%20Cyberpunk%20Community.jpg)
+
+The Sound System image is a `PLANNED` pathway visual, not evidence of an active partnership, participant consent, completed learning, competence or safety validation.
+
+### Future-dated Kefir & Knowledge visual
+
+![Kefir & Knowledge Pilot — 22 September](https://raw.githubusercontent.com/MyZubster-Ecosystem/MyZubster-Visual/main/visuals/knowledge-pilots/MyZubster%20-%20Kefir%20%26%20Knowledge%20Pilot%20-%2022%20settembre.png)
+
+`PLANNED / FUTURE-DATED VISUAL` — the image references 22 September 2026, which is later than this 17 September documentation update. It does not establish that a 22 September activity has already happened.
 
 - KF-006 public evidence page: https://www.myzubster.com/knowledge-kf-006.html
 - Knowledge Explorer: https://myzubster-knowledge.vercel.app/knowledge.html
@@ -123,14 +129,17 @@ Research is a separate layer: `Question → protocol → consent/evidence plan �
 
 No README, visual, issue or pilot record by itself establishes a formal university partnership, scientific validation, funding or institutional endorsement.
 
-## Visual and comic layer
+## Circular evidence — Denmark concept visual
 
-<p align="center">
-  <a href="https://www.myzubster.com/fumetto"><img src="https://raw.githubusercontent.com/MyZubster-Ecosystem/myzubster/main/public/comics/community/N4K48_Nicola_MyZubster_Comic.png" alt="Nicola N4K48 MyZubster comic" width="82%"></a>
-</p>
+![Circular Evidence Denmark Pilot](https://raw.githubusercontent.com/MyZubster-Ecosystem/MyZubster-Visual/main/visuals/knowledge-pilots/MyZubster_Circular_Evidence_Denmark_Pilot.png)
+
+`CONCEPT / PILOT VISUAL` — this visual illustrates a possible Denmark circular-evidence pathway. It does not by itself establish a Denmark pilot, partnership, participant activity or verified outcome.
+
+## Visual and comic layer
 
 The Comic Universe is the narrative navigation layer around the evidence system. Visuals explain how components connect; they are not evidence that an event, payment, partnership or scientific result occurred.
 
+- Connected visual evidence journey: https://github.com/MyZubster-Ecosystem/MyZubster-Visual/blob/main/docs/CONNECTED-EVIDENCE-JOURNEY.md
 - KF-006 public evidence page: https://www.myzubster.com/knowledge-kf-006.html
 - Interactive comic: https://www.myzubster.com/fumetto
 - Visual repository: https://github.com/MyZubster-Ecosystem/MyZubster-Visual
@@ -143,6 +152,6 @@ The Comic Universe is the narrative navigation layer around the evidence system.
 
 MyZubster deliberately keeps these layers separate:
 
-`LISTING ≠ PAYMENT ≠ HANDOVER ≠ RECEIPT ≠ RECORDED APP STATE ≠ ON-CHAIN COMMITMENT ≠ KNOWLEDGE RECORD ≠ LEARNING INTERACTION ≠ DEMONSTRATED COMPETENCE ≠ KNOWLEDGE VALIDATION ≠ SCIENTIFIC VALIDATION`.
+`VISUAL ≠ LISTING ≠ PAYMENT ≠ HANDOVER ≠ RECEIPT ≠ RECORDED APP STATE ≠ ON-CHAIN COMMITMENT ≠ KNOWLEDGE RECORD ≠ LEARNING INTERACTION ≠ DEMONSTRATED COMPETENCE ≠ KNOWLEDGE VALIDATION ≠ SCIENTIFIC VALIDATION`.
 
 They can be connected by identifiers and provenance, but one state never silently proves the next.

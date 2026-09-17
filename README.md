@@ -16,6 +16,16 @@ MyZubster turns authorized real-world observations — photos, places, environme
   <a href="https://github.com/MyZubster-Ecosystem/myzubster"><strong>⭐ Star on GitHub</strong></a>
 </p>
 
+## 🧠 Learn · Share · Help others with Zorgax
+
+MyZubster connects documented knowledge to a learning and mentorship pathway: **learn → try → document → share → Zorgax assists → another person tries → evidence + feedback → improve → help the next pilot**.
+
+**Pilot pathway:** Nicola / KF-006 · Yassen · Bologna Sound (`PLANNED`). Human work, Zorgax assistance and evidence remain distinguishable.
+
+**Explore:** [Learn / Share with Zorgax](https://www.myzubster.com/learn-with-zorgax.html) · [Knowledge Mentorship](docs/KNOWLEDGE-MENTORSHIP-PILOTS.md) · [Public Journey](docs/MYZUBSTER-PUBLIC-JOURNEY.md) · [KF-006](https://www.myzubster.com/knowledge-kf-006.html)
+
+> A learning or mentoring interaction does not by itself prove competence, safety, scientific validity or institutional endorsement.
+
 ## 🚀 Start here — Star · Fork your profile · Contribute
 
 New to MyZubster? You can participate in under five minutes:

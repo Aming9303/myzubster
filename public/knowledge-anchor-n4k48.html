@@ -36,13 +36,19 @@ a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 
 </div>
 
 <div class="card">
-<h2>Anchor with your wallet</h2>
-<p>Your private key never leaves your wallet. The transaction sends <strong>0 ETH</strong> to a fixed evidence sink address and stores only the commitment payload in transaction calldata. You still pay Base Sepolia testnet gas. No funds are transferred.</p>
+<h2>Confirmed on Base Sepolia</h2>
+<p>The knowledge commitment is now confirmed and independently verified. No additional wallet transaction is required.</p>
+<dl>
+<dt>Status</dt><dd><strong>CONFIRMED / MATCH</strong></dd>
+<dt>Block</dt><dd><code>47000958</code></dd>
+<dt>Confirmed</dt><dd><code>2026-09-18T22:23:24.000Z</code></dd>
+<dt>Transaction</dt><dd><code>0xff3c108275625673ad22a886da2df7120ae81b8f0106ec833613513b03c7bc31</code></dd>
+</dl>
 <div class="row">
-<button id="connect" class="btn secondary" type="button">1 · Connect wallet</button>
-<button id="anchor" class="btn primary" type="button" disabled>2 · Anchor on Base Sepolia</button>
+<a class="btn primary" href="https://sepolia.basescan.org/tx/0xff3c108275625673ad22a886da2df7120ae81b8f0106ec833613513b03c7bc31" target="_blank" rel="noopener">Open BaseScan receipt</a>
+<a class="btn secondary" href="/api/knowledge-anchor/n4k48/0xff3c108275625673ad22a886da2df7120ae81b8f0106ec833613513b03c7bc31" target="_blank" rel="noopener">Open verifier result</a>
 </div>
-<div id="status" class="status warn" role="status" aria-live="polite">Wallet not connected. Use a wallet that supports Base Sepolia.</div>
+<div class="status" role="status">Independent verifier result: MATCH. MetaMask submitted the anchor through a delegated smart-account execution; the nested zero-value execution contains the exact canonical payload.</div>
 </div>
 
 <div class="card">
@@ -51,132 +57,6 @@ a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 
 <p><strong>Never paste a seed phrase or private key into this page, ChatGPT, GitHub, or any form.</strong></p>
 </div>
 </main>
-<script>
-(() => {
-  const CHAIN_ID_HEX = '0x14a34';
-  const EVIDENCE_SINK = '0x000000000000000000000000000000000000dEaD';
-  const HASH = '39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14';
-  const PAYLOAD = 'MZ-KNOWLEDGE-V1:' + HASH;
-  const connectBtn = document.getElementById('connect');
-  const anchorBtn = document.getElementById('anchor');
-  const status = document.getElementById('status');
-  let account = null;
 
-  function setStatus(message, warning = false) {
-    status.textContent = message;
-    status.classList.toggle('warn', warning);
-  }
-
-  function utf8ToHex(value) {
-    const bytes = new TextEncoder().encode(value);
-    return '0x' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  async function ensureBaseSepolia() {
-    const current = await window.ethereum.request({ method: 'eth_chainId' });
-    if (current === CHAIN_ID_HEX) return;
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: CHAIN_ID_HEX }]
-      });
-    } catch (error) {
-      if (error && error.code === 4902) {
-        await window.ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: CHAIN_ID_HEX,
-            chainName: 'Base Sepolia',
-            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-            rpcUrls: ['https://sepolia.base.org'],
-            blockExplorerUrls: ['https://sepolia.basescan.org']
-          }]
-        });
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  async function connect() {
-    if (!window.ethereum) {
-      setStatus('No injected wallet detected. Open this page in a browser/wallet with an EVM provider.', true);
-      return;
-    }
-    connectBtn.disabled = true;
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      if (!accounts || !accounts[0]) throw new Error('No wallet account returned');
-      account = accounts[0];
-      await ensureBaseSepolia();
-      anchorBtn.disabled = false;
-      setStatus('Connected: ' + account + ' · Base Sepolia ready.');
-    } catch (error) {
-      setStatus('Wallet connection/network switch failed: ' + (error.message || error), true);
-    } finally {
-      connectBtn.disabled = false;
-    }
-  }
-
-  async function anchor() {
-    if (!window.ethereum || !account) {
-      setStatus('Connect a wallet first.', true);
-      return;
-    }
-    anchorBtn.disabled = true;
-    try {
-      await ensureBaseSepolia();
-      const txHash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: account,
-          to: EVIDENCE_SINK,
-          value: '0x0',
-          data: utf8ToHex(PAYLOAD)
-        }]
-      });
-      const url = 'https://sepolia.basescan.org/tx/' + txHash;
-      setStatus('Transaction submitted: ' + txHash + '. Waiting for confirmation…');
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.textContent = 'Open transaction on BaseScan';
-      status.appendChild(document.createTextNode(' '));
-      status.appendChild(link);
-
-      for (let i = 0; i < 60; i++) {
-        const receipt = await window.ethereum.request({
-          method: 'eth_getTransactionReceipt',
-          params: [txHash]
-        });
-        if (receipt) {
-          if (receipt.status === '0x1') {
-            setStatus('CONFIRMED · ' + txHash + ' · Send this transaction hash back to MyZubster/ChatGPT so the public receipt can be verified and recorded.');
-            const confirmedLink = document.createElement('a');
-            confirmedLink.href = url;
-            confirmedLink.target = '_blank';
-            confirmedLink.rel = 'noopener';
-            confirmedLink.textContent = ' BaseScan receipt';
-            status.appendChild(confirmedLink);
-          } else {
-            setStatus('Transaction was mined but failed: ' + txHash, true);
-          }
-          return;
-        }
-        await new Promise(resolve => setTimeout(resolve, 3000));
-      }
-      setStatus('Transaction submitted but confirmation is still pending. Check BaseScan: ' + txHash, true);
-    } catch (error) {
-      setStatus('Anchor transaction cancelled or failed: ' + (error.message || error), true);
-    } finally {
-      anchorBtn.disabled = false;
-    }
-  }
-
-  connectBtn.addEventListener('click', connect);
-  anchorBtn.addEventListener('click', anchor);
-})();
-</script>
 </body>
 </html>

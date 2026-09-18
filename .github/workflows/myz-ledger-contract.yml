@@ -15,17 +15,22 @@ on:
       - 'scripts/myz-ledger-ci-smoke.js'
       - 'tests/myzLedgerApiService.test.js'
       - 'tests/myzLedgerApiRoutes.test.js'
+      - 'tests/myzInternalPayments.test.js'
       - '.github/workflows/myz-ledger-contract.yml'
   pull_request:
     branches: [main]
     paths:
       - 'src/services/myzLedgerApiService.js'
       - 'src/routes/myzLedgerApiRoutes.js'
+      - 'src/routes/myzWalletRoutes.js'
+      - 'src/services/marketplaceMyzPaymentService.js'
+      - 'src/services/zorgaxMyzCheckoutService.js'
       - 'src/middleware/myzLedgerServiceAuth.js'
       - 'myz/**'
       - 'scripts/myz-ledger-ci-smoke.js'
       - 'tests/myzLedgerApiService.test.js'
       - 'tests/myzLedgerApiRoutes.test.js'
+      - 'tests/myzInternalPayments.test.js'
       - '.github/workflows/myz-ledger-contract.yml'
   workflow_dispatch:
 

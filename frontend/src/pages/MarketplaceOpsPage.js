@@ -19,6 +19,7 @@ function MarketplaceOpsPage() {
   const [loading, setLoading] = useState(true);
   const [moderationAvailable, setModerationAvailable] = useState(false);
   const [myzBalance, setMyzBalance] = useState(null);
+  const [myzHistory, setMyzHistory] = useState([]);
 
   const load = useCallback(async () => {
     setLoading(true); setStatus('');
@@ -26,10 +27,15 @@ function MarketplaceOpsPage() {
       const orderPayload = await requestJson('/api/marketplace/orders/mine');
       setOrders(Array.isArray(orderPayload.orders) ? orderPayload.orders : []);
       try {
-        const balancePayload = await requestJson('/api/myz/balance');
+        const [balancePayload, historyPayload] = await Promise.all([
+          requestJson('/api/myz/balance'),
+          requestJson('/api/myz/history?limit=20')
+        ]);
         setMyzBalance(balancePayload.balanceMyz ?? null);
+        setMyzHistory(Array.isArray(historyPayload.entries) ? historyPayload.entries : []);
       } catch (_error) {
         setMyzBalance(null);
+        setMyzHistory([]);
       }
       try {
         const reportPayload = await requestJson('/api/marketplace/moderation/reports?status=OPEN');
@@ -118,6 +124,13 @@ function MarketplaceOpsPage() {
       <h2>Le mie richieste e vendite</h2>
       <p>Qui gestisci gli scambi. Per gli ordini prezzati in MYZ, il pagamento trasferisce esclusivamente crediti MYZ interni nel ledger MyZubster: nessuna conversione EUR/crypto e nessun rimborso monetario implicito.</p>
       {myzBalance !== null && <p><strong>Saldo MYZ interno: {myzBalance} MYZ</strong></p>}
+      {myzHistory.length > 0 && <details style={{ margin:'10px 0' }}>
+        <summary>Storico MYZ recente</summary>
+        <ul>{myzHistory.map(entry => <li key={entry.entry_id}>
+          <strong>{entry.amount_myz} MYZ</strong> · {entry.entry_type}
+          {entry.transfer_id ? ` · ${entry.transfer_id}` : ''}
+        </li>)}</ul>
+      </details>}
       <button onClick={load}>Aggiorna</button>
     </header>
     {status && <p role="status">{status}</p>}

@@ -12,13 +12,16 @@ const marketplaceOrderSchema = new mongoose.Schema({
   snapshot: { title: { type: String, required: true }, price: { type: Number, default: 0 }, currency: { type: String, required: true }, exchangeMode: { type: String, required: true } },
   payment: {
     status: { type: String, enum: ['NOT_REQUIRED','AWAITING_PAYMENT','CONFIRMING','PAID','FAILED'], default: 'AWAITING_PAYMENT', index: true },
-    asset: { type: String, enum: ['XMR','BTC','ETH'] },
-    network: { type: String, enum: ['stagenet','testnet','sepolia'] },
+    asset: { type: String, enum: ['XMR','BTC','ETH','MYZ'] },
+    network: { type: String, enum: ['stagenet','testnet','sepolia','internal-ledger'] },
     expectedRecipient: String,
     expectedAtomicAmount: String,
     txId: { type: String, index: true },
     confirmations: { type: Number, min: 0, default: 0 },
     verifier: { type: String },
+    transferId: { type: String, index: true },
+    debitEntryId: String,
+    creditEntryId: String,
     verifiedAt: Date,
     failureCode: String
   },

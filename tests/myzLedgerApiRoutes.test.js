@@ -101,4 +101,47 @@ describe('MYZ ledger API routes', () => {
       .set(auth);
     expect(after.body.balanceMyz).toBe('74.5');
   });
+
+  test('creates an atomic idempotent transfer and exposes account history', async () => {
+    const auth = { Authorization: 'Bearer test-ledger-secret' };
+    const payload = {
+      from_account_id: 'marketplace:user:alice',
+      to_account_id: 'marketplace:user:bob',
+      amount_myz: '30',
+      transfer_id: 'MYZ-TEST-TRANSFER-1',
+      reference: { type: 'MARKETPLACE_ORDER', order_id: 'ORDER-1' }
+    };
+
+    const first = await request(app)
+      .post('/v1/myz/transfers')
+      .set(auth)
+      .set('Idempotency-Key', 'transfer-order-1')
+      .send(payload);
+    expect(first.status).toBe(201);
+    expect(first.body.asset).toBe('MYZ');
+    expect(first.body.on_chain).toBe(false);
+    expect(first.body.transfer_id).toBe('MYZ-TEST-TRANSFER-1');
+    expect(first.body.debit_entry.amount_myz).toBe('-30');
+    expect(first.body.credit_entry.amount_myz).toBe('30');
+    expect(first.body.from_balance_myz).toBe('70');
+    expect(first.body.to_balance_myz).toBe('30');
+
+    const replay = await request(app)
+      .post('/v1/myz/transfers')
+      .set(auth)
+      .set('Idempotency-Key', 'transfer-order-1')
+      .send(payload);
+    expect(replay.status).toBe(200);
+    expect(replay.body.duplicate).toBe(true);
+    expect(replay.body.debit_entry.entry_id).toBe(first.body.debit_entry.entry_id);
+    expect(replay.body.credit_entry.entry_id).toBe(first.body.credit_entry.entry_id);
+
+    const history = await request(app)
+      .get('/v1/myz/accounts/marketplace%3Auser%3Abob/history')
+      .set(auth);
+    expect(history.status).toBe(200);
+    expect(history.body.balanceMyz).toBe('30');
+    expect(history.body.entries[0].transfer_id).toBe('MYZ-TEST-TRANSFER-1');
+  });
+
 });

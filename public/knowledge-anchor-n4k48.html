@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>N4K48 Knowledge Anchor · MyZubster</title>
+<style>
+:root{color-scheme:dark;--bg:#071018;--panel:#0e1924;--line:#263747;--ink:#eff8ff;--muted:#9fb0be;--accent:#63e6be;--warn:#ffd166}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55}
+main{width:min(900px,calc(100% - 28px));margin:36px auto 70px}h1{font-size:clamp(2rem,6vw,4rem);line-height:1;margin:0 0 14px}h2{margin-top:32px}
+p,li{color:var(--muted)}code{word-break:break-all;color:var(--accent)}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin:18px 0}
+.row{display:flex;gap:12px;flex-wrap:wrap}.btn{min-height:44px;border:0;border-radius:999px;padding:11px 18px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#052017}.secondary{background:#172838;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:not-allowed}.status{border-left:4px solid var(--accent);padding:10px 14px;background:#0a151e;color:var(--ink);margin:16px 0}.warn{border-left-color:var(--warn)}
+a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 1fr;gap:8px 14px}dt{color:var(--muted)}dd{margin:0;min-width:0}
+@media(max-width:600px){dl{grid-template-columns:1fr}.row .btn{width:100%}}
+</style>
+</head>
+<body>
+<main>
+<p><strong>MYZUBSTER · PUBLIC EVIDENCE TOOL</strong></p>
+<h1>N4K48 Knowledge Anchor</h1>
+<p>This page prepares a zero-value Base Sepolia transaction that anchors the SHA-256 commitment for the public 18 September 2026 Daniel/H4X0R → Nicola/N4K48 knowledge-transfer snapshot.</p>
+
+<div class="card">
+<h2>Commitment</h2>
+<dl>
+<dt>Transfer ID</dt><dd><code>KNOWLEDGE-N4K48-2026-09-18-001</code></dd>
+<dt>Snapshot</dt><dd><code>8da7435d… → b9ac4e88…</code> · 30 commits</dd>
+<dt>SHA-256</dt><dd><code id="hash">39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14</code></dd>
+<dt>Payload</dt><dd><code id="payload">MZ-KNOWLEDGE-V1:39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14</code></dd>
+<dt>Network</dt><dd>Base Sepolia · chain ID 84532</dd>
+<dt>Value</dt><dd>0 ETH (gas only)</dd>
+</dl>
+<p><a href="https://github.com/MyZubster-Ecosystem/myzubster/blob/main/docs/evidence/knowledge-transfers/KNOWLEDGE-N4K48-2026-09-18-001.json" target="_blank" rel="noopener">Inspect canonical manifest</a> · <a href="https://github.com/nicolaususnicola-lgtm/myzubster-mvp/compare/8da7435ddc1b9ae8b2f5c2eea5debd2df4bc5f47...b9ac4e8801d65b84ef882baf78fa09ce5b6b5059" target="_blank" rel="noopener">Inspect GitHub snapshot</a></p>
+</div>
+
+<div class="card">
+<h2>Anchor with your wallet</h2>
+<p>Your private key never leaves your wallet. The transaction sends <strong>0 ETH</strong> to your own address and stores only the commitment payload in transaction calldata. You still pay Base Sepolia testnet gas.</p>
+<div class="row">
+<button id="connect" class="btn secondary" type="button">1 · Connect wallet</button>
+<button id="anchor" class="btn primary" type="button" disabled>2 · Anchor on Base Sepolia</button>
+</div>
+<div id="status" class="status warn" role="status" aria-live="polite">Wallet not connected. Use a wallet that supports Base Sepolia.</div>
+</div>
+
+<div class="card">
+<h2>Evidence boundary</h2>
+<p>A confirmed transaction proves integrity/timestamp evidence for this manifest. It does not independently prove authorship of every idea, learning or mastery, scientific validity, commercial value or legal ownership. Nicola's explicit recipient attestation remains a separate evidence step.</p>
+<p><strong>Never paste a seed phrase or private key into this page, ChatGPT, GitHub, or any form.</strong></p>
+</div>
+</main>
+<script>
+(() => {
+  const CHAIN_ID_HEX = '0x14a34';
+  const HASH = '39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14';
+  const PAYLOAD = 'MZ-KNOWLEDGE-V1:' + HASH;
+  const connectBtn = document.getElementById('connect');
+  const anchorBtn = document.getElementById('anchor');
+  const status = document.getElementById('status');
+  let account = null;
+
+  function setStatus(message, warning = false) {
+    status.textContent = message;
+    status.classList.toggle('warn', warning);
+  }
+
+  function utf8ToHex(value) {
+    const bytes = new TextEncoder().encode(value);
+    return '0x' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async function ensureBaseSepolia() {
+    const current = await window.ethereum.request({ method: 'eth_chainId' });
+    if (current === CHAIN_ID_HEX) return;
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: CHAIN_ID_HEX }]
+      });
+    } catch (error) {
+      if (error && error.code === 4902) {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: CHAIN_ID_HEX,
+            chainName: 'Base Sepolia',
+            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+            rpcUrls: ['https://sepolia.base.org'],
+            blockExplorerUrls: ['https://sepolia.basescan.org']
+          }]
+        });
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async function connect() {
+    if (!window.ethereum) {
+      setStatus('No injected wallet detected. Open this page in a browser/wallet with an EVM provider.', true);
+      return;
+    }
+    connectBtn.disabled = true;
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (!accounts || !accounts[0]) throw new Error('No wallet account returned');
+      account = accounts[0];
+      await ensureBaseSepolia();
+      anchorBtn.disabled = false;
+      setStatus('Connected: ' + account + ' · Base Sepolia ready.');
+    } catch (error) {
+      setStatus('Wallet connection/network switch failed: ' + (error.message || error), true);
+    } finally {
+      connectBtn.disabled = false;
+    }
+  }
+
+  async function anchor() {
+    if (!window.ethereum || !account) {
+      setStatus('Connect a wallet first.', true);
+      return;
+    }
+    anchorBtn.disabled = true;
+    try {
+      await ensureBaseSepolia();
+      const txHash = await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [{
+          from: account,
+          to: account,
+          value: '0x0',
+          data: utf8ToHex(PAYLOAD)
+        }]
+      });
+      const url = 'https://sepolia.basescan.org/tx/' + txHash;
+      setStatus('Transaction submitted: ' + txHash + '. Waiting for confirmation…');
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = 'Open transaction on BaseScan';
+      status.appendChild(document.createTextNode(' '));
+      status.appendChild(link);
+
+      for (let i = 0; i < 60; i++) {
+        const receipt = await window.ethereum.request({
+          method: 'eth_getTransactionReceipt',
+          params: [txHash]
+        });
+        if (receipt) {
+          if (receipt.status === '0x1') {
+            setStatus('CONFIRMED · ' + txHash + ' · Send this transaction hash back to MyZubster/ChatGPT so the public receipt can be verified and recorded.');
+            const confirmedLink = document.createElement('a');
+            confirmedLink.href = url;
+            confirmedLink.target = '_blank';
+            confirmedLink.rel = 'noopener';
+            confirmedLink.textContent = ' BaseScan receipt';
+            status.appendChild(confirmedLink);
+          } else {
+            setStatus('Transaction was mined but failed: ' + txHash, true);
+          }
+          return;
+        }
+        await new Promise(resolve => setTimeout(resolve, 3000));
+      }
+      setStatus('Transaction submitted but confirmation is still pending. Check BaseScan: ' + txHash, true);
+    } catch (error) {
+      setStatus('Anchor transaction cancelled or failed: ' + (error.message || error), true);
+    } finally {
+      anchorBtn.disabled = false;
+    }
+  }
+
+  connectBtn.addEventListener('click', connect);
+  anchorBtn.addEventListener('click', anchor);
+})();
+</script>
+</body>
+</html>

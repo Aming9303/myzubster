@@ -155,6 +155,7 @@ const MARKETPLACE_DEMO_CATEGORIES = [
   ['event_equipment', 'Event equipment'],
   ['tools', 'Tools'],
   ['services', 'Services'],
+  ['knowledge', 'Knowledge'],
   ['volunteering', 'Volunteering'],
   ['pet_adoption', 'Pet adoption'],
   ['pet_lost_found', 'Lost & found pets'],

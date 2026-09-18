@@ -108,28 +108,11 @@ exports.addCheckoutPayment = async (req, res) => {
       return res.status(400).json({ error: 'Payment method must be MYZ or XMR' });
 
     if (method === 'MYZ') {
-      const receiverId = req.body?.sellerId || req.body?.receiverId;
-      if (!receiverId) return res.status(400).json({ error: 'sellerId is required for MYZ checkout' });
-      if (String(req.user?.userId || '') !== String(userId) && req.user?.role !== 'admin') return res.status(403).json({ error: 'userId must match authenticated user' });
-      const idempotencyKey = String(req.headers['idempotency-key'] || '').trim();
-      if (!idempotencyKey) return res.status(400).json({ error: 'Idempotency-Key is required' });
-      const transfer = myzLedgerApiService.transfer({
-        from_account_id:myzAccountForUser(userId),
-        to_account_id:myzAccountForUser(receiverId),
-        amount_myz:String(amount),
-        transfer_id:`MYZ-MARKETPLACE-LEGACY-${orderId}`,
-        idempotency_key:`legacy-marketplace-order:${orderId}:myz`,
-        reference:{ type:'LEGACY_MARKETPLACE_ORDER', order_id:String(orderId), client_idempotency_key:idempotencyKey },
-        note:`Legacy Marketplace checkout for order ${orderId}`
-      });
-      return res.json({
-        message:'MYZ checkout recorded in canonical ledger',
-        orderId, amount:String(amount), currency:'MYZ',
-        transferId:transfer.transferId,
-        debitEntryId:transfer.debitEntry.entry_id,
-        creditEntryId:transfer.creditEntry.entry_id,
-        remainingBalance:transfer.fromBalanceMyz,
-        duplicate:transfer.duplicate
+      return res.status(410).json({
+        error:'Legacy MYZ checkout is disabled',
+        code:'MYZ_CHECKOUT_MOVED',
+        next:'/api/marketplace/orders/:id/payment/myz',
+        message:'Usa il pagamento MYZ dell’ordine Marketplace: il dashboard legacy non è una fonte contabile MYZ.'
       });
     }
 

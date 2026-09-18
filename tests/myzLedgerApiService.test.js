@@ -123,6 +123,26 @@ describe('MyzLedgerApiService', () => {
     } finally { fs.rmSync(dir, { recursive: true, force: true }); }
   });
 
+  test('rejects debit idempotency replay when the semantic reference changes', () => {
+    const { dir, file } = tempLedger([entry({ entry_id: 'A', amount_myz: '100' })]);
+    try {
+      const service = new MyzLedgerApiService({ ledgerPath: file, allowedAccountPrefixes: 'marketplace:user:,contributor:' });
+      service.appendDebit({
+        account_id: 'marketplace:user:alice',
+        amount_myz: '-10',
+        idempotency_key: 'utility-key',
+        reference: { type: 'MYZ_UTILITY_REDEMPTION', offer_id: 'offer-a' }
+      });
+      expect(() => service.appendDebit({
+        account_id: 'marketplace:user:alice',
+        amount_myz: '-10',
+        idempotency_key: 'utility-key',
+        reference: { type: 'MYZ_UTILITY_REDEMPTION', offer_id: 'offer-b' }
+      })).toThrow('Idempotency key already exists with a different ledger payload');
+      expect(service.getBalance('marketplace:user:alice').balanceMyz).toBe('90');
+    } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+  });
+
   test('fails closed on insufficient balance', () => {
     const { dir, file } = tempLedger([entry({ entry_id: 'A', amount_myz: '10' })]);
     try {

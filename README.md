@@ -63,6 +63,20 @@ MyZubster connects documented knowledge to a learning and mentorship pathway: **
 
 **Pilot pathway:** Nicola / KF-006 · Yassen · Bologna Sound (`PLANNED`). Human work, Zorgax assistance and evidence remain distinguishable.
 
+### 🧪 Live pilot — Nicola / N4K48
+
+Nicola's independent MyZubster MVP is a **public, interactive pilot** showing how a real participant is connecting comics, evidence-first AI, economic provenance, an internal ledger experiment, derived balances and asset/revenue views.
+
+<p align="center">
+  <a href="https://myzubster-mvp.onrender.com/"><strong>🌐 Open Nicola / N4K48 Live Pilot</strong></a>
+  ·
+  <a href="https://myzubster-mvp.onrender.com/api/comics"><strong>🎨 Open Nicola Comics API</strong></a>
+</p>
+
+**What this demonstrates:** a participant-owned public MVP, a live Comics catalog, creator/provenance metadata and an inspectable path from experimentation to the wider MyZubster ecosystem.
+
+> **Evidence boundary:** entries marked `NFT_CANDIDATE` are proposals/candidates only. They are not claimed as minted NFTs unless contract address, token ID and transaction hash are independently verifiable. Nicola's experimental ledger is also distinct from the canonical MYZ accounting ledger in this repository until an explicit integration is implemented.
+
 **Explore:** [Learn / Share with Zorgax](https://www.myzubster.com/learn-with-zorgax.html) · [Knowledge Mentorship](docs/KNOWLEDGE-MENTORSHIP-PILOTS.md) · [Public Journey](docs/MYZUBSTER-PUBLIC-JOURNEY.md) · [KF-006](https://www.myzubster.com/knowledge-kf-006.html)
 
 > A learning or mentoring interaction does not by itself prove competence, safety, scientific validity or institutional endorsement.

@@ -58,7 +58,7 @@ class MyzLedgerApiService {
   constructor(options = {}) {
     this.ledgerPath = options.ledgerPath || process.env.MYZ_LEDGER_PATH || DEFAULT_LEDGER_PATH;
     this.fs = options.fs || fs;
-    const configuredPrefixes = options.allowedAccountPrefixes || process.env.MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES || 'marketplace:user:';
+    const configuredPrefixes = options.allowedAccountPrefixes || process.env.MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES || 'marketplace:user:,zorgax:system:';
     this.allowedAccountPrefixes = String(configuredPrefixes).split(',').map(value => value.trim()).filter(Boolean);
   }
 
@@ -99,6 +99,39 @@ class MyzLedgerApiService {
       accountId: normalized,
       balanceMyz: formatUnits(this.balanceFor(ledger, normalized)),
       revision: revisionFor(ledger)
+    };
+  }
+
+  getHistory(input = {}) {
+    const accountId = this.assertAuthorizedAccount(input.accountId || input.account_id);
+    const requestedLimit = Number(input.limit);
+    const limit = Number.isSafeInteger(requestedLimit) && requestedLimit > 0 ? Math.min(requestedLimit, 250) : 100;
+    const ledger = this.readLedger();
+    const reversedBy = new Map();
+    for (const candidate of ledger.entries) {
+      if (candidate?.entry_type === 'REVERSAL' && candidate?.status === 'RECORDED' && candidate?.reverses_entry_id) {
+        reversedBy.set(candidate.reverses_entry_id, candidate);
+      }
+    }
+    const entries = ledger.entries
+      .filter(candidate => candidate?.account_id === accountId)
+      .slice()
+      .reverse()
+      .slice(0, limit)
+      .map(candidate => ({
+        ...candidate,
+        reversed: reversedBy.has(candidate.entry_id),
+        reversalEntryId: reversedBy.get(candidate.entry_id)?.entry_id || null
+      }));
+    return {
+      schema: 'myzubster-myz-ledger-history/v1',
+      asset: 'MYZ',
+      assetType: 'internal-reward-accounting-unit',
+      onChain: false,
+      accountId,
+      balanceMyz: formatUnits(this.balanceFor(ledger, accountId)),
+      revision: revisionFor(ledger),
+      entries
     };
   }
 
@@ -158,6 +191,132 @@ class MyzLedgerApiService {
       try { if (fd !== undefined) this.fs.closeSync(fd); } catch (_) {}
       try { this.fs.unlinkSync(lockPath); } catch (_) {}
     }
+  }
+
+  transfer(input = {}) {
+    const fromAccountId = this.assertAuthorizedAccount(input.from_account_id || input.fromAccountId);
+    const toAccountId = this.assertAuthorizedAccount(input.to_account_id || input.toAccountId);
+    if (fromAccountId === toAccountId) {
+      throw Object.assign(new Error('MYZ self-transfer is not allowed'), { code: 'MYZ_SELF_TRANSFER_FORBIDDEN' });
+    }
+
+    const amountText = String(input.amount_myz ?? input.amountMyz ?? '').trim();
+    const amount = parseUnits(amountText);
+    if (amount <= 0n) {
+      throw Object.assign(new Error('MYZ transfer amount must be positive'), { code: 'INVALID_MYZ_LEDGER_TRANSFER' });
+    }
+
+    const idempotencyKey = String(input.idempotency_key || input.idempotencyKey || '').trim();
+    if (!idempotencyKey) {
+      throw Object.assign(new Error('idempotency_key is required'), { code: 'INVALID_MYZ_LEDGER_TRANSFER' });
+    }
+
+    const requestedTransferId = String(input.transfer_id || input.transferId || '').trim();
+    const transferId = requestedTransferId || `MYZ-TRANSFER-${crypto.createHash('sha256').update(idempotencyKey).digest('hex').slice(0, 32)}`;
+    const reference = input.reference && typeof input.reference === 'object' ? input.reference : {};
+    const evidence = Array.isArray(input.evidence) ? input.evidence.map(String) : [];
+
+    return this.withWriteLock(() => {
+      const ledger = this.readLedger();
+      const replayEntries = ledger.entries.filter(entry => entry?.reference?.idempotency_key === idempotencyKey);
+      if (replayEntries.length) {
+        const debit = replayEntries.find(entry => entry?.entry_type === 'INTERNAL_TRANSFER_DEBIT');
+        const credit = replayEntries.find(entry => entry?.entry_type === 'INTERNAL_TRANSFER_CREDIT');
+        const samePayload = debit && credit &&
+          debit.account_id === fromAccountId &&
+          credit.account_id === toAccountId &&
+          parseUnits(debit.amount_myz) === -amount &&
+          parseUnits(credit.amount_myz) === amount &&
+          String(debit.transfer_id || debit.reference?.transfer_id || '') === transferId &&
+          String(credit.transfer_id || credit.reference?.transfer_id || '') === transferId;
+        if (!samePayload) {
+          throw Object.assign(new Error('Idempotency key already exists with a different ledger payload'), { code: 'MYZ_LEDGER_IDEMPOTENCY_CONFLICT' });
+        }
+        return {
+          transferId,
+          debitEntry: debit,
+          creditEntry: credit,
+          duplicate: true,
+          fromBalanceMyz: formatUnits(this.balanceFor(ledger, fromAccountId)),
+          toBalanceMyz: formatUnits(this.balanceFor(ledger, toAccountId)),
+          revision: revisionFor(ledger)
+        };
+      }
+
+      const transferConflict = ledger.entries.find(entry =>
+        String(entry?.transfer_id || entry?.reference?.transfer_id || '') === transferId
+      );
+      if (transferConflict) {
+        throw Object.assign(new Error('transfer_id already exists with a different idempotency key'), { code: 'MYZ_LEDGER_TRANSFER_CONFLICT' });
+      }
+
+      const balance = this.balanceFor(ledger, fromAccountId);
+      if (balance - amount < 0n) {
+        throw Object.assign(new Error('Insufficient canonical MYZ balance'), { code: 'INSUFFICIENT_MYZ_BALANCE' });
+      }
+
+      const timestamp = new Date().toISOString();
+      const debitEntry = {
+        entry_id: `MYZ-LEDGER-${crypto.randomUUID()}`,
+        timestamp,
+        account_id: fromAccountId,
+        amount_myz: formatUnits(-amount),
+        entry_type: 'INTERNAL_TRANSFER_DEBIT',
+        transfer_id: transferId,
+        reference: {
+          ...reference,
+          idempotency_key: idempotencyKey,
+          transfer_id: transferId,
+          counterparty_account_id: toAccountId
+        },
+        status: 'RECORDED',
+        evidence,
+        reverses_entry_id: null,
+        note: String(input.debit_note || input.note || `Internal MYZ transfer to ${toAccountId}`)
+      };
+      const creditEntry = {
+        entry_id: `MYZ-LEDGER-${crypto.randomUUID()}`,
+        timestamp,
+        account_id: toAccountId,
+        amount_myz: formatUnits(amount),
+        entry_type: 'INTERNAL_TRANSFER_CREDIT',
+        transfer_id: transferId,
+        reference: {
+          ...reference,
+          idempotency_key: idempotencyKey,
+          transfer_id: transferId,
+          counterparty_account_id: fromAccountId
+        },
+        status: 'RECORDED',
+        evidence,
+        reverses_entry_id: null,
+        note: String(input.credit_note || input.note || `Internal MYZ transfer from ${fromAccountId}`)
+      };
+
+      ledger.entries.push(debitEntry, creditEntry);
+      const directory = path.dirname(this.ledgerPath);
+      const temp = path.join(directory, `.${path.basename(this.ledgerPath)}.${process.pid}.${crypto.randomUUID()}.tmp`);
+      const serialized = `${JSON.stringify(ledger, null, 2)}\n`;
+      this.fs.writeFileSync(temp, serialized, { encoding: 'utf8', flag: 'wx' });
+      this.fs.renameSync(temp, this.ledgerPath);
+
+      const persisted = this.readLedger();
+      const persistedDebit = persisted.entries.find(candidate => candidate.entry_id === debitEntry.entry_id);
+      const persistedCredit = persisted.entries.find(candidate => candidate.entry_id === creditEntry.entry_id);
+      if (!persistedDebit || !persistedCredit || persistedDebit.status !== 'RECORDED' || persistedCredit.status !== 'RECORDED') {
+        throw Object.assign(new Error('Canonical transfer persistence could not be verified'), { code: 'MYZ_LEDGER_PERSISTENCE_UNVERIFIED' });
+      }
+
+      return {
+        transferId,
+        debitEntry: persistedDebit,
+        creditEntry: persistedCredit,
+        duplicate: false,
+        fromBalanceMyz: formatUnits(this.balanceFor(persisted, fromAccountId)),
+        toBalanceMyz: formatUnits(this.balanceFor(persisted, toAccountId)),
+        revision: revisionFor(persisted)
+      };
+    });
   }
 
   appendDebit(input = {}) {

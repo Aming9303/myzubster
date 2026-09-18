@@ -52,13 +52,21 @@ A successful purchase transfers MYZ from `marketplace:user:<user>` to the config
 
 ## Account namespaces
 
-The canonical service must authorize both user and Zorgax internal accounts when Zorgax MYZ checkout is enabled:
+The canonical service authorizes the user, Zorgax internal, and historical contributor account namespaces used by current MYZ flows:
 
 ```text
-MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES=marketplace:user:,zorgax:system:
+MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES=marketplace:user:,zorgax:system:,contributor:
 ```
 
 A custom `ZORGAX_MYZ_ACCOUNT_ID` must belong to one of the explicitly authorized prefixes.
+
+## Legacy Payment Dashboard
+
+The historical Payment Dashboard used to add MongoDB `myzCredit` rows derived from a default EUR→MYZ rate and subtract MongoDB utility redemptions from the displayed MYZ balance. That shadow balance is no longer spendable or authoritative.
+
+New Stripe verification stores only the external payment record. It does not create MYZ, `MYZ_PER_EUR` is not used as a live pricing policy, and utility purchases now write the debit to the canonical ledger first. MongoDB redemption rows remain only as fulfillment/receipt metadata and keep the canonical `ledgerEntryId`.
+
+Historical conversion/credit rows are exposed as legacy audit data but excluded from the spendable balance. They are not silently migrated because mapping them into canonical MYZ would require an explicit policy decision.
 
 ## User-facing balance/history
 

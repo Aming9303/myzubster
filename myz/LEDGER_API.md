@@ -17,10 +17,10 @@ If `MYZ_LEDGER_SERVICE_TOKEN` is missing, the API returns `503` rather than runn
 Authorized account namespaces are controlled by:
 
 ```text
-MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES=marketplace:user:
+MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES=marketplace:user:,zorgax:system:
 ```
 
-Multiple prefixes may be comma-separated. The default permits only `marketplace:user:` accounts.
+Multiple prefixes may be comma-separated. The default permits `marketplace:user:` and `zorgax:system:` so internal user spending and the Zorgax internal account can share the same canonical ledger. Production should narrow this list to the namespaces actually used.
 
 ## Storage
 
@@ -55,6 +55,38 @@ Response:
 Balance follows the canonical rule: sum `RECORDED` entries for the account, exclude `REVERSAL` entries themselves, and exclude entries neutralized by a recorded reversal.
 
 MYZ arithmetic uses fixed 18-decimal integer units internally; no JavaScript floating-point arithmetic is used for canonical balance or debit checks.
+
+## Account history
+
+```text
+GET /api/v1/myz/accounts/:accountId/history?limit=100
+```
+
+Returns canonical entries newest-first plus the current exact MYZ balance. The response explicitly identifies MYZ as `internal-reward-accounting-unit` with `onChain=false`.
+
+## Atomic internal transfer
+
+```text
+POST /api/v1/myz/transfers
+Idempotency-Key: <stable request key>
+```
+
+Example:
+
+```json
+{
+  "from_account_id": "marketplace:user:buyer-id",
+  "to_account_id": "marketplace:user:seller-id",
+  "amount_myz": "250",
+  "transfer_id": "MYZ-MARKETPLACE-order-id",
+  "reference": {
+    "type": "MARKETPLACE_ORDER",
+    "order_id": "order-id"
+  }
+}
+```
+
+A successful transfer appends one `INTERNAL_TRANSFER_DEBIT` and one `INTERNAL_TRANSFER_CREDIT` with the same `transfer_id` while holding the canonical write lock, then atomically replaces the ledger file. The debit is refused if it would make the source balance negative. Exact retries return the original pair; reuse of the idempotency key or transfer ID for another payload is rejected.
 
 ## Read-only evidence lookup
 

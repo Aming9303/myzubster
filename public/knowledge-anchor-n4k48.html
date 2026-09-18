@@ -29,6 +29,7 @@ a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 
 <dt>SHA-256</dt><dd><code id="hash">39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14</code></dd>
 <dt>Payload</dt><dd><code id="payload">MZ-KNOWLEDGE-V1:39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14</code></dd>
 <dt>Network</dt><dd>Base Sepolia · chain ID 84532</dd>
+<dt>Evidence sink</dt><dd><code>0x000000000000000000000000000000000000dEaD</code></dd>
 <dt>Value</dt><dd>0 ETH (gas only)</dd>
 </dl>
 <p><a href="https://github.com/MyZubster-Ecosystem/myzubster/blob/main/docs/evidence/knowledge-transfers/KNOWLEDGE-N4K48-2026-09-18-001.json" target="_blank" rel="noopener">Inspect canonical manifest</a> · <a href="https://github.com/nicolaususnicola-lgtm/myzubster-mvp/compare/8da7435ddc1b9ae8b2f5c2eea5debd2df4bc5f47...b9ac4e8801d65b84ef882baf78fa09ce5b6b5059" target="_blank" rel="noopener">Inspect GitHub snapshot</a></p>
@@ -36,7 +37,7 @@ a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 
 
 <div class="card">
 <h2>Anchor with your wallet</h2>
-<p>Your private key never leaves your wallet. The transaction sends <strong>0 ETH</strong> to your own address and stores only the commitment payload in transaction calldata. You still pay Base Sepolia testnet gas.</p>
+<p>Your private key never leaves your wallet. The transaction sends <strong>0 ETH</strong> to a fixed evidence sink address and stores only the commitment payload in transaction calldata. You still pay Base Sepolia testnet gas. No funds are transferred.</p>
 <div class="row">
 <button id="connect" class="btn secondary" type="button">1 · Connect wallet</button>
 <button id="anchor" class="btn primary" type="button" disabled>2 · Anchor on Base Sepolia</button>
@@ -53,6 +54,7 @@ a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 
 <script>
 (() => {
   const CHAIN_ID_HEX = '0x14a34';
+  const EVIDENCE_SINK = '0x000000000000000000000000000000000000dEaD';
   const HASH = '39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14';
   const PAYLOAD = 'MZ-KNOWLEDGE-V1:' + HASH;
   const connectBtn = document.getElementById('connect');
@@ -128,7 +130,7 @@ a{color:var(--accent)}dl{display:grid;grid-template-columns:minmax(120px,220px) 
         method: 'eth_sendTransaction',
         params: [{
           from: account,
-          to: account,
+          to: EVIDENCE_SINK,
           value: '0x0',
           data: utf8ToHex(PAYLOAD)
         }]

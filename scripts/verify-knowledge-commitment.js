@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const PREFIX = 'MZ-KNOWLEDGE-V1:';
 const SCHEMA = 'myzubster.knowledge-transfer.v1';
 const EXPECTED_CHAIN_ID = 84532n;
+const EVIDENCE_SINK = '0x000000000000000000000000000000000000dead';
 
 function canonicalize(value) {
   if (Array.isArray(value)) return value.map(canonicalize);
@@ -52,6 +53,9 @@ async function verifyTransaction(manifest, txId) {
   if (!receipt) throw new Error('Transaction receipt not found');
   if (receipt.status !== 1) throw new Error('Transaction was not successful');
   if (tx.value !== 0n) throw new Error('Knowledge anchor transaction must have 0 ETH value');
+  if (String(tx.to || '').toLowerCase() !== EVIDENCE_SINK) {
+    throw new Error(`Unexpected evidence sink: ${tx.to}`);
+  }
 
   let decoded;
   try {
@@ -123,6 +127,7 @@ module.exports = {
   PREFIX,
   SCHEMA,
   EXPECTED_CHAIN_ID,
+  EVIDENCE_SINK,
   canonicalize,
   canonicalJson,
   sha256,

@@ -16,8 +16,8 @@ function normalizeConfiguredPrice(value) {
 
 function defaultPriceMap() {
   return {
-    pro: normalizeConfiguredPrice(process.env.ZORGAX_PRO_PRICE_MYZ),
-    developer: normalizeConfiguredPrice(process.env.ZORGAX_DEVELOPER_PRICE_MYZ)
+    pro: process.env.ZORGAX_PRO_PRICE_MYZ,
+    developer: process.env.ZORGAX_DEVELOPER_PRICE_MYZ
   };
 }
 
@@ -35,7 +35,12 @@ function createZorgaxMyzCheckoutService({
 } = {}) {
   function getPlanPrice(planId) {
     const plan = requirePaidPlan(planId);
-    const amountMyz = normalizeConfiguredPrice(priceByPlan?.[plan.id]);
+    let amountMyz;
+    try {
+      amountMyz = normalizeConfiguredPrice(priceByPlan?.[plan.id]);
+    } catch (error) {
+      throw Object.assign(new Error(`Prezzo MYZ non valido per Zorgax ${plan.name}`), { code: 'ZORGAX_MYZ_PRICE_INVALID', cause:error });
+    }
     if (!amountMyz) {
       throw Object.assign(new Error(`Prezzo MYZ non configurato per Zorgax ${plan.name}`), { code: 'ZORGAX_MYZ_PRICE_NOT_CONFIGURED' });
     }
@@ -51,8 +56,12 @@ function createZorgaxMyzCheckoutService({
       redeemable: false,
       plans: ['pro', 'developer'].map(id => {
         const plan = requirePaidPlan(id);
-        const amountMyz = normalizeConfiguredPrice(priceByPlan?.[id]);
-        return { id:plan.id, name:plan.name, amountMyz, available:Boolean(amountMyz) };
+        try {
+          const amountMyz = normalizeConfiguredPrice(priceByPlan?.[id]);
+          return { id:plan.id, name:plan.name, amountMyz, available:Boolean(amountMyz), configurationError:false };
+        } catch (_error) {
+          return { id:plan.id, name:plan.name, amountMyz:null, available:false, configurationError:true };
+        }
       })
     };
   }

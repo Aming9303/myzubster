@@ -18,12 +18,19 @@ function MarketplaceOpsPage() {
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(true);
   const [moderationAvailable, setModerationAvailable] = useState(false);
+  const [myzBalance, setMyzBalance] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true); setStatus('');
     try {
       const orderPayload = await requestJson('/api/marketplace/orders/mine');
       setOrders(Array.isArray(orderPayload.orders) ? orderPayload.orders : []);
+      try {
+        const balancePayload = await requestJson('/api/myz/balance');
+        setMyzBalance(balancePayload.balanceMyz ?? null);
+      } catch (_error) {
+        setMyzBalance(null);
+      }
       try {
         const reportPayload = await requestJson('/api/marketplace/moderation/reports?status=OPEN');
         setReports(Array.isArray(reportPayload.reports) ? reportPayload.reports : []);
@@ -57,6 +64,29 @@ function MarketplaceOpsPage() {
     } catch (error) { setStatus(error.message); }
   }
 
+  async function payWithMyz(order) {
+    const amount = Number(order.snapshot?.price || 0) * Number(order.quantity || 1);
+    if (!window.confirm(`Pagare ${amount} MYZ interni per questo ordine? MYZ non viene convertito in EUR o crypto.`)) return;
+    const storageKey = `myz-order-idempotency:${order._id}`;
+    let key = localStorage.getItem(storageKey);
+    if (!key) {
+      key = `marketplace-myz-${order._id}-${globalThis.crypto?.randomUUID?.() || Date.now()}`;
+      localStorage.setItem(storageKey, key);
+    }
+    try {
+      const payload = await requestJson(`/api/marketplace/orders/${order._id}/payment/myz`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Idempotency-Key':key },
+        body:'{}'
+      });
+      const receipt = payload.receipt || {};
+      setStatus(`Pagamento MYZ registrato · transfer_id ${receipt.transferId || 'disponibile nella ricevuta'}`);
+      await load();
+    } catch (error) {
+      setStatus(error.message);
+    }
+  }
+
   async function leaveReview(order) {
     const score = Number(window.prompt('Punteggio 1-5', '5'));
     if (!Number.isInteger(score) || score < 1 || score > 5) return;
@@ -86,7 +116,8 @@ function MarketplaceOpsPage() {
     <header style={{ marginBottom: 20 }}>
       <div style={{ fontSize: 13, letterSpacing: 1.4, opacity: .7 }}>MARKETPLACE OPERATIONS</div>
       <h2>Le mie richieste e vendite</h2>
-      <p>Qui gestisci gli scambi non-custodial. Nessuna azione in questa pagina trasferisce denaro o conferma un pagamento.</p>
+      <p>Qui gestisci gli scambi. Per gli ordini prezzati in MYZ, il pagamento trasferisce esclusivamente crediti MYZ interni nel ledger MyZubster: nessuna conversione EUR/crypto e nessun rimborso monetario implicito.</p>
+      {myzBalance !== null && <p><strong>Saldo MYZ interno: {myzBalance} MYZ</strong></p>}
       <button onClick={load}>Aggiorna</button>
     </header>
     {status && <p role="status">{status}</p>}
@@ -97,8 +128,10 @@ function MarketplaceOpsPage() {
       {orders.map(order => <article key={order._id} style={{ border: '1px solid rgba(127,127,127,.3)', borderRadius: 12, padding: 16 }}>
         <strong>{order.snapshot?.title || order.listingId?.title || 'Annuncio'}</strong>
         <p>Stato: {order.status} · Quantità: {order.quantity}</p>
-        <p>{order.snapshot?.currency === 'FREE' ? 'Gratis' : order.snapshot?.currency === 'BARTER' ? 'Baratto' : `${order.snapshot?.price || 0} ${order.snapshot?.currency || ''}`}</p>
+        <p>{order.snapshot?.currency === 'FREE' ? 'Gratis' : order.snapshot?.currency === 'BARTER' ? 'Baratto' : `${Number(order.snapshot?.price || 0) * Number(order.quantity || 1)} ${order.snapshot?.currency || ''}`}</p>
+        {order.payment?.status && <p>Pagamento: <strong>{order.payment.status}</strong>{order.payment.transferId ? ` · transfer_id ${order.payment.transferId}` : ''}</p>}
         <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+          {order.status === 'ACCEPTED' && order.viewerRole === 'BUYER' && String(order.snapshot?.currency || '').toUpperCase() === 'MYZ' && order.payment?.status !== 'PAID' && <button onClick={()=>payWithMyz(order)}>Paga con MYZ</button>}
           {order.status === 'REQUESTED' && <><button onClick={()=>updateOrder(order,'ACCEPTED')}>Accetta</button><button onClick={()=>updateOrder(order,'REJECTED')}>Rifiuta</button><button onClick={()=>updateOrder(order,'CANCELLED')}>Annulla</button></>}
           {order.status === 'ACCEPTED' && <><button onClick={()=>updateOrder(order,'COMPLETED')}>Completa</button><button onClick={()=>updateOrder(order,'CANCELLED')}>Annulla</button></>}
           {order.status === 'COMPLETED' && <button onClick={()=>leaveReview(order)}>Lascia recensione</button>}

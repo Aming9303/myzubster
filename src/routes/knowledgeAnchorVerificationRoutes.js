@@ -63,7 +63,11 @@ router.get('/n4k48/:txId', async (req, res) => {
         from: tx.from,
         to: tx.to,
         valueWei: tx.value.toString(),
-        dataUtf8: decodedData
+        dataHex: tx.data,
+        dataUtf8: decodedData,
+        type: tx.type,
+        accessList: tx.accessList || null,
+        authorizationList: tx.authorizationList || null
       },
       checks
     });

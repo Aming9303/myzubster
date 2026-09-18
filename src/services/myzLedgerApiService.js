@@ -58,7 +58,7 @@ class MyzLedgerApiService {
   constructor(options = {}) {
     this.ledgerPath = options.ledgerPath || process.env.MYZ_LEDGER_PATH || DEFAULT_LEDGER_PATH;
     this.fs = options.fs || fs;
-    const configuredPrefixes = options.allowedAccountPrefixes || process.env.MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES || 'marketplace:user:,zorgax:system:';
+    const configuredPrefixes = options.allowedAccountPrefixes || process.env.MYZ_LEDGER_ALLOWED_ACCOUNT_PREFIXES || 'marketplace:user:,zorgax:system:,contributor:';
     this.allowedAccountPrefixes = String(configuredPrefixes).split(',').map(value => value.trim()).filter(Boolean);
   }
 
@@ -333,11 +333,19 @@ class MyzLedgerApiService {
     const amount = parseUnits(amountText);
     if (amount >= 0n) throw Object.assign(new Error('ADJUSTMENT_DEBIT amount_myz must be negative'), { code: 'INVALID_MYZ_LEDGER_ENTRY' });
 
+    const reference = input.reference && typeof input.reference === 'object' ? input.reference : {};
+
     return this.withWriteLock(() => {
       const ledger = this.readLedger();
       const duplicate = ledger.entries.find(entry => entry?.reference?.idempotency_key === idempotencyKey);
       if (duplicate) {
-        const samePayload = duplicate.account_id === accountId && parseUnits(duplicate.amount_myz) === amount && duplicate.entry_type === 'ADJUSTMENT_DEBIT';
+        const replayReference = { ...(duplicate.reference || {}) };
+        delete replayReference.idempotency_key;
+        const samePayload =
+          duplicate.account_id === accountId &&
+          parseUnits(duplicate.amount_myz) === amount &&
+          duplicate.entry_type === 'ADJUSTMENT_DEBIT' &&
+          stableStringify(replayReference) === stableStringify(reference);
         if (!samePayload) throw Object.assign(new Error('Idempotency key already exists with a different ledger payload'), { code: 'MYZ_LEDGER_IDEMPOTENCY_CONFLICT' });
         return { entry: duplicate, duplicate: true, revision: revisionFor(ledger) };
       }
@@ -352,7 +360,7 @@ class MyzLedgerApiService {
         amount_myz: formatUnits(amount),
         entry_type: 'ADJUSTMENT_DEBIT',
         reference: {
-          ...(input.reference && typeof input.reference === 'object' ? input.reference : {}),
+          ...reference,
           idempotency_key: idempotencyKey
         },
         status: 'RECORDED',

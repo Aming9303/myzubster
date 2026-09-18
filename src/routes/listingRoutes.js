@@ -63,8 +63,8 @@ router.post('/create',authenticate,async(req,res)=>{try{
  const{title,category,price,currency,description,location,features,contact,stock,exchangeMode,species,variety,pet,kefir}=req.body||{};
  const normalizedCurrency=String(currency||(exchangeMode==='gift'?'FREE':exchangeMode==='barter'?'BARTER':'MYZ')).toUpperCase();
  if(!title||!category)return res.status(400).json({error:'Titolo e categoria sono obbligatori'});
- const approvedCustomCategory=!ALLOWED_CATEGORIES.has(category)?await MarketplaceCategoryProposal.exists({slug:category,status:'approved'}):true;
- if(!approvedCustomCategory)return res.status(400).json({error:'Categoria marketplace non supportata o non ancora approvata'});
+ const usableCustomCategory=!ALLOWED_CATEGORIES.has(category)?await MarketplaceCategoryProposal.exists({slug:category,$or:[{status:'approved'},{status:'pending',proposerId:req.userId}]}):true;
+ if(!usableCustomCategory)return res.status(400).json({error:'Categoria marketplace non supportata o non disponibile per questo account'});
  if(!ALLOWED_CURRENCIES.has(normalizedCurrency))return res.status(400).json({error:'Valuta/modalità non supportata'});
  if(!['FREE','BARTER'].includes(normalizedCurrency)&&(price===undefined||price===null||Number(price)<0))return res.status(400).json({error:'Prezzo non valido'});
  if(category.startsWith('pet_')&&pet?.sale===true)return res.status(400).json({error:'Il modulo pet supporta adozioni, smarriti/trovati e servizi; non la vendita diretta di animali.'});

@@ -43,7 +43,14 @@ router.post('/orders', authenticate, mutationLimiter, async (req, res) => {
 router.get('/orders/mine', authenticate, async (req, res) => {
   try {
     const orders = await MarketplaceOrder.find({ $or: [{ buyerId: req.userId }, { sellerId: req.userId }] }).populate('listingId', 'title status stock ownerUsername').sort({ createdAt: -1 }).limit(200).lean();
-    res.json({ success: true, orders });
+    const viewerId = String(req.userId);
+    res.json({
+      success:true,
+      orders:orders.map(order => ({
+        ...order,
+        viewerRole:String(order.buyerId) === viewerId ? 'BUYER' : 'SELLER'
+      }))
+    });
   } catch (_error) { res.status(500).json({ success: false, message: 'Impossibile recuperare le richieste' }); }
 });
 

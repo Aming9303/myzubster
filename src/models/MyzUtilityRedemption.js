@@ -14,6 +14,7 @@ const MyzUtilityRedemptionSchema = new mongoose.Schema({
   fulfillmentReference: { type: String, trim: true, maxlength: 320 },
   fulfilledAt: { type: Date, index: true },
   sourceReference: { type: String, required: true, trim: true, maxlength: 320 },
+  ledgerEntryId: { type: String, trim: true, maxlength: 180, index: true },
   recordedAt: { type: Date, required: true, default: Date.now, index: true }
 }, { timestamps: true, versionKey: false });
 

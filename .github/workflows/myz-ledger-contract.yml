@@ -7,22 +7,30 @@ on:
     paths:
       - 'src/services/myzLedgerApiService.js'
       - 'src/routes/myzLedgerApiRoutes.js'
+      - 'src/routes/myzWalletRoutes.js'
+      - 'src/services/marketplaceMyzPaymentService.js'
+      - 'src/services/zorgaxMyzCheckoutService.js'
       - 'src/middleware/myzLedgerServiceAuth.js'
       - 'myz/**'
       - 'scripts/myz-ledger-ci-smoke.js'
       - 'tests/myzLedgerApiService.test.js'
       - 'tests/myzLedgerApiRoutes.test.js'
+      - 'tests/myzInternalPayments.test.js'
       - '.github/workflows/myz-ledger-contract.yml'
   pull_request:
     branches: [main]
     paths:
       - 'src/services/myzLedgerApiService.js'
       - 'src/routes/myzLedgerApiRoutes.js'
+      - 'src/routes/myzWalletRoutes.js'
+      - 'src/services/marketplaceMyzPaymentService.js'
+      - 'src/services/zorgaxMyzCheckoutService.js'
       - 'src/middleware/myzLedgerServiceAuth.js'
       - 'myz/**'
       - 'scripts/myz-ledger-ci-smoke.js'
       - 'tests/myzLedgerApiService.test.js'
       - 'tests/myzLedgerApiRoutes.test.js'
+      - 'tests/myzInternalPayments.test.js'
       - '.github/workflows/myz-ledger-contract.yml'
   workflow_dispatch:
 
@@ -58,7 +66,7 @@ jobs:
         run: node myz/verify-ledger.mjs
 
       - name: Run MYZ ledger service and route tests
-        run: npx jest tests/myzLedgerApiService.test.js tests/myzLedgerApiRoutes.test.js --runInBand
+        run: npx jest tests/myzLedgerApiService.test.js tests/myzLedgerApiRoutes.test.js tests/myzInternalPayments.test.js --runInBand
 
       - name: Run MYZ internal-accounting safety smoke marker
         run: node scripts/myz-ledger-ci-smoke.js

@@ -8,6 +8,7 @@ const { catalog, createCheckoutIntent, getPaymentIntent, listPaymentIntents } = 
 const { getAccess } = require('../services/zorgaxAccessService');
 const { refreshPaymentIntent, verifyAndActivatePaymentIntent } = require('../services/zorgaxPaymentIntentService');
 const { getPaymentReceipt } = require('../services/zorgaxBillingService');
+const zorgaxMyzCheckoutService = require('../services/zorgaxMyzCheckoutService');
 
 const router = express.Router();
 const { loadZorgaxAccess, requireZorgaxPlan } = createZorgaxAccessMiddleware();
@@ -112,7 +113,29 @@ router.get('/status', (_req, res) => {
   res.json({ ok: true, entity: 'ZORGAX-001', capability: 'general-assistant-v1', chat: true, web_research: true, data_entry: true, monetization: true, paid_access_lifecycle: true, paid_access_enforced: true, payment_intents_persisted: true, automatic_payment_monitoring: true, payment_history: true, payment_receipts: true, renewal_stacking: true, automatic_recurring_charges: false, payment_activation_requires_trusted_verifier: true, crypto_quotes_require_trusted_provider: true, guest_chat: true, guest_web_research: false, free_web_research_limit: 2, pro_workspace_required: true, developer_api_required: true, data_write_requires_auth: true, data_write_requires_confirmation: true, autonomous_persistent_writes: false, ai: { openai_configured: openaiConfigured, astra_enabled: openaiConfigured && !astraKillSwitch, astra_kill_switch: astraKillSwitch, astra_model: process.env.ZORGAX_ASTRA_MODEL || 'gpt-5.6-sol' }, providers: { brave_search: Boolean(process.env.BRAVE_SEARCH_API_KEY), tavily: Boolean(process.env.TAVILY_API_KEY), google_news: true, wikipedia: true, general_ai_gateway: true } });
 });
 
-router.get('/pricing', (_req, res) => res.json({ ok: true, entity: 'ZORGAX-001', ...catalog() }));
+router.get('/pricing', (_req, res) => res.json({ ok: true, entity: 'ZORGAX-001', ...catalog(), myz: zorgaxMyzCheckoutService.catalog() }));
+
+router.post('/checkout/myz', authenticate, async (req, res) => {
+  try {
+    const result = await zorgaxMyzCheckoutService.purchase({
+      ownerId:req.userId,
+      planId:req.body?.plan,
+      idempotencyKey:req.headers['idempotency-key']
+    });
+    res.status(result.receipt.duplicate ? 200 : 201).json({
+      ok:true,
+      entity:'ZORGAX-001',
+      payment:'MYZ_INTERNAL_CREDIT',
+      ...result
+    });
+  } catch (error) {
+    const code = error?.code || 'ZORGAX_MYZ_CHECKOUT_FAILED';
+    if (['ZORGAX_MYZ_PRICE_NOT_CONFIGURED','ZORGAX_MYZ_PRICE_INVALID'].includes(code)) return res.status(503).json({ ok:false, code, error:error.message });
+    if (['INSUFFICIENT_MYZ_BALANCE','MYZ_LEDGER_IDEMPOTENCY_CONFLICT','MYZ_LEDGER_TRANSFER_CONFLICT'].includes(code)) return res.status(409).json({ ok:false, code, error:error.message });
+    if (['IDEMPOTENCY_KEY_REQUIRED','INVALID_MYZ_ACCOUNT','INVALID_MYZ_AMOUNT','MYZ_SELF_TRANSFER_FORBIDDEN'].includes(code)) return res.status(400).json({ ok:false, code, error:error.message });
+    return res.status(400).json({ ok:false, code, error:error.message });
+  }
+});
 
 router.post('/checkout/intent', authenticate, async (req, res) => {
   try {

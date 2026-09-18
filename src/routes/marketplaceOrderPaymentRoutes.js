@@ -2,12 +2,38 @@ const express = require('express');
 const MarketplaceOrder = require('../models/MarketplaceOrder');
 const { authenticate } = require('../middleware/auth');
 const { verifyBitcoinTestnetPayment, verifyEthereumSepoliaPayment } = require('../services/marketplaceChainVerifiers');
+const { createMarketplaceMyzPaymentService } = require('../services/marketplaceMyzPaymentService');
 
 const router = express.Router();
 const NETWORK = { BTC:'testnet', ETH:'sepolia' };
 const MIN_CONFIRMATIONS = { BTC:2, ETH:3 };
+const marketplaceMyzPaymentService = createMarketplaceMyzPaymentService();
 
 function participant(order, userId) { return [String(order.buyerId), String(order.sellerId)].includes(String(userId)); }
+
+router.post('/orders/:id/payment/myz', authenticate, async (req, res) => {
+  try {
+    const order = await MarketplaceOrder.findById(req.params.id);
+    if (!order) return res.status(404).json({ success:false, code:'ORDER_NOT_FOUND' });
+    const receipt = await marketplaceMyzPaymentService.payOrder({
+      order,
+      buyerId:req.userId,
+      clientIdempotencyKey:req.headers['idempotency-key']
+    });
+    return res.status(receipt.duplicate ? 200 : 201).json({ success:true, payment:order.payment, receipt });
+  } catch (error) {
+    const code = error?.code || 'MARKETPLACE_MYZ_PAYMENT_FAILED';
+    if (code === 'ORDER_NOT_FOUND') return res.status(404).json({ success:false, code, message:error.message });
+    if (['ORDER_PAYMENT_FORBIDDEN'].includes(code)) return res.status(403).json({ success:false, code, message:error.message });
+    if (['ORDER_NOT_ACCEPTED','ORDER_ASSET_NOT_MYZ','ORDER_ALREADY_PAID','INSUFFICIENT_MYZ_BALANCE','MYZ_LEDGER_IDEMPOTENCY_CONFLICT','MYZ_LEDGER_TRANSFER_CONFLICT'].includes(code)) {
+      return res.status(409).json({ success:false, code, message:error.message });
+    }
+    if (['IDEMPOTENCY_KEY_REQUIRED','INVALID_MARKETPLACE_MYZ_AMOUNT','MYZ_SELF_TRANSFER_FORBIDDEN','INVALID_MYZ_AMOUNT'].includes(code)) {
+      return res.status(400).json({ success:false, code, message:error.message });
+    }
+    return res.status(503).json({ success:false, code, message:'Pagamento MYZ interno temporaneamente non disponibile' });
+  }
+});
 
 router.post('/orders/:id/payment/verify', authenticate, async (req, res) => {
   try {

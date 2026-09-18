@@ -12,6 +12,95 @@ const Reward = require('../models/rewardModel');
 
 const router = express.Router();
 
+// User-created knowledge records. Creation never creates a reward or writes MYZ.
+router.post('/submissions', authenticate, async (req, res) => {
+  try {
+    const authorId = String(req.userId || '').trim();
+    const title = String(req.body?.title || '').trim().slice(0, 180);
+    const type = String(req.body?.type || 'community_knowledge').trim().slice(0, 80);
+    const category = String(req.body?.category || '').trim().slice(0, 80) || null;
+    const description = String(req.body?.description || '').trim().slice(0, 4000);
+    const reference = String(req.body?.reference || '').trim().slice(0, 500) || null;
+    if (!authorId || title.length < 3) return res.status(400).json({ success:false, message:'Inserisci un titolo valido per la conoscenza' });
+
+    const domainContribution = createContribution({ authorId, type, title, description, reference, category });
+    const contribution = await KnowledgeContribution.create({
+      contributionId: domainContribution.id,
+      authorId,
+      type,
+      title,
+      description,
+      reference,
+      category,
+      status:'PENDING_REVIEW'
+    });
+
+    return res.status(201).json({
+      success:true,
+      persisted:true,
+      contribution:{
+        id:String(contribution._id),
+        contributionId:contribution.contributionId,
+        title:contribution.title,
+        category:contribution.category,
+        description:contribution.description,
+        reference:contribution.reference,
+        status:contribution.status,
+        createdAt:contribution.createdAt
+      },
+      rewardCreated:false,
+      ledgerWritten:false,
+      myzTransferred:false
+    });
+  } catch (error) {
+    const status = error?.code === 11000 ? 409 : 400;
+    return res.status(status).json({ success:false, message:error.message || 'Conoscenza non salvata' });
+  }
+});
+
+router.get('/mine', authenticate, async (req, res) => {
+  try {
+    const items = await KnowledgeContribution.find({ authorId:String(req.userId) })
+      .sort({ createdAt:-1 })
+      .limit(100)
+      .lean();
+    return res.json({ success:true, items });
+  } catch (_error) {
+    return res.status(500).json({ success:false, message:'Conoscenze non disponibili' });
+  }
+});
+
+router.patch('/submissions/:id/review', authenticate, isAdmin, async (req, res) => {
+  try {
+    const decision = String(req.body?.decision || '').trim().toUpperCase();
+    if (!['APPROVE','REJECT'].includes(decision)) return res.status(400).json({ success:false, message:'Decisione non valida' });
+    const contribution = await KnowledgeContribution.findById(req.params.id);
+    if (!contribution) return res.status(404).json({ success:false, message:'Conoscenza non trovata' });
+    if (contribution.status !== 'PENDING_REVIEW') return res.status(409).json({ success:false, message:'Conoscenza già revisionata' });
+    contribution.status = decision === 'APPROVE' ? 'APPROVED' : 'REJECTED';
+    contribution.reviewerId = String(req.userId);
+    contribution.reviewNotes = String(req.body?.notes || '').trim().slice(0, 1000) || null;
+    contribution.reviewedAt = new Date();
+    await contribution.save();
+    return res.json({
+      success:true,
+      contribution:{
+        id:String(contribution._id),
+        contributionId:contribution.contributionId,
+        status:contribution.status,
+        reviewerId:contribution.reviewerId,
+        reviewNotes:contribution.reviewNotes,
+        reviewedAt:contribution.reviewedAt
+      },
+      rewardCreated:false,
+      ledgerWritten:false,
+      myzTransferred:false
+    });
+  } catch (error) {
+    return res.status(400).json({ success:false, message:error.message || 'Revisione non salvata' });
+  }
+});
+
 // Safe, non-persistent preview. It never mints, transfers, or writes MYZ to a ledger.
 router.post('/preview', authenticate, (req, res) => {
   try {

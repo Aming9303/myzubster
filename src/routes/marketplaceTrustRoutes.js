@@ -43,7 +43,14 @@ router.post('/orders', authenticate, mutationLimiter, async (req, res) => {
 router.get('/orders/mine', authenticate, async (req, res) => {
   try {
     const orders = await MarketplaceOrder.find({ $or: [{ buyerId: req.userId }, { sellerId: req.userId }] }).populate('listingId', 'title status stock ownerUsername').sort({ createdAt: -1 }).limit(200).lean();
-    res.json({ success: true, orders });
+    const viewerId = String(req.userId);
+    res.json({
+      success:true,
+      orders:orders.map(order => ({
+        ...order,
+        viewerRole:String(order.buyerId) === viewerId ? 'BUYER' : 'SELLER'
+      }))
+    });
   } catch (_error) { res.status(500).json({ success: false, message: 'Impossibile recuperare le richieste' }); }
 });
 
@@ -57,6 +64,9 @@ router.patch('/orders/:id/status', authenticate, mutationLimiter, async (req, re
     if (order.status === 'REQUESTED') allowed = seller ? ['ACCEPTED','REJECTED','CANCELLED'] : ['CANCELLED'];
     if (order.status === 'ACCEPTED') allowed = seller ? ['COMPLETED','CANCELLED'] : ['CANCELLED'];
     if (!allowed.includes(next)) return res.status(400).json({ success: false, message: 'Transizione di stato non valida' });
+    if (next === 'COMPLETED' && String(order.snapshot?.currency || '').toUpperCase() === 'MYZ' && order.payment?.status !== 'PAID') {
+      return res.status(409).json({ success:false, code:'MYZ_PAYMENT_REQUIRED', message:'L’ordine MYZ deve risultare PAID prima di essere completato.' });
+    }
     if (order.status === 'REQUESTED' && next === 'ACCEPTED') {
       const listing = await MarketplaceListing.findOneAndUpdate({ _id: order.listingId, status: 'active', stock: { $gte: order.quantity } }, { $inc: { stock: -order.quantity } }, { new: true });
       if (!listing) return res.status(409).json({ success: false, message: 'Disponibilità cambiata: richiesta non accettabile' });

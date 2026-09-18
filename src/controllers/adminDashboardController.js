@@ -4,7 +4,7 @@ const SellerMembership = require('../models/SellerMembership');
 const Dashboard = require('../models/dashboardModel');
 
 // #218: Admin Dashboard - Monitoraggio Lavori e Pagamenti
-// Dashboard is the project's registered balance/transaction ledger model.
+// Dashboard remains the legacy XMR/operations model. Canonical MYZ accounting lives in myzLedgerApiService.
 
 const since = days => new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
@@ -32,7 +32,7 @@ exports.getOverview = async (req, res) => {
       SellerMembership.countDocuments({ status: 'ACTIVE', createdAt: { $gte: d7 } }),
       SellerMembership.countDocuments({ status: 'ACTIVE', createdAt: { $gte: d30 } })
     ]);
-    const dashboard = await Dashboard.aggregate([{$group: {_id: null, totalMYZ: {$sum: '$balanceMYZ'}, totalXMR: {$sum: '$balanceXMR'}}}]);
+    const dashboard = await Dashboard.aggregate([{$group: {_id: null, totalXMR: {$sum: '$balanceXMR'}}}]);
     res.json({
       totalUsers,
       totalSellers,
@@ -43,7 +43,8 @@ exports.getOverview = async (req, res) => {
         activeSellers: { last24h: activeSellers24h, last7d: activeSellers7d, last30d: activeSellers30d }
       },
       totalWallets,
-      totalMYZInCirculation: dashboard[0]?.totalMYZ || 0,
+      totalMYZInCirculation: null,
+      totalMYZAccountingSource: 'canonical-ledger',
       totalXMRInCirculation: dashboard[0]?.totalXMR || 0
     });
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -53,7 +54,7 @@ exports.getOverview = async (req, res) => {
 exports.getPaymentMonitoring = async (req, res) => {
   try {
     const dashboards = await Dashboard.find({});
-    const allTxs = dashboards.flatMap(d => d.transactions || []);
+    const allTxs = dashboards.flatMap(d => d.transactions || []).filter(tx => tx.currency !== 'MYZ');
     const today = new Date().toISOString().slice(0,10);
     const todayTxs = allTxs.filter(t => new Date(t.timestamp).toISOString().slice(0,10) === today);
     const pending = allTxs.filter(t => t.status === 'pending');
@@ -64,7 +65,8 @@ exports.getPaymentMonitoring = async (req, res) => {
       todayTransactions: todayTxs.length,
       pendingTransactions: pending.length,
       failedTransactions: failed.length,
-      totalVolume
+      totalVolume,
+      myzAccountingSource:'canonical-ledger'
     });
   } catch (e) { res.status(500).json({ error: e.message }); }
 };
@@ -80,7 +82,7 @@ exports.getJobMonitoring = async (req, res) => {
       totalRobots,
       totalJobsCompleted: totalJobs,
       totalRobotEarnings: totalEarnings,
-      robots: dashboards.map(d => ({robotId: d.robotId, jobsCompleted: d.jobsCompleted, totalEarnings: d.totalEarnings, balanceMYZ: d.balanceMYZ}))
+      robots: dashboards.map(d => ({robotId: d.robotId, jobsCompleted: d.jobsCompleted, totalEarnings: d.totalEarnings, balanceMYZ:null, balanceMYZSource:'canonical-ledger-unmapped-robot-account'}))
     });
   } catch (e) { res.status(500).json({ error: e.message }); }
 };

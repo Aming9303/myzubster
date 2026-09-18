@@ -89,20 +89,105 @@
     const plan = document.getElementById('payPlan');
     const btcButton = document.getElementById('startBtc');
     const accessState = document.getElementById('accessState');
-    if (!plan || !btcButton || !accessState || document.getElementById('startCard')) return;
+    if (!plan || !btcButton || !accessState || document.getElementById('startCard') || document.getElementById('startMyz')) return;
 
     const notice = document.querySelector('.notice');
-    if (notice) notice.textContent = 'Zorgax e Marketplace Seller sono abbonamenti separati. Zorgax può cercare sul web e preparare dati da inserire; gli upgrade Zorgax possono essere pagati con carta tramite Stripe oppure tramite rail crypto separati, mentre lo stato Seller viene mostrato separatamente.';
+    if (notice) notice.textContent = 'Zorgax e Marketplace Seller sono servizi separati. Gli upgrade Zorgax possono essere pagati con carta, BTC oppure con crediti MYZ interni quando il relativo prezzo è configurato. MYZ non viene convertito automaticamente in EUR o crypto e non implica rimborso in denaro.';
 
     observeZorgaxLabel(accessState);
+
+    const myzButton = document.createElement('button');
+    myzButton.id = 'startMyz';
+    myzButton.type = 'button';
+    myzButton.textContent = 'Paga con MYZ';
+    myzButton.disabled = true;
 
     const cardButton = document.createElement('button');
     cardButton.id = 'startCard';
     cardButton.type = 'button';
     cardButton.textContent = '💳 Paga con carta';
-    btcButton.insertAdjacentElement('afterend', cardButton);
+    btcButton.insertAdjacentElement('afterend', myzButton);
+    myzButton.insertAdjacentElement('afterend', cardButton);
 
+    const myzState = document.createElement('span');
+    myzState.id = 'myzBalanceState';
+    myzState.className = 'paystate';
+    myzState.style.whiteSpace = 'nowrap';
+    cardButton.insertAdjacentElement('afterend', myzState);
+
+    let myzPlans = {};
+
+    async function refreshMyzOffer() {
+      try {
+        const response = await fetch('/api/zorgax/assistant/pricing', { headers:{ Accept:'application/json' } });
+        const data = await response.json();
+        const plans = Array.isArray(data?.myz?.plans) ? data.myz.plans : [];
+        myzPlans = Object.fromEntries(plans.map(item => [item.id, item]));
+        const offer = myzPlans[plan.value];
+        myzButton.disabled = !offer?.available;
+        myzButton.textContent = offer?.available ? `Paga ${offer.amountMyz} MYZ` : 'MYZ non configurato';
+
+        const t = token();
+        if (!t) {
+          myzState.textContent = '';
+          return;
+        }
+        const balanceResponse = await fetch('/api/myz/balance', { headers:{ Authorization:`Bearer ${t}`, Accept:'application/json' } });
+        const balance = await balanceResponse.json();
+        myzState.textContent = balanceResponse.ok && balance.success ? `Saldo MYZ: ${balance.balanceMyz}` : '';
+      } catch (_error) {
+        myzButton.disabled = true;
+        myzButton.textContent = 'MYZ non disponibile';
+      }
+    }
+
+    plan.addEventListener('change', refreshMyzOffer);
+    refreshMyzOffer();
     refreshSellerState(accessState);
+
+    myzButton.addEventListener('click', async () => {
+      const t = token();
+      if (!t) {
+        location.assign('/social-login?returnTo=' + encodeURIComponent('/zorgax'));
+        return;
+      }
+      const offer = myzPlans[plan.value];
+      if (!offer?.available || !offer.amountMyz) {
+        accessState.textContent = 'Prezzo MYZ non configurato per questo piano.';
+        return;
+      }
+      if (!window.confirm(`Usare ${offer.amountMyz} MYZ interni per attivare Zorgax ${plan.options[plan.selectedIndex]?.textContent || plan.value}? Nessuna conversione EUR/crypto viene applicata.`)) return;
+
+      const pendingKey = `zorgax-myz-pending:${plan.value}`;
+      let idempotencyKey = sessionStorage.getItem(pendingKey);
+      if (!idempotencyKey) {
+        idempotencyKey = `zorgax-myz-${plan.value}-${globalThis.crypto?.randomUUID?.() || Date.now()}`;
+        sessionStorage.setItem(pendingKey, idempotencyKey);
+      }
+
+      myzButton.disabled = true;
+      accessState.textContent = 'Registro il pagamento MYZ nel ledger interno…';
+      try {
+        const response = await fetch('/api/zorgax/assistant/checkout/myz', {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'Idempotency-Key':idempotencyKey,
+            Authorization:`Bearer ${t}`
+          },
+          body:JSON.stringify({ plan:plan.value })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error(data.error || 'Pagamento MYZ non disponibile');
+        sessionStorage.removeItem(pendingKey);
+        accessState.textContent = `Pagamento MYZ registrato · transfer_id ${data.receipt?.transferId || ''}. Verifico accesso…`;
+        await refreshMyzOffer();
+        await refreshPaidState(accessState);
+      } catch (error) {
+        accessState.textContent = `MYZ: ${error.message}`;
+        await refreshMyzOffer();
+      }
+    });
 
     cardButton.addEventListener('click', async () => {
       const t = token();

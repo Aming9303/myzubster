@@ -185,29 +185,31 @@ Zorgax includes an **“Enter the Community”** guided path that helps users de
 
 **Current MVP entry point:** [Community Map & Marketplace](https://www.myzubster.com/community-marketplace.html) · [Talk to Zorgax](https://www.myzubster.com/zorgax)
 
-## 💳 MYZ payments, Google authentication & Zorgax onboarding — 11 Sep 2026
+## 💳 MYZ payments, Google authentication & Zorgax onboarding — 18 Sep 2026
 
-MyZubster now has a verified internal utility-credit flow that connects a real Stripe payment to MYZ accounting and then to a concrete ecosystem redemption. `MYZ` is an **internal utility/accounting credit**, not a blockchain token, investment product or fiat-redeemable asset.
+MyZubster uses `MYZ` as an **internal utility/accounting credit** backed by the canonical MYZ ledger. It is not a blockchain token, investment product, fiat-equivalent asset or fiat-redeemable balance. EUR/Stripe, BTC and other external payment rails remain separate and do **not** automatically create MYZ.
 
 ```text
-EUR PAYMENT (STRIPE)
+CANONICAL MYZ LEDGER
         ↓
-PAYMENT VERIFICATION
+INTERNAL MYZ BALANCE
         ↓
-EUR → MYZ INTERNAL CREDIT
+MYZ SPEND / TRANSFER
         ↓
-MYZ BALANCE
+CANONICAL DEBIT (+ CREDIT FOR P2P/MARKETPLACE)
         ↓
-UTILITY PURCHASE
+FULFILLMENT
         ↓
-RECORDED MYZ DEBIT
+ZORGAX / MARKETPLACE / OTHER MYZUBSTER UTILITY
+
+EUR / STRIPE / BTC
         ↓
-FULFILLMENT WORKFLOW
+SEPARATE PAYMENT OR FUNDING RAIL
         ↓
-ZORGAX / OTHER MYZUBSTER UTILITY
+NO AUTOMATIC EUR/BTC → MYZ CONVERSION
 ```
 
-The currently implemented pilot utility catalog includes **Zorgax Pro Session**, **Marketplace Boost** and **Pilot Project Pass**. A successful MYZ spend is persisted as a durable redemption/debit with an idempotency key and a separate fulfillment state. The current Zorgax fulfillment path can mark a purchased session as fulfilled and open Zorgax; it should not yet be interpreted as a separate subscription or permanent Pro entitlement unless that entitlement is explicitly implemented and verified.
+The pilot utility catalog includes **Zorgax Pro Session**, **Marketplace Boost** and **Pilot Project Pass**. New MYZ spending is recorded in the canonical ledger; MongoDB redemption records are fulfillment/receipt metadata rather than a second MYZ balance. Historical Payment Dashboard EUR→MYZ records, if present, are treated as legacy audit data and are excluded from spendable MYZ until an explicit migration policy is defined.
 
 The onboarding layer has also been extended around **Google/Gmail, GitHub identity and Zorgax**. Users can enter through social authentication, keep Gmail access voluntary and read-only when enabled, and use Zorgax to complete a profile step by step. When a verified GitHub identity is available, Zorgax can use only the verified/public information that is actually accessible and ask the user for missing profile details such as bio, skills, README and project description.
 

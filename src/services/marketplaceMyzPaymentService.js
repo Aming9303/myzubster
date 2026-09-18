@@ -69,6 +69,8 @@ function createMarketplaceMyzPaymentService({ ledgerService = myzLedgerApiServic
     order.payment.asset = 'MYZ';
     order.payment.network = 'internal-ledger';
     order.payment.transferId = transfer.transferId;
+    // Keep the existing compound uniqueness guard collision-free. This is an internal ledger reference, not an on-chain transaction hash.
+    order.payment.txId = `myz:${transfer.transferId}`;
     order.payment.debitEntryId = transfer.debitEntry.entry_id;
     order.payment.creditEntryId = transfer.creditEntry.entry_id;
     order.payment.verifier = 'myzLedgerApiService';

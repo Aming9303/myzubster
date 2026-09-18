@@ -222,13 +222,18 @@ class MyzLedgerApiService {
       if (replayEntries.length) {
         const debit = replayEntries.find(entry => entry?.entry_type === 'INTERNAL_TRANSFER_DEBIT');
         const credit = replayEntries.find(entry => entry?.entry_type === 'INTERNAL_TRANSFER_CREDIT');
+        const replayReference = { ...(debit?.reference || {}) };
+        delete replayReference.idempotency_key;
+        delete replayReference.transfer_id;
+        delete replayReference.counterparty_account_id;
         const samePayload = debit && credit &&
           debit.account_id === fromAccountId &&
           credit.account_id === toAccountId &&
           parseUnits(debit.amount_myz) === -amount &&
           parseUnits(credit.amount_myz) === amount &&
           String(debit.transfer_id || debit.reference?.transfer_id || '') === transferId &&
-          String(credit.transfer_id || credit.reference?.transfer_id || '') === transferId;
+          String(credit.transfer_id || credit.reference?.transfer_id || '') === transferId &&
+          stableStringify(replayReference) === stableStringify(reference);
         if (!samePayload) {
           throw Object.assign(new Error('Idempotency key already exists with a different ledger payload'), { code: 'MYZ_LEDGER_IDEMPOTENCY_CONFLICT' });
         }

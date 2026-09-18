@@ -11,11 +11,11 @@ function myzAccountForUser(userId) {
 
 function orderMyzAmount(order) {
   const priceUnits = parseUnits(String(order?.snapshot?.price ?? ''));
-  const quantity = BigInt(Number(order?.quantity || 0));
-  if (priceUnits <= 0n || quantity <= 0n) {
+  const quantityValue = Number(order?.quantity || 0);
+  if (priceUnits <= 0n || !Number.isSafeInteger(quantityValue) || quantityValue <= 0) {
     throw Object.assign(new Error('Marketplace MYZ order has an invalid amount'), { code: 'INVALID_MARKETPLACE_MYZ_AMOUNT' });
   }
-  return formatUnits(priceUnits * quantity);
+  return formatUnits(priceUnits * BigInt(quantityValue));
 }
 
 function createMarketplaceMyzPaymentService({ ledgerService = myzLedgerApiService } = {}) {
@@ -58,8 +58,7 @@ function createMarketplaceMyzPaymentService({ ledgerService = myzLedgerApiServic
       reference: {
         type: 'MARKETPLACE_ORDER',
         order_id: orderId,
-        listing_id: String(order.listingId),
-        client_idempotency_key: requestKey
+        listing_id: String(order.listingId)
       },
       note: `Marketplace order ${orderId} paid with internal MYZ credits`
     });

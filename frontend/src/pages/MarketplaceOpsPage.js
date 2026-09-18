@@ -76,7 +76,7 @@ function MarketplaceOpsPage() {
     const storageKey = `myz-order-idempotency:${order._id}`;
     let key = localStorage.getItem(storageKey);
     if (!key) {
-      key = `marketplace-myz-${order._id}-${globalThis.crypto?.randomUUID?.() || Date.now()}`;
+      key = `marketplace-myz-${order._id}-${window.crypto?.randomUUID?.() || Date.now()}`;
       localStorage.setItem(storageKey, key);
     }
     try {

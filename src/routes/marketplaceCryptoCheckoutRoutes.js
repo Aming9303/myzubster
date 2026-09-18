@@ -20,6 +20,26 @@ router.get('/listings/:id/checkout-options', async (req, res) => {
       return res.json({ success:true, listingId:String(listing._id), paymentRequired:false, methods:[] });
     }
 
+    if (String(listing.currency || '').toUpperCase() === 'MYZ') {
+      return res.json({
+        success:true,
+        listingId:String(listing._id),
+        sellerId:String(listing.ownerId),
+        paymentRequired:true,
+        acceptedCryptoCurrencies:[],
+        defaultAsset:'MYZ',
+        preferredSettlementCurrency:null,
+        conversion:{ enabled:false, status:'NOT_APPLICABLE' },
+        methods:[{
+          asset:'MYZ',
+          network:'internal-ledger',
+          available:true,
+          mode:'INTERNAL_LEDGER_TRANSFER',
+          message:'Pagamento disponibile con crediti MYZ interni. Nessuna conversione fiat o crypto viene applicata.'
+        }]
+      });
+    }
+
     const membership = await SellerMembership.findOne({ userId:listing.ownerId, status:'ACTIVE' }).lean();
     const accepted = normalizeAccepted(membership);
     const preferred = accepted.includes(membership?.preferredSettlementCurrency) ? membership.preferredSettlementCurrency : 'XMR';
@@ -52,9 +72,24 @@ router.get('/listings/:id/checkout-options', async (req, res) => {
 router.post('/listings/:id/select-payment-method', async (req, res) => {
   try {
     const requested = String(req.body?.asset || 'XMR').toUpperCase();
-    if (!SUPPORTED.includes(requested)) return res.status(400).json({ success:false, code:'UNSUPPORTED_CRYPTO_ASSET', message:'Valuta crypto non supportata' });
+    if (![...SUPPORTED, 'MYZ'].includes(requested)) return res.status(400).json({ success:false, code:'UNSUPPORTED_PAYMENT_ASSET', message:'Metodo di pagamento non supportato' });
     const listing = await MarketplaceListing.findOne({ _id:req.params.id, status:'active' }).lean();
     if (!listing) return res.status(404).json({ success:false, code:'LISTING_NOT_FOUND', message:'Annuncio non trovato' });
+    const listingAsset = String(listing.currency || '').toUpperCase();
+    if (listingAsset === 'MYZ') {
+      if (requested !== 'MYZ') return res.status(409).json({ success:false, code:'LISTING_ASSET_MISMATCH', message:'Questo annuncio è prezzato esclusivamente in MYZ.' });
+      return res.json({
+        success:true,
+        selectedAsset:'MYZ',
+        network:'internal-ledger',
+        mode:'INTERNAL_LEDGER_TRANSFER',
+        conversionEnabled:false,
+        nextStep:'PAY_ACCEPTED_ORDER_WITH_MYZ'
+      });
+    }
+    if (requested === 'MYZ') {
+      return res.status(409).json({ success:false, code:'LISTING_ASSET_MISMATCH', message:'MYZ può pagare solo annunci prezzati direttamente in MYZ; la conversione automatica è disabilitata.' });
+    }
     const membership = await SellerMembership.findOne({ userId:listing.ownerId, status:'ACTIVE' }).lean();
     const accepted = normalizeAccepted(membership);
     if (!accepted.includes(requested)) return res.status(409).json({ success:false, code:'PAYMENT_METHOD_NOT_ACCEPTED', message:'Il Seller non accetta questa valuta' });

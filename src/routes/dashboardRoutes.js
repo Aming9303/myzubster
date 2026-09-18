@@ -26,7 +26,7 @@ router.get('/robot/:robotId', auth, dashboardController.getRobotDashboard);
 router.post('/transfer', auth, dashboardController.createP2PTransfer);
 router.post('/checkout', auth, dashboardController.addCheckoutPayment);
 router.post('/monero-webhook', dashboardController.handleMoneroWebhook);
-router.get('/transactions', dashboardController.listTransactions);
+router.get('/transactions', auth, dashboardController.listTransactions);
 router.get('/stats', auth, admin, dashboardController.getStats);
 
 module.exports = router;

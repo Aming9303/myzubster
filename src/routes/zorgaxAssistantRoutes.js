@@ -130,7 +130,7 @@ router.post('/checkout/myz', authenticate, async (req, res) => {
     });
   } catch (error) {
     const code = error?.code || 'ZORGAX_MYZ_CHECKOUT_FAILED';
-    if (['ZORGAX_MYZ_PRICE_NOT_CONFIGURED'].includes(code)) return res.status(503).json({ ok:false, code, error:error.message });
+    if (['ZORGAX_MYZ_PRICE_NOT_CONFIGURED','ZORGAX_MYZ_PRICE_INVALID'].includes(code)) return res.status(503).json({ ok:false, code, error:error.message });
     if (['INSUFFICIENT_MYZ_BALANCE','MYZ_LEDGER_IDEMPOTENCY_CONFLICT','MYZ_LEDGER_TRANSFER_CONFLICT'].includes(code)) return res.status(409).json({ ok:false, code, error:error.message });
     if (['IDEMPOTENCY_KEY_REQUIRED','INVALID_MYZ_ACCOUNT','INVALID_MYZ_AMOUNT','MYZ_SELF_TRANSFER_FORBIDDEN'].includes(code)) return res.status(400).json({ ok:false, code, error:error.message });
     return res.status(400).json({ ok:false, code, error:error.message });

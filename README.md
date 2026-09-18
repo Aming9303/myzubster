@@ -71,9 +71,13 @@ Nicola's independent MyZubster MVP is a **public, interactive pilot** showing ho
   <a href="https://myzubster-mvp.onrender.com/"><strong>🌐 Open Nicola / N4K48 Live Pilot</strong></a>
   ·
   <a href="https://myzubster-mvp.onrender.com/api/comics"><strong>🎨 Open Nicola Comics API</strong></a>
+  ·
+  <a href="https://www.myzubster.com/knowledge-anchor-n4k48"><strong>🔗 Verify / Anchor N4K48 Knowledge</strong></a>
 </p>
 
 **What this demonstrates:** a participant-owned public MVP, a live Comics catalog, creator/provenance metadata and an inspectable path from experimentation to the wider MyZubster ecosystem.
+
+**Knowledge evidence:** the 18 September 2026 collaboration snapshot is frozen as `KNOWLEDGE-N4K48-2026-09-18-001`, with SHA-256 `39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14`. Its Base Sepolia anchor is prepared but must not be described as confirmed until a transaction receipt is verified.
 
 > **Evidence boundary:** entries marked `NFT_CANDIDATE` are proposals/candidates only. They are not claimed as minted NFTs unless contract address, token ID and transaction hash are independently verifiable. Nicola's experimental ledger is also distinct from the canonical MYZ accounting ledger in this repository until an explicit integration is implemented.
 

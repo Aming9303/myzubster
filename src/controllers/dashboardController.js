@@ -36,7 +36,8 @@ exports.getRobotDashboard = async (req, res) => {
       robotId: d.robotId,
       totalEarnings: d.totalEarnings,
       jobsCompleted: d.jobsCompleted,
-      balanceMYZ: d.balanceMYZ,
+      balanceMYZ: null,
+      balanceMYZSource: 'canonical-ledger-unmapped-robot-account',
       balanceXMR: d.balanceXMR,
       earningsHistory: earnings.slice(-20).reverse(),
       allTransactions: d.transactions.slice(-20).reverse()

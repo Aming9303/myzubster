@@ -1,6 +1,8 @@
 # MyZubster Bounty System
 
-This is the canonical bounty contract for the MyZubster ecosystem. Repository-specific `BOUNTIES.md` files may narrow scope, but they must not weaken the verification, privacy or settlement requirements in this document.
+This is the canonical bounty contract for the MyZubster ecosystem. Repository-specific `BOUNTIES.md` files may narrow scope, but they must not weaken the verification, privacy, treasury or settlement requirements in this document.
+
+The canonical treasury and funding policy is [`TREASURY.md`](TREASURY.md).
 
 ## 1. Core principle
 
@@ -14,7 +16,8 @@ MyZubster separates:
 2. evidence submission;
 3. review/verification;
 4. reward accounting;
-5. external settlement, when applicable.
+5. ecosystem treasury funding;
+6. external settlement, when applicable.
 
 ## 2. Canonical work lifecycle
 
@@ -168,13 +171,42 @@ An adapter/provider response alone must not promote a payout to `PAID`.
 
 ## 9. Treasury and funding
 
+Detailed treasury source, reservation, separation-of-funds and overspending rules are defined in [`TREASURY.md`](TREASURY.md).
+
+### Ecosystem-funded rule
+
+**All MyZubster bounty programs must be designed to sustain themselves from the MyZubster ecosystem, not from the personal finances of the founder or any contributor.**
+
+The following are **not** valid automatic bounty funding sources:
+
+- personal salary or wages;
+- personal savings;
+- personal bank accounts or wallets;
+- income from an employment contract, whether fixed-term or permanent;
+- reimbursements or benefits arising from unrelated employment;
+- personal credit or debt;
+- any other private household income unless it is first donated/transferred voluntarily into an ecosystem treasury under an explicit, auditable record.
+
+No contributor, maintainer or founder is personally obligated to fund an approved bounty merely because the issue exists or because an amount is displayed.
+
+A bounty that requires external settlement may move to `FUNDED` only when a real ecosystem funding source has been reserved and recorded. Valid sources may include, when actually implemented and lawful:
+
+- App / Marketplace fees;
+- ecosystem service revenue;
+- grants, sponsorships or donations made to the project/treasury;
+- institutional project funding specifically allocated to MyZubster;
+- approved treasury reserves;
+- other ecosystem revenue streams governed by a published policy.
+
+Funds originating from an unrelated employer or employment relationship are **outside the MyZubster treasury by default** and must never be represented as project backing, sponsorship or bounty collateral without a separate written project agreement and an auditable transfer/allocation.
+
 For external assets, funding and settlement are separate:
 
 ```text
-Funding source / treasury
+Ecosystem revenue / grant / donation / treasury
         |
         v
-reservation / allocation
+recorded reservation / allocation
         |
         v
 bounty execution + verification
@@ -192,6 +224,19 @@ PAID
 A reservation is not a payment. A submitted transaction is not a confirmed payment.
 
 Treasury implementations must prevent duplicate/overspent allocations and preserve an auditable history of reservation, release, retry, cancellation and reconciliation.
+
+### Pre-marketplace operating model
+
+Until MyZubster App / Marketplace revenue rails are actually implemented, reviewed and activated:
+
+- MYZ remains an internal accounting/reward unit;
+- MYZ does not accrue interest or guaranteed yield;
+- MYZ is not silently convertible to XMR, fiat or another token;
+- no marketplace fee, revenue share or treasury contribution is assumed to exist unless it is recorded in a live, auditable implementation;
+- bounty programs should use MYZ accounting or explicitly mark external settlement as unfunded/pending rather than relying on personal money;
+- no project treasury, founder/maintainer reserve or personal beneficiary account should be described as receiving interest or revenue automatically without an explicit published policy and auditable accounting.
+
+If future App/Marketplace activity generates fees or other project revenue, any allocation to ecosystem treasury, maintenance, contributors, reserves or a founder/maintainer allocation must be defined by an explicit versioned policy, with legal/tax review where applicable and strict separation between project accounting and personal funds. A future revenue allocation is not the same thing as guaranteed interest.
 
 ## 10. Security bounty rules
 
@@ -227,11 +272,12 @@ Public/authorized observation from safe locations is the default.
 ```text
 1. Read the issue and acceptance criteria.
 2. Confirm the issue is active and unblocked.
-3. Implement/collect only the authorized deliverable.
-4. Submit the required evidence or PR.
-5. Wait for review and required checks.
-6. If verified, the reward is recorded according to the bounty definition.
-7. Any external settlement proceeds through its own verification lifecycle.
+3. Confirm any external reward is actually FUNDED by the ecosystem before treating it as payable.
+4. Implement/collect only the authorized deliverable.
+5. Submit the required evidence or PR.
+6. Wait for review and required checks.
+7. If verified, the reward is recorded according to the bounty definition.
+8. Any external settlement proceeds through its own verification lifecycle.
 ```
 
 Contributors should not post wallet secrets. A public destination address, when actually required for settlement, is not a substitute for payment verification.
@@ -244,7 +290,8 @@ Every first-party repository should contain a lightweight `BOUNTIES.md` that:
 - links back to this canonical document;
 - points contributors to the repository's GitHub issues;
 - states that issue/PR/merge does not prove payment;
-- preserves the current MYZ/internal-ledger distinction.
+- preserves the current MYZ/internal-ledger distinction;
+- states that personal salary, employment income and private funds are not automatic bounty funding sources.
 
 ## 14. Issue template
 
@@ -269,6 +316,7 @@ A good bounty issue follows this structure:
 - Asset/accounting unit: MYZ / XMR / TOKEN / none
 - Amount: ...
 - Funding state: PROPOSED / APPROVED / FUNDED
+- Ecosystem funding source: <treasury/revenue/grant/donation reservation, if external>
 
 ## Review
 - Mode: normal / manual / multi-review (only if actually enforced)
@@ -278,9 +326,12 @@ A good bounty issue follows this structure:
 - No unauthorized access or restricted-area collection
 
 ## Settlement
-Merge or acceptance does not by itself prove external payment. `PAID` requires the applicable verified settlement evidence.
+Merge or acceptance does not by itself prove external payment. `PAID` requires the applicable verified settlement evidence. Personal income or unrelated employment income is not a default settlement source.
 ```
 
-## Related architecture
+## Related architecture and policies
 
-See [`docs/ECOSYSTEM.md`](docs/ECOSYSTEM.md) for the repository map, IPFS layer and settlement/verifier boundaries.
+- [`TREASURY.md`](TREASURY.md) — canonical ecosystem treasury and funding rules
+- [`myz/LEDGER.md`](myz/LEDGER.md) — MYZ internal accounting model
+- [`REWARDS_LEDGER.md`](REWARDS_LEDGER.md) — public reward/settlement status
+- [`docs/ECOSYSTEM.md`](docs/ECOSYSTEM.md) — repository map, IPFS layer and settlement/verifier boundaries

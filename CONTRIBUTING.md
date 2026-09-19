@@ -1,146 +1,224 @@
-## 📝 Open Code Review Process
+# Contributing to MyZubster
 
-We follow an **Open Code Review** model inspired by industry leaders like Alibaba.
+MyZubster is open to contributors from different backgrounds and skill levels. You do **not** need to be a professional developer, use your legal name, complete KYC, own crypto, or have an existing MyZubster contribution to start participating.
 
-### Why Open Code Review?
+You can contribute with code, documentation, testing, translation, design, accessibility, research, public/authorized observations, photography, datasets, issue triage, security review within an explicitly authorized scope, or original visual storytelling.
 
-| Benefit | Description |
-|---------|-------------|
-| **Quality** | More eyes catch more bugs |
-| **Learning** | Everyone learns from reviews |
-| **Transparency** | All decisions are documented |
-| **Community** | Builds trust and collaboration |
-| **Standardization** | Consistent code quality |
+## Quick start — join in 5 steps
 
-### Our Review Process
+1. Explore the public repository and choose an issue, task, documentation page or observation workflow that you understand.
+2. Comment on the relevant issue if you want to claim or discuss the task. New contributors are welcome to ask questions before starting.
+3. Fork the repository or create a branch where you have permission.
+4. Make a focused change and include the evidence/tests appropriate to that change.
+5. Open a pull request for public review.
 
-#### 1. Opening a PR
+Repository: https://github.com/MyZubster-Ecosystem/myzubster
 
-```yaml
-Title: [TYPE] Brief description
-Labels: [appropriate labels]
-Assignees: [optional]
+Contributor registry: [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md)
 
-Description:
-- **What:** Brief description of changes
-- **Why:** Reason for the change
-- **How:** Technical approach
-- **Testing:** How it was tested
-- **Screenshots:** If applicable
+Interactive public story: https://www.myzubster.com/fumetto
 
-2. Review Checklist
+Character Registry: https://github.com/MyZubster-Ecosystem/myzubster/issues/617
 
-Reviewers check:
+## Start here — newcomer-friendly issues
 
-    □
+If this is your first MyZubster contribution, start with one of these deliberately small, stable tasks. They are labelled `good first issue` and `help wanted` so they remain easy to discover:
 
-    Code compiles without errors
-    □
+- [#1080 — Verify public links and report broken routes](https://github.com/MyZubster-Ecosystem/myzubster/issues/1080)
+- [#1081 — Improve the contributor quickstart](https://github.com/MyZubster-Ecosystem/myzubster/issues/1081)
+- [#1082 — Add a smoke-test checklist for the public Zorgax flow](https://github.com/MyZubster-Ecosystem/myzubster/issues/1082)
+- [#1083 — Document a minimal metaverse health-check flow](https://github.com/MyZubster-Ecosystem/myzubster/issues/1083)
+- [#1084 — Create a contributor-friendly architecture map](https://github.com/MyZubster-Ecosystem/myzubster/issues/1084)
 
-    Tests pass
-    □
+Before starting, comment on the issue you want to take. This helps maintainers avoid editing the same files and gives you a clear place to ask questions or confirm scope.
 
-    Code follows style guide
-    □
+You can also browse all current newcomer tasks here: https://github.com/MyZubster-Ecosystem/myzubster/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
 
-    Documentation is updated
-    □
+## Who can participate?
 
-    No security issues
-    □
+Everyone who follows the project rules and contributes lawfully and respectfully can participate, including:
 
-    Performance is acceptable
-    □
+- developers and maintainers;
+- first-time open-source contributors;
+- designers, illustrators and storytellers;
+- translators and documentation contributors;
+- testers and accessibility reviewers;
+- researchers and students;
+- photographers and people documenting public/authorized observations;
+- data, GIS, IoT and robotics contributors;
+- privacy and Monero/XMR contributors working within the documented integration boundaries;
+- community members proposing ideas, reporting reproducible bugs or reviewing public work.
 
-    Edge cases are handled
+Participation does not imply employment, partnership, payment, ownership, endorsement or identity verification.
 
-3. Review Comments
+## Contributor paths
 
-All review comments are:
+Use the path that best matches the work you want to do:
 
-    Public - Everyone can see them
+- **First-time contributor** — docs, translations, small fixes, basic tests;
+- **Developer** — API, backend, frontend, database, automation;
+- **GIS / IoT** — mapping, geolocation, sensing, environmental data;
+- **Design / storytelling** — UX, visual guides, comics, accessibility;
+- **Research / LIFE-aligned** — KPI/MRV, evidence methodology, datasets, replication;
+- **QA / reproducibility** — CI, testing, security review, clean-checkout validation.
 
-    Constructive - Focus on the code, not the person
+Issue #742 defines the public contributor-onboarding system. `docs/CONTRIBUTORS.md` is the public evidence registry.
 
-    Actionable - Clear what needs to change
+## Claim format
 
-    Documented - Why the change is needed
+For a normal bounded task, you can use:
 
-4. Approval Process
-Step	Action	Who
-1	Submit PR	Contributor
-2	Initial review	Maintainer
-3	Community review	Anyone
-4	Changes made	Contributor
-5	Final approval	Maintainer
-6	Merge	Maintainer
-Review Etiquette
-For Reviewers
+```text
+CLAIM
+GitHub username:
+Contributor path: first-time / developer / GIS-IoT / design / research / QA
+Issue:
+Proposed approach:
+Testing/evidence plan:
+Expected first milestone:
+```
 
-✅ DO:
+A maintainer may confirm scope, suggest a smaller first milestone, or route the contributor to an existing issue before substantial work starts.
 
-    Be respectful and constructive
+## LIFE-aligned contribution path
 
-    Explain why something should change
+MyZubster has preparatory open-source technical lanes for potential LIFE-aligned environmental work. See [`docs/life-2027/CONTRIBUTOR_POOL.md`](docs/life-2027/CONTRIBUTOR_POOL.md).
 
-    Suggest alternatives when possible
+Current source-of-truth issues include:
 
-    Acknowledge good work
+- #534 — IoT sensing & auditable environmental data adapter;
+- #535 — human-in-the-loop AI recommendation & intervention log;
+- #536 — automation safety & manual override;
+- #537 — environmental pilot dashboard & KPI evidence view;
+- #538 — pilot replication package;
+- #713 — Zorgax LIFE evidence automation.
 
-    Respond in a timely manner
+To opt in, use:
 
-❌ DON'T:
+```text
+LIFE INTEREST
+GitHub username:
+Preferred lane:
+Relevant public contribution:
+What I would like to help with:
+Availability / first proposed task:
+```
 
-    Be rude or dismissive
+The activation path is:
 
-    Leave vague comments
+```text
+PUBLIC CONTRIBUTION EVIDENCE
+→ CANDIDATE LIFE LANE
+→ EXPLICIT OPT-IN / CLAIM
+→ BOUNDED LIFE ISSUE
+→ PR + TESTS / EVIDENCE
+→ REVIEW
+→ VERIFIED LIFE-ALIGNED CONTRIBUTION
+```
 
-    Request changes without reason
+A LIFE-aligned contribution does **not** by itself establish LIFE funding, EU/CINEA approval, university/company representation, partnership or consortium membership.
 
-    Block PRs without explanation
+## Public identity and privacy
 
-For Contributors
+You may use a public alias. A legal name is not required for ordinary GitHub participation.
 
-✅ DO:
+Do not publish unnecessary personal information, credentials, wallet seeds, private keys, private contact details, precise sensitive locations or confidential material. Only submit observations and media that you are allowed to publish.
 
-    Respond to all comments
+## Create your MyZubster character
 
-    Explain your reasoning
+A contributor may optionally create an original character/avatar representing their public contribution role in the GitHub-native visual world.
 
-    Ask clarifying questions
+Start here: https://github.com/MyZubster-Ecosystem/myzubster/issues/617
 
-    Be open to feedback
+Character participation is voluntary. A character is not KYC and does not prove employment, payment, partnership or ownership. AI-generated visual assets must be labelled as AI-generated and are not evidence of a contribution.
 
-    Keep PRs small and focused
+## Evidence-first contribution model
 
-❌ DON'T:
+```text
+IDEA / OBSERVATION
+→ ISSUE / MISSION
+→ WORK
+→ PR + EVIDENCE
+→ PUBLIC REVIEW
+→ VERIFIED / REJECTED
+→ WORLD STATE UPDATE
+```
 
-    Ignore review comments
+An issue is not a completed mission. A PR is not an accepted contribution until reviewed. A merge is not proof of external payment. A visual is not evidence unless the underlying evidence is linked separately.
 
-    Take feedback personally
+## Opening a pull request
 
-    Push without addressing feedback
+Use a clear title and include:
 
-    Open large, unfocused PRs
+```text
+What: what changed
+Why: why the change is useful
+How: implementation or method
+Testing / evidence: how it was checked
+Screenshots: when relevant
+Privacy / safety notes: when relevant
+Related issue: if applicable
+```
 
-Review Metrics
+Keep PRs focused whenever possible. Large changes may be easier to review when split into smaller PRs.
 
-We track:
-Metric	Target	How to Improve
-Review Time	< 24 hours	More reviewers
-PR Size	< 200 lines	Smaller PRs
-Comments per PR	3-10	Better documentation
-Time to Merge	< 48 hours	Faster responses
-Learning from Reviews
+## Review process
 
-All reviews are opportunities to learn:
+1. Contributor submits a PR.
+2. Maintainers and community members may review publicly.
+3. Review comments should be constructive and actionable.
+4. Contributor addresses feedback or explains the reasoning.
+5. A maintainer decides whether the change is ready to merge.
 
-    Review the review - What was good/bad?
+Community review is welcome. Final merge authority remains with repository maintainers.
 
-    Document patterns - Common issues and solutions
+## Review etiquette
 
-    Share knowledge - What did we learn?
+For everyone:
 
-    Improve process - How can we do better?
+- be respectful and discuss the work, not the person;
+- explain why a change is requested;
+- ask questions when requirements are unclear;
+- acknowledge uncertainty and evidence limits;
+- do not harass, discriminate, threaten, dox or impersonate others;
+- do not pressure contributors to disclose private identity information.
 
-Remember: Code review is about making the code better, not about being right. Everyone is here to learn and improve together.
+See `CODE_OF_CONDUCT.md` for the community baseline.
+
+## Bounties and rewards
+
+Some issues may define a bounty or reward lifecycle. Read the issue and `BOUNTIES.md` before starting.
+
+MYZ is currently documented as an internal reward/accounting ledger. XMR or another external settlement, where explicitly defined, is a separate process and requires independent verification. An issue, assignment, PR, merge or ledger entry is not proof of payment.
+
+## Security contributions
+
+Only test systems you own or have explicit authorization to test. Do not attack third-party infrastructure, bypass access controls, obtain credentials, or publish exploitable private data.
+
+Report security issues according to the repository's security/disclosure guidance when available.
+
+## Real-world observations and photos
+
+Use public or explicitly authorized observations only. Keep observation and interpretation separate. A photograph documents what is visible; stronger claims require additional evidence.
+
+Do not publish sensitive/restricted locations or unnecessary personal information.
+
+## First contribution ideas
+
+If you are new, useful first contributions include:
+
+- fix documentation or broken links;
+- improve translations;
+- add tests for an existing behavior;
+- reproduce and document a bug;
+- improve accessibility or mobile readability;
+- review an issue or PR and provide evidence-based feedback;
+- submit a safe public observation using the documented schema;
+- create an original character proposal with `status: proposed`;
+- improve the public comic/visual documentation while clearly separating fiction from evidence.
+
+## Need help?
+
+Open or comment on a relevant public GitHub issue and explain what you want to contribute. You may begin with a small proposal; there is no requirement to arrive with a finished implementation.
+
+**Welcome to MyZubster. Build in public, protect privacy, and keep evidence stronger than claims.**

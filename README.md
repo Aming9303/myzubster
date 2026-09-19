@@ -1,205 +1,958 @@
-# MyZubster — osserva, documenta e collega il mondo reale
+# MyZubster
 
-> 🌍 **Global / Multilingual:** [English · Italiano · Español · Français · Deutsch · Português · 中文 · 日本語 · 한국어 · العربية · हिन्दी · Русский · Türkçe · Bahasa Indonesia · Polski · Українська · বাংলা · اردو · فارسی · Kiswahili](docs/i18n/README.md)
->
-> **MyZubster is an open-source ecosystem that connects real-world observations, verifiable evidence, collaborative bounties and platform rewards.** MYZ is currently an internal reward/accounting ledger; any external XMR/token/blockchain settlement is separate and requires independent verification.
+## 🧭 Explore MyZubster — interactive links
 
-**MyZubster è un ecosistema open-source collaborativo per mappare, documentare e collegare persone, luoghi, ambiente, tecnologia e servizi nel mondo reale.**
+[🌐 **MyZubster**](https://www.myzubster.com/) · [🤖 **Zorgax**](https://www.myzubster.com/zorgax) · [🧠 **Knowledge Profile Builder**](https://www.myzubster.com/zorgax-profile-builder.html) · [👤 **Profile Onboarding**](https://www.myzubster.com/zorgax-profile-onboarding.html) · [🛒 **Marketplace**](https://www.myzubster.com/community-marketplace.html) · [🧪 **Marketplace demos**](https://www.myzubster.com/marketplace-demos) · [🔬 **University & Research**](https://github.com/DanielIoni-creator/myzubster-university-research) · [🔊 **Sound System**](https://github.com/DanielIoni-creator/Myzubster-soundsystem) · [🧑‍🔬 **Nicola pilot**](https://github.com/DanielIoni-creator/Nicola) · [🧩 **Yassen pilot**](https://github.com/DanielIoni-creator/Yassen) · [💻 **Core repository**](https://github.com/MyZubster-Ecosystem/myzubster)
 
-Parte da osservazioni concrete — fotografie, coordinate, piante, edifici, patrimonio, strade, servizi urbani e contributi — e le organizza in una struttura pubblica, verificabile e progressivamente estendibile.
+**Knowledge evidence path:** open the Profile Builder → inspect a Knowledge Card → **Registra evidenza** to create the canonical SHA-256 record without a blockchain transaction → **Ancora su blockchain** only when an explicit Base Sepolia anchor is wanted.
 
-## Stato del progetto
 
-**MVP open-source in sviluppo e validazione.** Alcune funzionalità sono operative, altre sperimentali, simulate o ancora in progettazione.
+<p align="center">
+  <img src="assets/readme/myzubster-core.png" alt="MyZubster ecosystem overview" width="100%">
+</p>
 
-Monero/XMR, MYZ, Tor, IPFS, robotica, IoT e AI appartengono a specifici layer o filoni dell'ecosistema: non implicano che ogni funzionalità sia già production-ready.
+> **Open-source platform connecting people, communities, AI and real-world projects through verifiable digital evidence.**
 
-## 🆕 Aggiornamenti recenti — agosto 2026
+MyZubster turns authorized real-world observations — photos, places, environmental data, services and technical contributions — into structured information that can be connected, reviewed, validated and reused.
 
-L'ecosistema continua a evolvere su più repository. Gli elementi seguenti descrivono attività pubblicamente osservabili e non vanno interpretati come prova automatica di deployment production-ready, adozione, partnership o pagamento di bounty.
+<p align="center">
+  <a href="https://www.myzubster.com/"><strong>🚀 Try MyZubster</strong></a>
+  ·
+  <a href="https://www.myzubster.com/zorgax"><strong>🤖 Talk to Zorgax</strong></a>
+  ·
+  <a href="https://github.com/MyZubster-Ecosystem/myzubster"><strong>⭐ Star on GitHub</strong></a>
+</p>
 
-- **MyZubsterGateway:** attività di sviluppo e validazione continua sul boundary di gateway, integrazioni e settlement. Issue e pull request aperte indicano un workstream attivo; fork/star e altre metriche GitHub sono segnali di interesse tecnico, non metriche di adozione.
-- **Monero / FCMP++:** è aperto un filone per aggiornare il wallet e il monitoraggio delle transazioni in vista del supporto FCMP++, includendo configurazione wallet/RPC, nuovi tipi di transazione, conferme, test e documentazione. Lo stato resta di sviluppo finché l'implementazione non viene verificata.
-- **Bounty lifecycle:** il progetto rafforza la separazione tra attività GitHub e settlement: issue, assegnazione, PR o merge non costituiscono prova di pagamento. Il percorso canonico resta `PROPOSED -> VALIDATED -> APPROVED -> FUNDED -> ACTIVE -> SUBMITTED -> UNDER_REVIEW -> VERIFIED -> REWARD_RECORDED -> SETTLEMENT_PENDING / SETTLED`.
-- **Security hardening:** tra i workstream pubblici figurano aggiornamento delle dipendenze/vulnerabilità e rate limiting degli endpoint API. Le issue descrivono lavoro richiesto o in corso e non certificano da sole che la remediation sia già distribuita.
-- **Documentazione:** è in corso l'allineamento delle tabelle/stati README tra i repository per rendere più esplicita la distinzione tra production, development, testnet, simulation, experimental e proposed.
-- **Monitoraggio Gateway:** sono presenti filoni dedicati ad analisi di pagamenti/trend e notifiche, mantenendo la verifica finanziaria separata dalle dichiarazioni applicative.
-- **Esposizione esterna:** eventuali menzioni su community, aggregatori o piattaforme esterne vengono considerate segnali di visibilità e discovery; engagement e adozione devono essere misurati separatamente con evidenza verificabile.
+### 🚀 60-second path — Try → Star → Contribute
 
-### Come leggere questi aggiornamenti
+1. **Try** the live project: [open MyZubster](https://www.myzubster.com/) or [talk to Zorgax](https://www.myzubster.com/zorgax).
+2. **Star** this repository if you want to follow the work and make the project easier to discover.
+3. **Contribute** one small, reviewable improvement: [good first issue](https://github.com/MyZubster-Ecosystem/myzubster/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), [help wanted](https://github.com/MyZubster-Ecosystem/myzubster/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22), or [CONTRIBUTING.md](CONTRIBUTING.md).
 
-MyZubster privilegia una documentazione prudente: una feature proposta non è una feature rilasciata, un merge non è un pagamento, un fork non è un utente attivo e un'integrazione descritta non è necessariamente operativa in produzione. Le fonti canoniche restano codice, test, CI, policy bounty ed evidenze indipendenti appropriate al tipo di claim.
+> **New here?** You do not need blockchain or AI expertise. A reproducible bug report, documentation fix, test, translation or accessibility improvement is a valid first contribution.
 
-## 🇪🇺 Programma LIFE dell'Unione europea
 
-MyZubster sta esplorando il **Programma LIFE 2021–2027** come possibile quadro europeo per sviluppare e validare applicazioni ambientali dell'ecosistema. LIFE è lo strumento di finanziamento dell'Unione europea dedicato ad ambiente e azione per il clima ed è articolato in quattro sottoprogrammi: **Nature and Biodiversity**, **Circular Economy and Quality of Life**, **Climate Change Mitigation and Adaptation** e **Clean Energy Transition**.
+## 🔐 Start from GitHub — create or connect your MyZubster account
 
-Le aree di MyZubster potenzialmente coerenti con LIFE includono:
+You can now use GitHub as a public entry point into the MyZubster onboarding flow.
 
-- raccolta e documentazione di osservazioni ambientali verificabili;
-- biodiversità urbana, alberi, piante, habitat e monitoraggio territoriale;
-- acqua, qualità ambientale, economia circolare e riduzione degli sprechi;
-- IoT, robotica e sensoristica per pilot ambientali;
-- dati geospaziali, GeoJSON, fotografia e sistemi di evidenza/MRV;
-- partecipazione civica, citizen science e collaborazione open-source;
-- replicazione di pilot e strumenti digitali in territori e comunità differenti.
+<p align="center">
+  <a href="https://www.myzubster.com/social-login?returnTo=%2Fzorgax-profile-onboarding.html%3Fprovider%3Dgithub"><strong>🔗 Connect GitHub to MyZubster</strong></a>
+  ·
+  <a href="https://github.com/signup"><strong>🆕 Create a GitHub account</strong></a>
+  ·
+  <a href="https://www.myzubster.com/zorgax-profile-onboarding.html"><strong>🤖 Complete your profile with Zorgax</strong></a>
+  ·
+  <a href="https://www.myzubster.com/community-marketplace.html"><strong>🛒 Open Marketplace</strong></a>
+</p>
 
-### Possibile ruolo di MyZubster in un progetto LIFE
+**Interactive path:** GitHub → MyZubster social login → verified GitHub identity → Zorgax profile assistant → optional GitHub profile automation → Marketplace.
 
-A seconda della call e del consorzio, MyZubster potrebbe contribuire come **piattaforma tecnologica/open-source**, layer di raccolta dati ed evidenze, supporto a pilot ambientali, visualizzazione e mapping, citizen engagement, automazione o infrastruttura per monitoraggio e replicazione.
+- Existing GitHub user: choose **Connect GitHub to MyZubster** and authorize the login.
+- No GitHub account yet: create it on GitHub first, then return and connect it to MyZubster.
+- Google-first user: Google remains a valid MyZubster login identity; GitHub can be linked afterwards.
+- Profile automation is opt-in. GitHub write authorization is requested separately from normal login, and profile changes remain user-controlled.
 
-Il lavoro preparatorio comprende la ricerca di soggetti compatibili per ruoli quali **applicant/coordinator, partner scientifici, enti territoriali, pilot site, validazione ambientale, MRV e replicazione**.
+> MyZubster does not create a GitHub personal account on the user's behalf. Account registration happens on GitHub; MyZubster links the verified account and continues onboarding with Zorgax.
 
-> **Stato:** esplorazione / preparazione. La presenza di questa sezione non implica che MyZubster abbia ricevuto finanziamenti LIFE, che una candidatura sia stata approvata o che esista una partnership ufficiale con l'Unione europea, CINEA o altri enti. Qualsiasi candidatura, partnership, grant o progetto finanziato dovrà essere documentato separatamente con evidenza verificabile.
 
-Riferimenti ufficiali:
+### ✨ Interactive Zorgax bio — human-approved
 
-- [European Commission — LIFE Programme](https://commission.europa.eu/funding-and-tenders/find-funding/eu-funding-programmes/programme-environment-and-climate-action-life_en)
-- [CINEA — LIFE](https://cinea.ec.europa.eu/programmes/life_en)
-- [EU Funding & Tenders Portal — LIFE](https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/programmes/life2027)
+From GitHub you can open the live profile assistant and let Zorgax prepare a bio **without publishing anything automatically**.
 
-## Architettura dell'ecosistema
+<p align="center">
+  <a href="https://www.myzubster.com/social-login?returnTo=%2Fzorgax-profile-onboarding.html%3Fprovider%3Dgithub"><strong>1 · Verify / connect GitHub</strong></a>
+  ·
+  <a href="https://www.myzubster.com/zorgax-profile-onboarding.html?provider=github"><strong>2 · Generate a bio with Zorgax</strong></a>
+  ·
+  <a href="https://www.myzubster.com/community-marketplace.html"><strong>3 · Continue to Marketplace</strong></a>
+</p>
 
-La mappa canonica dei repository e dei confini tra core, Gateway, app/web, robotica, AI, escrow/verifier e documentazione è mantenuta in:
+**Live flow:** GitHub verified → Zorgax analyzes the available public profile context → shows the GitHub data used → generates an editable bio → **Discard / Save only on MyZubster / Approve and publish to GitHub / Restore previous GitHub bio**.
 
-- [`docs/ECOSYSTEM.md`](docs/ECOSYSTEM.md)
+The final decision is always the user's. GitHub write access is separate from normal login and is required only for an explicitly approved GitHub update.
 
-In sintesi:
+## 🧠 Learn · Share · Help others with Zorgax
+
+MyZubster connects documented knowledge to a learning and mentorship pathway: **learn → try → document → share → Zorgax assists → another person tries → evidence + feedback → improve → help the next pilot**.
+
+**Pilot pathway:** Nicola / KF-006 · Yassen · Bologna Sound (`PLANNED`). Human work, Zorgax assistance and evidence remain distinguishable.
+
+### 🧪 Live pilot — Nicola / N4K48
+
+Nicola's independent MyZubster MVP is a **public, interactive pilot** showing how a real participant is connecting comics, evidence-first AI, economic provenance, an internal ledger experiment, derived balances and asset/revenue views.
+
+<p align="center">
+  <a href="https://myzubster-mvp.onrender.com/"><strong>🌐 Open Nicola / N4K48 Live Pilot</strong></a>
+  ·
+  <a href="https://myzubster-mvp.onrender.com/api/comics"><strong>🎨 Open Nicola Comics API</strong></a>
+  ·
+  <a href="https://www.myzubster.com/knowledge-anchor-n4k48"><strong>🔗 Verify N4K48 Knowledge Anchor</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/MyZubster-Ecosystem/MyZubster-Visual/blob/main/visuals/knowledge-pilots/MyZubster-H4X0R-N4K48-Neon-Plaza-Cyberpunk.png">
+    <img src="https://raw.githubusercontent.com/MyZubster-Ecosystem/MyZubster-Visual/main/visuals/knowledge-pilots/MyZubster-H4X0R-N4K48-Neon-Plaza-Cyberpunk.png" alt="MyZubster H4X0R and N4K48 in Neon Plaza — verified knowledge-transfer pilot visual" width="760">
+  </a>
+</p>
+
+<p align="center"><em>H4X0R × N4K48 · Neon Plaza · public pilot visual linked to the verified knowledge-transfer evidence chain.</em></p>
+
+**What this demonstrates:** a participant-owned public MVP, a live Comics catalog, creator/provenance metadata and an inspectable path from experimentation to the wider MyZubster ecosystem.
+
+**Knowledge evidence:** the 18 September 2026 collaboration snapshot is frozen as `KNOWLEDGE-N4K48-2026-09-18-001`, with SHA-256 `39ab3a177734b5e3e254657cfe6015100644bcda2fb008cf2561d000669b9e14`. Its Base Sepolia anchor is **CONFIRMED / MATCH**: block `47000958`, transaction [`0xff3c1082…7bc31`](https://sepolia.basescan.org/tx/0xff3c108275625673ad22a886da2df7120ae81b8f0106ec833613513b03c7bc31).
+
+> **Evidence boundary:** entries marked `NFT_CANDIDATE` are proposals/candidates only. They are not claimed as minted NFTs unless contract address, token ID and transaction hash are independently verifiable. Nicola's experimental ledger is also distinct from the canonical MYZ accounting ledger in this repository until an explicit integration is implemented.
+
+**Explore:** [Learn / Share with Zorgax](https://www.myzubster.com/learn-with-zorgax.html) · [Knowledge Mentorship](docs/KNOWLEDGE-MENTORSHIP-PILOTS.md) · [Public Journey](docs/MYZUBSTER-PUBLIC-JOURNEY.md) · [KF-006](https://www.myzubster.com/knowledge-kf-006.html)
+
+> A learning or mentoring interaction does not by itself prove competence, safety, scientific validity or institutional endorsement.
+
+## 🧩 Start contributing in 10 minutes
+
+Want to help without learning the whole ecosystem first? Start with one small, reviewable change.
+
+1. **Fork** this repository and clone your fork.
+2. Read [CONTRIBUTING.md](CONTRIBUTING.md) and pick an issue labeled **good first issue** or **help wanted**.
+3. Choose **one focused task**: docs, accessibility, tests, UI copy, Marketplace demo verification, or a small bug fix.
+4. Create a branch, make the smallest useful change, and run the relevant checks.
+5. Open a pull request describing **what changed, how you tested it, and what remains**.
+6. If you want to build a real-world pilot instead, start from [Choose Your MyZubster Profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md) and connect it to the ecosystem.
+
+**Good first contributions do not require blockchain, AI or MyZubster architecture expertise.** Documentation fixes, reproducible bug reports, tests, translations, accessibility improvements and focused UI fixes are useful contributions.
+
+**Find a task:** [good first issue](https://github.com/MyZubster-Ecosystem/myzubster/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) · [help wanted](https://github.com/MyZubster-Ecosystem/myzubster/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) · [all open issues](https://github.com/MyZubster-Ecosystem/myzubster/issues)
+
+## 🚀 Start here — Star · Fork your profile · Contribute
+
+New to MyZubster? You can participate in under five minutes:
+
+1. **⭐ Star this repository** if you want to follow the project and help other developers, researchers and communities discover it.
+2. **🍴 Fork your profile template** from [Choose Your MyZubster Profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md). Pick the closest of the 14 community/profile templates, fork it, rename it and make it your own.
+3. **🧩 Contribute** through [`CONTRIBUTING.md`](CONTRIBUTING.md): code, documentation, design, testing, research, authorized observations or a focused pull request.
+4. **🤝 Join the community** through [`JOIN.md`](JOIN.md), the [Community Marketplace](https://www.myzubster.com/community-marketplace.html) or [Zorgax](https://www.myzubster.com/zorgax).
+
+**Main technical gateway:** [MyZubsterGateway](https://github.com/MyZubster-Ecosystem/MyZubsterGateway) · **Core repository:** [MyZubster](https://github.com/MyZubster-Ecosystem/myzubster) · **Profile templates:** [Choose your profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md)
+
+> A fork is your independent working repository. Use a pull request back to the original template only when you want to improve the reusable template for everyone.
+
+## What can you do with MyZubster?
+
+| Goal | Start here |
+|---|---|
+| **Build a real-world pilot** | Turn an authorized observation, dataset, workflow or community need into a reproducible evidence-aware project. |
+| **Join a community or project** | Enter through the website, Zorgax, Telegram, GitHub or public project documentation. |
+| **Contribute code, data or evidence** | Pick a scoped issue, submit a reproducible test, improve docs/design, or contribute authorized observations. |
 
 ```text
-users / contributors
-       |
-       v
-App / Web
-       |
-       v
-Core MyZubster
- |     |       |
- v     v       v
-map  bounties observations/media
-       |       |
-       +---+---+
-           v
-      IPFS snapshots
-
-external settlement boundary:
-Core -> Gateway -> payment/treasury -> independent verifier
+REAL WORLD
+    ↓
+OBSERVATION / COMMUNITY / PROJECT
+    ↓
+EVIDENCE + PROVENANCE
+    ↓
+ZORGAX + HUMAN REVIEW
+    ↓
+PROJECT / MARKETPLACE / COMMUNITY / PUBLIC OUTPUT
 ```
 
-## Che cos'è MyZubster
+### Why star MyZubster?
 
-MyZubster costruisce una **mappa visuale e informativa del mondo reale** e una serie di workflow per collegare contributi, evidenze e attività verificabili.
+A GitHub ⭐ is a simple way to follow the project and help other developers, researchers and communities discover it. Star the repository if you want to track MyZubster's open-source development, evidence-first pilots, Zorgax automation and community infrastructure.
 
-### Cosa può documentare
+**Quick paths:** [5-minute demo: Zorgax → Marketplace](docs/DEMO-ZORGAX-MARKETPLACE.md) · [Choose your profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md) · [Join](JOIN.md) · [Contribute](CONTRIBUTING.md) · [How it works](#️-how-myzubster-works) · [Public evidence](SHOWCASE.md) · [Website](https://www.myzubster.com/)
 
-- luoghi, piazze, strade e panorami;
-- piante, alberi, giardini e biodiversità urbana;
-- edifici e patrimonio storico/culturale;
-- servizi urbani e ambientali;
-- fotografie e osservazioni geolocalizzate;
-- progetti tecnologici, civici e sperimentali;
-- evidenze associate a bounty definite in modo esplicito.
+> **Current state:** MVP / active development and validation. Some components are operational, others experimental or in active implementation. A roadmap, issue, PR, merge, discussion or automated test is not by itself proof of deployment, partnership, adoption, funding or external payment.
 
-## Public data layer: IPFS/IPNS
+## 🫶 Internal mutual-support community
 
-Il core può pubblicare **snapshot pubblici sanitizzati** tramite IPFS/IPNS, con indici separati per elementi come foto, bounty, reward pubblici, crawler observations e discoveries.
+MyZubster now includes the first working layer of an **internal community where people can offer skills, express needs and build projects together**. It connects the Marketplace and Zorgax around a simple principle:
 
-IPFS fornisce content addressing e replica. **Non sostituisce da solo autorizzazione, consenso applicativo o settlement finanziario.** MongoDB e i servizi backend restano parte del layer operativo, mentre gli snapshot pubblici sono indipendentemente indirizzabili.
+> **What you know how to do becomes a resource for someone else.**
 
-## Bounty system
+| Community area | What it can offer |
+|---|---|
+| **💻 Developers** | Websites, apps, automation, MyZubster configuration and digital tools for every community category. |
+| **🔊 Ravers and underground cultures** | Sound systems, DJs, visuals, event production, communication and support for legal, safe and authorized events. |
+| **🌾 Farmers** | Cultivation knowledge, seeds, local production, land-based projects and circular-economy practices. |
+| **🥛 Kefir and fermentation** | Responsible exchange of starters and food-culture knowledge, without medical or therapeutic claims. |
+| **🎨 Artists** | Music, photography, illustration, performance, crafts, workshops and project identity. |
+| **🌿 Wellbeing** | Movement, nature, social activities and responsible community wellbeing practices. |
 
-Il contratto canonico è:
+### Visual examples from the MyZubster Marketplace
 
-- [`BOUNTIES.md`](BOUNTIES.md)
+These are the same demonstration images used in the Marketplace category pop-ups. They show how a real need or offer can become a clear community listing.
 
-Lifecycle di alto livello:
+<table>
+<tr>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/tecnico-pc-computer-guasto.png" alt="Community request for a developer or computer technician"><br><b>Technology support</b><br>Someone describes a computer problem and finds technical help.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/produce-kefir.png" alt="Responsible kefir culture exchange"><br><b>Kefir and food culture</b><br>A responsible local exchange connects knowledge, starter cultures and people.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/plants-piantine-orto.png" alt="Plants and local agriculture listing"><br><b>Agriculture and plants</b><br>Growers can offer plants, seeds, produce or practical knowledge.</td>
+</tr>
+<tr>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/arte-dipinto-originale.png" alt="Independent artist marketplace listing"><br><b>Art and creativity</b><br>Artists can present original work and connect with interested people.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/benessere-rasta-treccine.png" alt="Non-medical wellbeing and personal care service"><br><b>Wellbeing services</b><br>People can offer responsible non-medical personal-care services.</td>
+<td width="33%"><img src="frontend/public/images/marketplace/demo/animals-cerco-dog-sitter.jpg" alt="Community request for a dog sitter"><br><b>Pets and mutual help</b><br>A pet owner can publish a practical request and find local support.</td>
+</tr>
+</table>
+
+The images are illustrative demos. They do not prove that a real provider, buyer, exchange, booking or payment exists.
+
+A community profile can describe:
+
+- the person's main area;
+- skills and resources they can offer;
+- help or resources they need;
+- projects or pilots they want to join;
+- optional participation in seed exchange, the pet community or responsible kefir donation.
+
+People can publish both **offers** and **requests for help** through community Marketplace categories such as development/configuration, events and sound systems, agriculture, art, wellbeing and volunteering. One person can be both a contributor and someone receiving support.
 
 ```text
-PROPOSED
- -> VALIDATED
- -> APPROVED
- -> FUNDED (quando necessario)
- -> ACTIVE
- -> SUBMITTED
- -> UNDER_REVIEW
- -> VERIFIED / REJECTED
- -> REWARD_RECORDED
- -> SETTLEMENT_PENDING / SETTLED
+PERSON / GROUP
+      ↓
+SKILLS + RESOURCES + NEEDS
+      ↓
+COMMUNITY PROFILE / LISTING
+      ↓
+ZORGAX GUIDANCE
+      ↓
+COMPATIBLE PEOPLE / SERVICES / PROJECTS
+      ↓
+HUMAN CONTACT, CONSENT AND COLLABORATION
 ```
 
-Un'issue, un'assegnazione, una PR, un merge o un reward applicativo **non costituiscono da soli prova di pagamento esterno**.
+Zorgax includes an **“Enter the Community”** guided path that helps users describe what they can contribute, what they need and which people or project areas may be relevant. Zorgax is a routing and assistance layer: it does not automatically prove identity, create consent, authorize events, promise payment or establish partnerships.
 
-### MYZ
+**Current MVP entry point:** [Community Map & Marketplace](https://www.myzubster.com/community-marketplace.html) · [Talk to Zorgax](https://www.myzubster.com/zorgax)
 
-Nel core attuale **MYZ è un ledger interno di reward/accounting**. Un reward MYZ `approved` rappresenta un credito della piattaforma; non va descritto automaticamente come transazione blockchain.
+## 💳 MYZ payments, Google authentication & Zorgax onboarding — 18 Sep 2026
 
-### XMR / token esterni
+MyZubster uses `MYZ` as an **internal utility/accounting credit** backed by the canonical MYZ ledger. It is not a blockchain token, investment product, fiat-equivalent asset or fiat-redeemable balance. EUR/Stripe, BTC and other external payment rails remain separate and do **not** automatically create MYZ.
 
-Una bounty può dichiarare una componente XMR/token, ma `PAID` richiede evidenza verificabile appropriata al rail. Un adapter/provider non può auto-dichiarare il settlement finale.
+```text
+CANONICAL MYZ LEDGER
+        ↓
+INTERNAL MYZ BALANCE
+        ↓
+MYZ SPEND / TRANSFER
+        ↓
+CANONICAL DEBIT (+ CREDIT FOR P2P/MARKETPLACE)
+        ↓
+FULFILLMENT
+        ↓
+ZORGAX / MARKETPLACE / OTHER MYZUBSTER UTILITY
 
-## Tecnologia
-
-- **Backend:** Node.js / Express + MongoDB
-- **Frontend:** interfacce web/client
-- **Mappe/dataset:** GeoJSON e coordinate WGS84
-- **Public snapshots:** IPFS/IPNS
-- **Gateway/integrations:** servizi separati nel relativo repository
-- **AI/automation:** supporto a workflow con human/security boundaries
-- **Robotica/IoT:** prototipi, simulatori e hardware integration track
-- **Rewards/settlement:** accounting interno separato dal settlement esterno verificato
-
-## Mappa mondiale e osservazioni
-
-Le osservazioni geografiche usano coordinate WGS84. Il repository può includere dataset GeoJSON e media/evidenze collegati agli oggetti della piattaforma.
-
-La precisione geografica deve essere ridotta o esclusa quando una posizione può essere sensibile.
-
-## Sicurezza e safety
-
-Non inserire mai nei repository:
-
-- private key o wallet seed;
-- password/token di produzione;
-- credenziali infrastrutturali;
-- dati personali/confidenziali non necessari.
-
-Le bounty fisiche/fotografiche non devono incentivare trespassing, accesso ad aree ristrette, raccolta di dettagli di sicurezza, ricerca confidenziale, armi/dispositivi pericolosi o attività non autorizzate.
-
-## Avvio rapido
-
-### Prerequisiti
-
-- Node.js 20+
-- MongoDB locale o Atlas
-- Python 3 per i componenti che lo richiedono
-
-```bash
-git clone https://github.com/MyZubster-Ecosystem/myzubster.git
-cd myzubster
-npm ci
+EUR / STRIPE / BTC
+        ↓
+SEPARATE PAYMENT OR FUNDING RAIL
+        ↓
+NO AUTOMATIC EUR/BTC → MYZ CONVERSION
 ```
 
-Configura l'ambiente usando placeholder/template appropriati. Non committare `.env` con segreti reali.
+The pilot utility catalog includes **Zorgax Pro Session**, **Marketplace Boost** and **Pilot Project Pass**. New MYZ spending is recorded in the canonical ledger; MongoDB redemption records are fulfillment/receipt metadata rather than a second MYZ balance. Historical Payment Dashboard EUR→MYZ records, if present, are treated as legacy audit data and are excluded from spendable MYZ until an explicit migration policy is defined.
 
-## Test e CI
+The onboarding layer has also been extended around **Google/Gmail, GitHub identity and Zorgax**. Users can enter through social authentication, keep Gmail access voluntary and read-only when enabled, and use Zorgax to complete a profile step by step. When a verified GitHub identity is available, Zorgax can use only the verified/public information that is actually accessible and ask the user for missing profile details such as bio, skills, README and project description.
 
-```bash
-npm test
-npm run build --if-present
+```text
+GOOGLE / GITHUB LOGIN
+        ↓
+MYZUBSTER ACCOUNT
+        ↓
+OPTIONAL GMAIL READ-ONLY PROFILE INPUT
+        ↓
+VERIFIED GITHUB IDENTITY WHEN AVAILABLE
+        ↓
+ZORGAX GUIDED PROFILE COMPLETION
+        ↓
+USER REVIEW / APPROVAL
+        ↓
+PUBLIC PROFILE / README / PROJECT MATERIAL
 ```
 
-## Documentazione
+The onboarding is deliberately **non-blocking**: if GitHub profile enrichment is temporarily unavailable, the verified identity can still be used and Zorgax continues with natural questions instead of exposing technical fallback values or debug details. Nothing is published automatically; profile changes remain proposals until the user approves them.
 
-- [🌍 Universal / Multilingual Guide](docs/i18n/README.md)
-- [Ecosystem Architecture](docs/ECOSYSTEM.md)
-- [Bounty System](BOUNTIES.md)
-- [Documentation hub](https://github.com/MyZubster-Ecosystem/myzubster-docs)
-- [Manuals](https://github.com/MyZubster-Ecosystem/myzubster-manuals)
+**Current GitHub OAuth note:** the MyZubster-side authorization redirect and callback configuration have been checked, while GitHub has intermittently returned an error before the callback during re-authorization. The onboarding therefore includes a fallback so this external OAuth issue does not block use of Zorgax. This is an implementation-status note, not a claim that the GitHub re-authorization issue is resolved.
 
-## Licenza
+## 🤖 Telegram bots — LIVE
 
-MIT License. Vedi `LICENSE`.
+Two Telegram entry points are currently deployed and verified against the MyZubster production backend:
 
-## Nota di trasparenza
+| Bot | Status | Role | Open |
+|---|---|---|---|
+| **MyZubster Bot** `@myzubster_bot` | 🟢 LIVE | Main ecosystem bot, platform commands and Zorgax AI conversational layer | [Open on Telegram](https://t.me/myzubster_bot) |
+| **Flytek Raver Bot** `@FlytekRaverBot` | 🟢 LIVE | Dedicated raver/DIY community bot for events, lineup, crew, welfare, organizing and rules | [Open on Telegram](https://t.me/FlytekRaverBot) |
 
-MyZubster è un progetto in evoluzione. La documentazione deve distinguere funzionalità operative, testnet, simulazioni, prototipi, proposte e componenti ancora in validazione. Le issue storiche rappresentano contesto di progetto, non prova automatica di deployment, partnership, funding o pagamento.
+The MyZubster bot supports `/start`, `/status`, `/github`, `/marketplace`, `/party`, `/life`, `/zorgax` and `/help`. Non-command text can be handled through the Zorgax conversational service. Flytek remains isolated as a dedicated community bot while using the MyZubster backend infrastructure.
+
+```text
+TELEGRAM
+   ├── @myzubster_bot → MYZUBSTER PRODUCTION → ZORGAX AI
+   └── @FlytekRaverBot → MYZUBSTER PRODUCTION → FLYTEK COMMUNITY
+```
+
+Operational verification covers webhook registration and Telegram request/response behavior. Bot tokens and webhook secrets remain environment-managed and are never committed to the repository.
+
+## 💬 Facebook Messenger → MyZubster → Zorgax
+
+MyZubster now includes a **Meta Messenger community bridge** designed to route messages from the **MyZubster Community** Facebook page through the production backend to **Zorgax AI**.
+
+```text
+FACEBOOK PAGE / MESSENGER
+          ↓
+MYZUBSTER COMMUNITY BRIDGE
+          ↓
+MYZUBSTER PRODUCTION
+          ↓
+ZORGAX AI
+          ↓
+MESSENGER RESPONSE
+```
+
+### Facebook → Messenger → Zorgax → Fumetto / Chronicle
+
+Facebook is one of the public discovery points of MyZubster. A person can discover the project through the MyZubster Community page, continue the conversation in Messenger, reach the MyZubster production backend through the Meta webhook, and be guided by Zorgax toward public areas of the ecosystem such as the website, GitHub, Metaverse, Marketplace, LIFE-oriented documentation and the **Fumetto / Chronicle**.
+
+```text
+FACEBOOK POST / PAGE
+        ↓
+     MESSENGER
+        ↓
+ META WEBHOOK / COMMUNITY BRIDGE
+        ↓
+ MYZUBSTER PRODUCTION
+        ↓
+      ZORGAX
+        ↓
+ EXPLAINS / ROUTES / GUIDES
+   ↙        ↓         ↘
+FUMETTO   WEBSITE    GITHUB
+   │         │          │
+   └──────→ WIDER MYZUBSTER ECOSYSTEM
+```
+
+The **Fumetto / Chronicle** is a public visual and narrative entry point that helps people understand MyZubster through storytelling and then move into the wider ecosystem:
+
+<p align="center">
+  <img src="public/comics/community/MyZubster-Community-Zorgax-Guide.jpg" alt="MyZubster Community and Zorgax guide — narrative visual" width="92%">
+</p>
+
+> **Narrative guide:** this visual explains the intended community journey. It is not proof of a completed conversation, verified identity, partnership, adoption or operational result.
+
+- **Fumetto / Chronicle:** https://www.myzubster.com/fumetto
+- **Messenger bridge status:** https://www.myzubster.com/api/meta/messenger/status
+- **Messenger webhook:** https://www.myzubster.com/api/meta/messenger/webhook
+- **Main website:** https://www.myzubster.com/
+- **Core repository:** https://github.com/MyZubster-Ecosystem/myzubster
+
+The same backend can therefore serve several community entry points:
+
+```text
+FACEBOOK / MESSENGER ─┐
+TELEGRAM BOT          ├──→ MYZUBSTER PRODUCTION ─→ ZORGAX
+WEB / FUMETTO         ┤             │
+GITHUB                ┘             ├──→ METAVERSE
+                                    ├──→ MARKETPLACE
+                                    ├──→ LIFE / PROJECTS
+                                    └──→ PUBLIC DOCUMENTATION
+```
+
+Zorgax is an assistance and routing layer, not an authority. It may explain public information and guide users, but it must not invent identities, partnerships, payments, measurements, historical claims or authorizations. A webhook request or runtime request is evidence of technical activity, **not automatically evidence of a unique visitor, successful conversation, contributor, partner or adoption**.
+
+Full technical and evidence-aware explanation: [`docs/FACEBOOK-MESSENGER-ZORGAX-FUMETTO.md`](docs/FACEBOOK-MESSENGER-ZORGAX-FUMETTO.md).
+
+Current public endpoints:
+
+- **Messenger webhook:** https://www.myzubster.com/api/meta/messenger/webhook
+- **Bridge status:** https://www.myzubster.com/api/meta/messenger/status
+- **Main website:** https://www.myzubster.com/
+- **Core repository:** https://github.com/MyZubster-Ecosystem/myzubster
+- **Daniel Ioni profile:** https://github.com/DanielIoni-creator
+
+The implementation keeps `META_PAGE_ACCESS_TOKEN`, `META_APP_SECRET` and the webhook verification token in environment-managed secrets; credentials are never committed to GitHub. The bridge backend is deployed and the status endpoint reports the integration as configured. **Meta webhook verification is still being completed**, so this section must not be read as proof that public Messenger conversations are already fully validated end-to-end.
+
+**Current state:** MVP / active development and validation. Some components are operational, others experimental or in active implementation. A roadmap, issue, PR, merge, discussion or automated test is not by itself proof of deployment, partnership, adoption, funding or external payment.
+
+## 🎵 Music, sound systems & subcultures
+
+MyZubster now includes an evidence-aware cultural layer for **music, sound systems, crews, organizers, artists and subcultures**. Authenticated contributors can be bound to individual cultural attestations, while the merged Zorgax framework defines how profiles, relationships, photos, documents, testimony, events and source links can be connected with provenance, rights declarations and explicit evidence states.
+
+The cultural graph keeps four concepts separate: **account authentication**, **historical claim verification**, **relationship confirmation** and **collective authorization**. A social login therefore never proves movement membership or authority to represent a collective. Zorgax may structure and connect cultural material, but it must not invent history, infer membership from OAuth, identify people from photographs or turn individual testimony into collective endorsement.
+
+MyZubster also documents a consented cultural dialogue with an individual who describes personal experience in the DIY sound-system scene associated with **Spiral Tribe, Mutoid Waste and Bedlam**. This is recorded as **individual testimony and cultural provenance** — not as an official partnership, endorsement, membership claim or representation by Spiral Tribe/SP23 or those collectives. The project explores a conceptual continuity from independent sound systems to independent digital systems: self-organization, experimentation, resilience and community infrastructure.
+
+Organizers, technicians, artists and other participants can contribute first-hand cultural material while preserving attribution and consent boundaries. Confirmed relationships between MyZubster accounts remain separate from verification of individual historical claims.
+
+→ Read the full framework: [`docs/culture/MUSIC-SUBCULTURES-AND-SOUND-SYSTEMS.md`](docs/culture/MUSIC-SUBCULTURES-AND-SOUND-SYSTEMS.md)  
+→ Cultural dialogue: [`docs/culture/DIY-CULTURAL-DIALOGUE.md`](docs/culture/DIY-CULTURAL-DIALOGUE.md)  
+→ Cultural provenance chronicle: [`docs/culture/CULTURAL-ORIGIN-CHRONICLE.md`](docs/culture/CULTURAL-ORIGIN-CHRONICLE.md)
+
+## 🔊 Free parties, events & community spaces
+
+In MyZubster, **free parties and independent events are treated primarily as cultural and community nodes**, not merely as commercial listings. A crew, sound system, artist collective or local scene can document its identity, history, music, visual language, contributors and public activity while keeping provenance and consent boundaries explicit.
+
+The intended model is:
+
+```text
+COMMUNITY / CREW
+      ↓
+GITHUB-BACKED PUBLIC PROFILE
+      ↓
+MYZUBSTER CULTURAL IDENTITY
+      ↓
+METAVERSE SPACE / CULTURAL NODE
+      ↓
+EVENT / PARTY / ARCHIVE
+      ↓
+MUSIC + VISUALS + CONTRIBUTORS + EVIDENCE
+      ↓
+OPTIONAL LINKS TO MARKETPLACE / LIFE / PROJECTS
+```
+
+GitHub can act as a transparent technical and documentary layer for a participant, crew or project: repositories, issues, documentation, releases and contributions can support a **versioned public profile**. A GitHub identity does not automatically prove membership in a collective, but it can provide attributable technical or documentary provenance when the owner chooses to connect it.
+
+The MyZubster Metaverse can then give that identity a navigable presence — for example a room, archive, cultural node, exhibition space, project area or event-related environment. This makes it possible to move from a static profile to an explorable cultural space while keeping the underlying sources reviewable.
+
+Zorgax can assist people in navigating this layer: discovering public events and cultural projects, explaining available context, connecting artists or crews to their documented material, and guiding users toward related Metaverse spaces, Marketplace listings or LIFE-oriented projects. Zorgax must not invent membership, endorsements, event authorization or historical claims.
+
+For real-world events, MyZubster separates **cultural documentation** from **operational authorization**. The platform may preserve archives, lineups, artwork, public event information, testimonies and community history, but it is not intended to facilitate unlawful access to property, evade authorities or bypass permits and safety requirements. Event organizers remain responsible for the permissions, safety, privacy and legal requirements that apply to the actual event and location.
+
+The goal is therefore not to commercialize or claim ownership of a subculture. It is to give independent scenes an optional **open-source, community-controlled and evidence-aware digital presence** that can connect real people, music, archives, contributors, projects and immersive spaces without turning cultural participation into an unsupported identity claim.
+
+## 🛡️ Automated software security — evidence-first CI
+
+MyZubster uses GitHub-based automation to continuously check software changes and dependency risk. The objective is **not blind self-updating**: automation detects issues, proposes or validates changes, produces evidence and blocks unsafe candidates, while consequential merge/risk decisions remain subject to human review.
+
+```text
+CODE / DEPENDENCY CHANGE
+          ↓
+       PUSH / PR
+          ↓
+     GITHUB ACTIONS
+          ↓
+ REPRODUCIBLE INSTALL
+          ↓
+ BUILD / EXPORT VALIDATION
+          ↓
+ SBOM + SECURITY EVIDENCE
+          ↓
+      SECURITY GATE
+       ↙         ↘
+    FAIL         PASS
+     ↓             ↓
+ BLOCK / FIX   REVIEW / MERGE
+```
+
+Security automation may include CI tests, `npm audit`, exact dependency-tree validation, build/export checks, SBOM generation and retained evidence artifacts. Dependabot/security tooling may detect vulnerable or outdated dependencies and propose pull requests; those proposals must still pass the applicable project gates before integration.
+
+Key principles:
+
+- **AUTOMATED CHECK ≠ SECURITY GUARANTEE** — a green workflow proves only the checks actually executed under the tested conditions;
+- **LOWER SCANNER COUNT ≠ VALID REMEDIATION** — dependency compatibility, exact-tree validity, tests and relevant build/runtime checks still matter;
+- **FAILED GATE → NO MERGE** for a candidate that does not satisfy required checks;
+- major framework/runtime migrations are not auto-merged merely to reduce vulnerability counts;
+- security evidence is versioned and reviewable so remediation decisions can be traced to concrete runs, artifacts and commits;
+- human review remains required for material risk acceptance, production activation and other consequential decisions.
+
+Current public security evidence is tracked in [`docs/PUBLIC-SECURITY-RESULTS-2026-08-29.md`](docs/PUBLIC-SECURITY-RESULTS-2026-08-29.md). Open findings remain findings until they are actually remediated and verified; automation must not represent an unresolved result as proof that the system is vulnerability-free.
+
+## 🇮🇹 Public compliance-by-design — Italy / EU
+
+MyZubster is **not** presented as automatically or universally legal merely because it is open source or because this README says so. The project instead adopts a verifiable **compliance-by-design** model: each real deployment must respect the laws, permissions, data rights, security requirements and sector-specific rules applicable to its actual use case.
+
+The operating principle is:
+
+> **Evidence before claims. Human responsibility before automation. Authorization before deployment.**
+
+For MyZubster this means:
+
+- **NO AUTHORIZATION → NO DEPLOYMENT** for third-party sites, infrastructure, systems or protected/non-public data;
+- **NO EVIDENCE → NO CLAIM** for material project, pilot, partnership, validation or adoption statements;
+- **REGULATED FEATURE → SEPARATE REVIEW** before activation;
+- AI/automation may assist workflows but does not automatically replace required human responsibility or oversight;
+- candidate pilots remain `CANDIDATE / PENDING AUTHORIZATION` until the relevant authorization and scope are evidenced;
+- open DAO/community participation does not automatically create employment, payment, partnership, representation or authority to bind third parties;
+- `MYZ`/token concepts remain separate from environmental evidence and operational responsibility, and any future regulated payment/crypto-asset functionality requires a dedicated assessment before activation;
+- privacy, cybersecurity, intellectual property, workplace safety, environmental rules, cultural/archaeological heritage, public procurement, professional requirements and other sector-specific law remain applicable whenever relevant.
+
+The Italian and EU reference framework includes **Italian Law 23 September 2025, no. 132** on artificial intelligence and **Regulation (EU) 2024/1689 (AI Act)**. MyZubster's position is not that technology is outside regulation; it is that authorization, evidence, human responsibility and applicable compliance gates must be satisfied before real-world use.
+
+If a proposed function cannot lawfully be deployed, lacks a required authorization, or needs further regulatory assessment, the project must **block it, keep it in simulation/demo, or redesign it** until the relevant requirements are satisfied.
+
+Public compliance statement: **[#840 — Why MyZubster is designed to operate lawfully in Italy](https://github.com/MyZubster-Ecosystem/myzubster/issues/840)**  
+Public roadmap: **[#839 — MyZubster territorial AI, evidence-first DAO & pilot pathway](https://github.com/MyZubster-Ecosystem/myzubster/issues/839)**
+
+> **Disclaimer:** this is a technical/governance commitment, not legal advice, a conformity assessment, certification, authorization, regulatory approval or institutional endorsement.
+
+## 👤 Daniel Ioni — Founder & Builder
+
+Daniel Ioni (`DanielIoni-creator`) is the creator and lead builder of **MyZubster**, an open digital ecosystem focused on interoperability, immersive experiences, open-source development and the emerging **MyZubster LIFE 2027** initiative.
+
+### Esperienze personali che hanno ispirato la comunità MyZubster
+
+Daniel racconta di avere svolto volontariato in contesti comunitari che, nella sua testimonianza personale, erano collegati alla **Comunità Papa Giovanni**, oltre ad avere vissuto un'esperienza a **Lourdes**. Queste esperienze hanno rafforzato il valore attribuito all'ascolto, alla solidarietà, alla dignità delle persone e alla capacità delle comunità di mantenere e condividere conoscenze pratiche.
+
+Durante quel percorso Daniel afferma di avere imparato a coltivare il kefir attraverso uno scambio diretto dei grani e di averne sperimentato, di propria iniziativa, l'uso in cucine domestiche e comunitarie per preparazioni fermentate, formaggi freschi, ricotta e ricette dolci e salate. Racconta che l'obiettivo era esplorare l'autoproduzione quotidiana e ridurre acquisti ripetuti. Questa è una testimonianza autobiografica: non rappresenta un programma ufficiale, un'attività clinica, una produzione alimentare autorizzata o una prova indipendente di risparmio, sicurezza o beneficio terapeutico.
+
+Daniel dichiara di mantenere ancora oggi culture di kefir a casa propria e presso la casa della nonna. Da questa continuità deriva una parte della filosofia di MyZubster: capacità e conoscenza possono essere custodite, rigenerate e condivise, mentre sicurezza, consenso, misurazione e responsabilità restano affidati a persone e operatori qualificati.
+
+Questa dimensione umana ha contribuito a orientare MyZubster come rete fra **persone, comunità, progetti, opportunità, volontariato, inclusione e impatto reale**. Il racconto ha inoltre ispirato il [pilot circolare sul kefir](docs/life/ventures/KEFIR_CIRCULAR_PILOT.md), inizialmente limitato a una demo sintetica di tracciabilità per culture, lotti e contenitori riutilizzabili.
+
+Approfondimenti:
+- [Testimonianza di Daniel su kefir e volontariato](docs/life/ventures/DANIEL_IONI_KEFIR_COMMUNITY_TESTIMONY.md)
+- [From a Shared Kefir Culture to MyZubster — DEV Community](https://dev.to/danielioni/from-a-shared-kefir-culture-to-myzubster-17b1)
+- [The Cashout Era: From IDC to Darkode — DEV Community](https://dev.to/danielioni/-the-cashout-era-from-idc-to-darkode-245p)
+
+I due articoli DEV sono racconti in prima persona e vanno letti come testimonianze autobiografiche, non come verifica indipendente di affiliazioni, identità, transazioni o attività.
+
+```text
+ESPERIENZA PERSONALE
+        ↓
+ASCOLTO + SOLIDARIETÀ + COMUNITÀ
+        ↓
+VISIONE SOCIALE
+        ↓
+MYZUBSTER
+        ↓
+PERSONE ↔ PROGETTI ↔ OPPORTUNITÀ ↔ COMUNITÀ
+```
+
+Questa sezione documenta il racconto personale del fondatore e la sua influenza dichiarata sulla filosofia del progetto; **non implica affiliazione, partnership, endorsement, autorizzazione o rappresentanza** da parte della Comunità Papa Giovanni, di Lourdes, delle comunità o di organizzazioni collegate. Non contiene informazioni su residenti o utenti dei servizi.
+
+Alongside MyZubster development, public contribution work includes upstream pull requests or contribution branches involving **Vircadia World**, **Decentraland JS SDK Toolchain**, **Monero Docs** and experimental **WebXR Samples** work.
+
+The contribution-first workflow is:
+
+```text
+STUDY → FORK → BUILD → TEST → UPSTREAM PR → REVIEW → INTEROPERABILITY
+```
+
+Open pull requests and fork branches are independent open-source contributions; they do **not** imply partnership, endorsement, affiliation, acceptance upstream or formal contributor status with the respective projects.
+
+## 🧭 Start here
+
+| I want to… | Start here |
+|---|---|
+| Choose a profile template and fork it | [Choose Your MyZubster Profile](examples/ecosystem-repositories/CHOOSE-YOUR-PROFILE.md) |
+| Understand MyZubster | This README → **How MyZubster works** |
+| Open MyZubster Telegram Bot | [@myzubster_bot](https://t.me/myzubster_bot) |
+| Open Flytek Raver Bot | [@FlytekRaverBot](https://t.me/FlytekRaverBot) |
+| Check Facebook Messenger bridge | [Messenger bridge status](https://www.myzubster.com/api/meta/messenger/status) |
+| Understand Facebook → Messenger → Zorgax → Fumetto | [`docs/FACEBOOK-MESSENGER-ZORGAX-FUMETTO.md`](docs/FACEBOOK-MESSENGER-ZORGAX-FUMETTO.md) |
+| Explore music, sound systems, organizers & subcultures | [`docs/culture/MUSIC-SUBCULTURES-AND-SOUND-SYSTEMS.md`](docs/culture/MUSIC-SUBCULTURES-AND-SOUND-SYSTEMS.md) |
+| Explore circular economy & Space Station visuals | [Visual gallery](#-circular-economy--space-station-visuals) |
+| Explore the open knowledge framework — chemistry, sexuality, health, cannabis, circular economy, sport, music, AI and more | [`docs/OPEN-KNOWLEDGE-DOMAINS-FRAMEWORK.md`](docs/OPEN-KNOWLEDGE-DOMAINS-FRAMEWORK.md) |
+| Explore religion, spirituality and belief framework | [`docs/OPEN-SOURCE-RELIGION-BELIEF-FRAMEWORK.md`](docs/OPEN-SOURCE-RELIGION-BELIEF-FRAMEWORK.md) |
+| Join the community | [`JOIN.md`](JOIN.md) |
+| Contribute code/docs/design | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| Understand ecosystem architecture | [`docs/ECOSYSTEM.md`](docs/ECOSYSTEM.md) |
+| Replicate LIFE participant automation | [`docs/life/participant-automation/README.md`](docs/life/participant-automation/README.md) |
+| Understand bounties | [`BOUNTIES.md`](BOUNTIES.md) |
+| Understand internal rewards | [`REWARDS_LEDGER.md`](REWARDS_LEDGER.md) |
+| Understand treasury boundaries | [`TREASURY.md`](TREASURY.md) |
+| Read the XMR stagenet implementation status | [`docs/XMR-STAGENET-SETTLEMENT.md`](docs/XMR-STAGENET-SETTLEMENT.md) |
+| See public community evidence | [`docs/PUBLIC-COMMUNITY-ACTIVITY.md`](docs/PUBLIC-COMMUNITY-ACTIVITY.md) |
+| Submit independent evidence | [Community evidence issue #715](https://github.com/MyZubster-Ecosystem/myzubster/issues/715) |
+| Follow globalization | [`docs/GLOBALIZATION_ROADMAP_2026_2028.md`](docs/GLOBALIZATION_ROADMAP_2026_2028.md) |
+| Read multilingual docs | [`docs/i18n/README.md`](docs/i18n/README.md) |
+| Follow public discovery/history | [`docs/PUBLIC-TIMELINE.md`](docs/PUBLIC-TIMELINE.md) |
+| Explore documentation hub | [myzubster-docs](https://github.com/MyZubster-Ecosystem/myzubster-docs) |
+| Read manuals | [myzubster-manuals](https://github.com/MyZubster-Ecosystem/myzubster-manuals) |
+| Open the public website | [myzubster.com](https://www.myzubster.com/) |
+| Explore DAO public area | [myzubster.com/dao](https://www.myzubster.com/dao) |
+| Explore the Chronicle | [myzubster.com/fumetto](https://www.myzubster.com/fumetto) |
+
+> 🌍 **Languages:** English · Italiano · Español · Français · Deutsch · Português · 中文 · 日本語 · 한국어 · العربية · हिन्दी · Русский · Türkçe · Bahasa Indonesia · Polski · Українська · বাংলা · اردو · فارسی · Kiswahili — see [`docs/i18n/README.md`](docs/i18n/README.md).
+
+## 🎨 Circular economy & Space Station visuals
+
+These visual assets document the current MyZubster narrative around circular economy, payment flows and the Space Station ecosystem. They are visual communication assets and do not by themselves constitute technical, scientific or financial evidence.
+
+### MyZubster — Economia Circolare Cyberpunk
+
+[![MyZubster Economia Circolare Cyberpunk](docs/visuals/MyZubster-Economia-Circolare-Cyberpunk.jpg)](docs/visuals/MyZubster-Economia-Circolare-Cyberpunk.jpg)
+
+### MyZubster — Pagamenti Economia Circolare
+
+[![MyZubster Pagamenti Economia Circolare](docs/visuals/MyZubster-Pagamenti-Economia-Circolare.jpg)](docs/visuals/MyZubster-Pagamenti-Economia-Circolare.jpg)
+
+### MyZubster — Space Station Cyberpunk
+
+[![MyZubster Space Station Cyberpunk](docs/visuals/MyZubster-Space-Station-Cyberpunk.jpg)](docs/visuals/MyZubster-Space-Station-Cyberpunk.jpg)
+
+## ⚙️ How MyZubster works
+
+![How MyZubster works](assets/readme/how-it-works.png)
+
+An original seven-panel Italian field guide and high-resolution edition are available in
+[`docs/comic/`](docs/comic/README.md).
+
+The core operating model is:
+
+```text
+OBSERVE
+   ↓
+DOCUMENT
+   ↓
+CONNECT TO MAP / DATASET / MISSION
+   ↓
+COLLABORATE
+   ↓
+VERIFY EVIDENCE
+   ↓
+PUBLISH SANITIZED / AUTHORIZED OUTPUT
+   ↓
+REWARD ACCOUNTING
+   ↓
+OPTIONAL INDEPENDENT EXTERNAL SETTLEMENT
+```
+
+### 1 — Observe
+A contributor records an authorized real-world observation: for example a public place, environmental measurement, plant, service, media contribution or technical test.
+
+### 2 — Document
+The observation is enriched with the information required by its workflow: timestamp, permitted location information, media, structured fields, source/provenance and supporting evidence.
+
+### 3 — Connect
+The record can be associated with mapping, a dataset, a project, a bounty/mission or another MyZubster workflow.
+
+### 4 — Collaborate
+Developers, researchers, designers, testers and other contributors can work through public issues and explicitly scoped tasks.
+
+### 5 — Verify
+Evidence is evaluated against stated acceptance criteria. A photo, issue, PR, CID, database row or automated output does **not** by itself prove successful completion.
+
+### 6 — Publish
+Only authorized and appropriately sanitized information should become public. Content-addressed publication through IPFS/IPNS is part of the ecosystem direction; confidential partner data and unnecessary personal information stay outside public datasets.
+
+### 7 — Reward / settlement
+`MYZ` currently represents internal reward/accounting logic. It must not automatically be represented as an on-chain payment. XMR or another external settlement mechanism is a separate boundary and requires actual independent verification.
+
+## 🏗️ Architecture at a glance
+
+```text
+                    PEOPLE / CONTRIBUTORS
+                             │
+                    Web / App / GitHub
+                             │
+                             ▼
+                      MYZUBSTER CORE
+                ┌────────────┼────────────┐
+                ▼            ▼            ▼
+          Observations      Map       Missions/Bounties
+                │            │            │
+                └────────────┼────────────┘
+                             ▼
+                    Evidence / Provenance
+                             │
+                   ┌─────────┴─────────┐
+                   ▼                   ▼
+                Zorgax             Human Review
+                   │                   │
+                   └─────────┬─────────┘
+                             ▼
+                  Validated / Sanitized Output
+                   ┌─────────┼─────────┐
+                   ▼         ▼         ▼
+               Dashboard   IPFS/IPNS  Reports
+                             │
+                  optional separate boundary
+                             ▼
+                Gateway / External Settlement
+                             │
+                             ▼
+                   Independent Verifier
+```
+
+## 💸 XMR stagenet settlement — active implementation
+
+MyZubster now has a concrete implementation track for the first **verifiable Monero stagenet settlement** in [`MyZubsterGateway`](https://github.com/MyZubster-Ecosystem/MyZubsterGateway).
+
+Public implementation evidence:
+
+- [`MyZubsterGateway#1403`](https://github.com/MyZubster-Ecosystem/MyZubsterGateway/issues/1403) — P0 implementation / E2E validation gate;
+- [`MyZubsterGateway#1404`](https://github.com/MyZubster-Ecosystem/MyZubsterGateway/pull/1404) — runtime + tests for the first verifiable XMR stagenet path;
+- [`docs/XMR-STAGENET-SETTLEMENT.md`](docs/XMR-STAGENET-SETTLEMENT.md) — canonical implementation-status document.
+
+### Current runtime guarantees
+
+The current Gateway implementation includes:
+
+- **stagenet-only** gating for the first real E2E path;
+- canonical positive integer **XMR atomic amount** handling;
+- strict **64-hex TXID validation**;
+- explicit separation between the transaction **submitter** and an **independent verifier**;
+- submission logic that may produce `SUBMITTED`, but cannot self-declare `PAID`;
+- fail-closed handling when verification is unavailable or invalid;
+- recipient, amount, network and TXID consistency checks;
+- minimum-confirmation enforcement;
+- idempotent/replay-aware submission behavior;
+- negative-path tests for malformed amount, wrong network, duplicate submit, missing verifier, verifier timeout, wrong recipient, wrong amount, wrong TXID and insufficient confirmations;
+- a successful path to `PAID` only after independent evidence matches the expected settlement.
+
+The settlement lifecycle is deliberately evidence-first:
+
+```text
+PENDING
+  ↓
+ACCEPTED
+  ↓
+SUBMITTED
+  ↓
+CONFIRMED
+  ↓
+PAID
+```
+
+Recovery/failure states may include `UNSETTLED`, `FAILED` and `DISPUTED`.
+
+### Critical trust boundary
+
+A wallet/provider response alone is **not** finality.
+
+```text
+AUTHORIZED SETTLEMENT INTENT
+        ↓
+SUBMITTER / WALLET RPC
+        ↓
+TXID
+        ↓
+INDEPENDENT VERIFIER
+        ↓
+MATCH NETWORK + RECIPIENT + AMOUNT + TXID + CONFIRMATIONS
+        ↓
+CONFIRMED
+        ↓
+PAID
+```
+
+If the verifier is unavailable, times out or returns inconsistent evidence, the settlement must remain non-final rather than inferring success.
+
+### Automated validation status
+
+On the current XMR implementation branch, the principal functional CI workflows have passed, including the main `CI`, `CI Boost`, quality and lint/typecheck checks. A separate performance workflow has reported a failure and is tracked independently rather than being represented as proof of settlement failure or success.
+
+Automated tests prove behavior under the tested conditions. They do **not** prove that a real external transaction has already happened.
+
+### Next gate: real stagenet E2E
+
+The next milestone is to wire the runtime contracts to:
+
+1. an authorized `monero-wallet-rpc` configured for **stagenet**;
+2. a separately configured read-only / independent verification source;
+3. one tiny-value real stagenet transaction;
+4. a sanitized evidence package proving the lifecycle without publishing wallet seeds, private keys, passwords or other secrets.
+
+Until that real transaction is executed and independently verified, the correct status is:
+
+> **runtime + automated tests implemented; real stagenet transaction still pending validation.**
+
+Mainnet is explicitly outside this milestone. Passing stagenet tests is not authorization to activate production/mainnet settlement.
+
+## 🤖 Zorgax — automation boundary
+
+Zorgax is the automation/orchestration track of MyZubster. Its intended role is to help with bounded processing such as routing, schema checks, normalization, provenance preparation, anomaly detection and draft evidence.
+
+For environmental/LIFE-oriented workflows:
+
+```text
+AUTHORIZED DATA / SENSORS
+          ↓
+        INGEST
+          ↓
+     SCHEMA CHECK
+          ↓
+    NORMALIZATION
+          ↓
+      PROVENANCE
+          ↓
+    DRAFT EVIDENCE
+          ↓
+   TECHNICAL REVIEW
+          ↓
+   SCIENTIFIC REVIEW
+          ↓
+    VALIDATED KPI
+          ↓
+ DASHBOARD / REPORTABLE EVIDENCE
+```
+
+Zorgax must not invent missing measurements, silently approve scientific claims, publish restricted partner data, authorize consequential governance actions or replace required human review.
+
+Implementation planning is tracked in **#713 — Zorgax LIFE Automation v1** and **#714 — ChatGPT × Zorgax v2 research/automation**.
+
+## 🧑‍🤝‍🧑 LIFE participant automation — reusable public playbook
+
+MyZubster publishes a privacy-aware participant workflow derived from the implementation completed with Nicola. The **method is reusable**; Nicola's consent, email address, GitHub identity, private messages, interviewee identities, evidence and decisions are not reusable by other participants.
+
+### What is implemented now — 31 Aug 2026
+
+The shared participant-orchestration layer is now **implemented and merged on `main` through [PR #864](https://github.com/MyZubster-Ecosystem/myzubster/pull/864)**. The merged implementation is a public registry + orchestration policy for connected Gmail/GitHub workflows; it is **not** a blanket enrollment system and it does not automatically turn candidates into participants or LIFE partners.
+
+| Component | Current state |
+|---|---|
+| [Zorgax LIFE participant orchestrator](docs/life/participant-automation/ORCHESTRATOR.md) | **IMPLEMENTED / monitoring enabled, changes human-gated** |
+| [Machine-readable participant registry](docs/life/participant-automation/participant-registry.json) | **IMPLEMENTED** |
+| Nicola participant workflow | **CONSENT_CONFIRMED / AUTOMATION_ENABLED / VALIDATION_ACTIVE** |
+| Nicola current validation evidence | **NEEDS_CLARIFICATION / ranking unchanged** |
+| `@Aming9303` | **INVITED candidate only / automation disabled** |
+| `@wasim-builds` | **INVITED candidate only / automation disabled** |
+| Direct writes to `main` from participant automation | **DISABLED** |
+| Automatic outbound participant email | **DISABLED** |
+| Automatic merge / sensitive actions | **DISABLED / human approval required** |
+
+The orchestrator watches the existing public entry points for explicit opt-in or consent changes — contributor onboarding (`#742`), country/global interest (`#833`), real pilots (`#834`), event interest (`#835`), metaverse interest (`#836`) and LIFE technical missions (`#837`) — while authorized participant updates are handled through participant-specific connected Gmail/GitHub workflows.
+
+A public contribution, invitation, event interest, issue comment or candidate status is **not consent**. Activation requires explicit participant-specific opt-in. For a confirmed participant, the flow is:
+
+```text
+DISCOVER EXPLICIT OPT-IN
+          ↓
+VERIFY IDENTITY + CONSENT SCOPE
+          ↓
+REGISTER PUBLIC/NON-SENSITIVE STATE
+          ↓
+PARTICIPANT-SPECIFIC GMAIL FILTER
+          ↓
+NO_ACTION / NEEDS_CLARIFICATION / UPDATE_PREPARED
+          ↓
+MINIMIZE + ANONYMIZE EVIDENCE
+          ↓
+DEDICATED BRANCH / PULL REQUEST
+          ↓
+PRIVACY + CI + SECURITY / EVIDENCE GATES
+          ↓
+HUMAN REVIEW
+```
+
+Revocation or restriction has priority over every other instruction. The orchestrator may detect, classify and prepare bounded repository changes, but it must not bulk-contact candidates, scrape public email addresses, expose private contact details, merge automatically, change pricing, spend money, create legal commitments, alter access rights or claim that a contributor/candidate is an EU LIFE partner or consortium member.
+
+The reusable participant method remains:
+
+```text
+PARTICIPANT-SPECIFIC CONSENT
+          ↓
+MINIMUM VERIFIED PROFILE
+          ↓
+GMAIL + GITHUB CONNECTION CHECK
+          ↓
+PARTICIPANT-SPECIFIC AUTOMATION
+          ↓
+ANONYMOUS VALIDATION EVIDENCE
+          ↓
+FOCUSED BRANCH / PULL REQUEST
+          ↓
+PRIVACY + QUALITY GATES
+          ↓
+HUMAN REVIEW / MERGE
+```
+
+The public package includes:
+
+| Resource | Purpose |
+|---|---|
+| [Participant automation playbook](docs/life/participant-automation/README.md) | Canonical workflow, status model, safety boundaries and definition of done |
+| [Participant orchestrator](docs/life/participant-automation/ORCHESTRATOR.md) | Shared opt-in discovery, activation rules, classifications and human gate |
+| [Participant registry](docs/life/participant-automation/participant-registry.json) | Public-safe machine-readable participant/candidate state |
+| [Participant project template](docs/life/participant-automation/PARTICIPANT_PROJECT_TEMPLATE.md) | Independent scope and tracking file for each participant |
+| [Consent and onboarding template](docs/life/participant-automation/CONSENT_AND_ONBOARDING_TEMPLATE.md) | Participant-specific consent, revocation and connector setup |
+| [Automation prompt template](docs/life/participant-automation/AUTOMATION_PROMPT_TEMPLATE.md) | Bounded ChatGPT/Gmail/GitHub classification and update preparation |
+| [Anonymous validation template](docs/life/participant-automation/VALIDATION_INTERVIEW_TEMPLATE.md) | Four separate, anonymous responses with candidate attribution |
+| [Evidence record schema](docs/life/participant-automation/evidence-record-template.json) | Normalized evidence fields and completeness state |
+| [Operator checklist](docs/life/participant-automation/OPERATOR_CHECKLIST.md) | Activation, privacy, PR and human-review gates |
+| [Public-safe Nicola case study](docs/life/participant-automation/NICOLA_CASE_STUDY.md) | Completed steps, remaining gates and lessons that can be replicated |
+
+The automation classifies relevant email input as `NO_ACTION`, `NEEDS_CLARIFICATION` or `UPDATE_PREPARED`. It may prepare a focused branch and pull request, but it does **not** send participant email, publish private data, update `main` directly, merge automatically or make product/governance decisions.
+
+**Current evidence status:** the reusable workflow, templates, evidence schema, shared orchestrator and public-safe registry are implemented. Participant-specific consent, connector authorization, validation evidence and operational decisions remain separate per person. Nicola is the only currently registered participant with confirmed consent and enabled automation; invited candidates remain disabled until explicit opt-in. In this package, **LIFE** identifies an internal MyZubster/Zorgax digital-pilot track; it does not claim EU LIFE funding, approval, partnership or institutional endorsement.
+
+## 🏛️ DAO / governance
+
+MyZubster exposes a public DAO/governance area at [myzubster.com/dao](https://www.myzubster.com/dao).
+
+```text
+COMMUNITY INPUT
+      ↓
+PROPOSAL / EVIDENCE
+      ↓
+ZORGAX-ASSISTED PREPARATION
+      ↓
+HUMAN / GOVERNANCE REVIEW
+      ↓
+AUTHORIZED ACTION
+```
+
+Automation is assistance, not authority. Scientific validation, formal partnerships, treasury operations and other consequential decisions require explicit controls appropriate to the action.
+
+## 🌍 Open Community
+
+Public GitHub contribution does not require a private invitation. Contributors may participate using a public alias, subject to GitHub and project rules.
+
+Contribution paths include:
+
+- 🧑‍💻 **Develop** — code, tests, API, frontend/backend, DevOps, documentation;
+- 🎨 **Create** — UX, visuals, characters, storytelling, translations;
+- 📷 **Observe** — authorized/public observations and provenance-aware media;
+- 🔬 **Research** — datasets, environment, IoT, GIS, privacy and technical verification;
+- 🧪 **Test** — reproduce bugs and workflows, accessibility and usability;
+- 🌎 **Participate** — start with [`JOIN.md`](JOIN.md) and a small public mission.
+
+Participation is voluntary. A contribution, character, issue or PR does not automatically imply employment, partnership, payment or endorsement.
+
+## 🤝 External upstream contributions
+
+MyZubster follows a **contribute first, integrate second** approach when interacting with independent open-source ecosystems. These entries are public technical contributions or contribution branches; they do **not** imply partnership, endorsement, affiliation or adoption.
+
+| Upstream project | Contribution | Public evidence | Current evidence status |
+|---|---|---|---|
+| **Vircadia World** | Documentation clarifying external integration boundaries, API separation, identity boundaries, licensing and reproducible provenance. | [vircadia/vircadia-world PR #17](https://github.com/vircadia/vircadia-world/pull/17) | **Upstream PR open / under review** |
+| **Decentraland JS SDK Toolchain** | Fix preserving CRDT state-sync retries when a state response comes from a non-authoritative peer, with a regression test. | [decentraland/js-sdk-toolchain PR #1556](https://github.com/decentraland/js-sdk-toolchain/pull/1556) | **Upstream PR open / review required** |
+| **Monero Docs** | Wallet RPC documentation clarification for the `get_transfers` `pending` parameter. | [monero-project/monero-docs PR #389](https://github.com/monero-project/monero-docs/pull/389) | **Upstream PR open / checks + review pending** |
+| **Immersive Web / WebXR Samples** | Experimental `visibility-mask-change` sample work prepared in a fork branch. | [`feat/visibility-mask-change-sample`](https://github.com/DanielIoni-creator/webxr-samples/tree/feat/visibility-mask-change-sample) | **Fork branch prepared; no upstream PR claimed** |
+
+```text
+FORK / BRANCH
+    ↓
+UPSTREAM PR SUBMITTED
+    ↓
+UPSTREAM REVIEW
+    ↓
+UPSTREAM ACCEPTED / MERGED
+```
+
+Only the final state may be described as accepted upstream.
+
+## 📊 Public evidence & adoption
+
+MyZubster separates anonymous interest from attributable public participation and stronger adoption evidence.
+
+```text
+Website analytics
+→ anonymous interest
+
+GitHub PR / issue / review / reproducible test
+→ attributable public participation
+
+Independent reproduction / integration
+→ stronger adoption evidence
+
+Authorized real-world pilot
+→ operational evidence
+```
+
+### Independent public discovery signals — 29 Aug 2026
+
+A public discovery check identified two external signals that are kept separate from stronger adoption evidence:
+
+- **ShipRadar** independently indexed MyZubster GitHub opportunities, including the External & LIFE Bounty Federation and the visual-comic bounty. This is evidence of third-party discovery/indexing outside MyZubster-owned channels; it is **not** evidence of payout, contributor conversion, partnership, endorsement or adoption.
+- **Web Pulse** republished/syndicated a MyZubster article originally published on DEV. This is treated as a secondary distribution signal rather than independent editorial validation.
+
+At the time of the check, production Web Analytics data were not available in a form sufficient to compare visitors, page views, landing pages, referrers/search, countries and devices against a recent baseline. Therefore no traffic spike or causal relationship is claimed.
+
+**Next verification gate:** look for a material new referrer/search source associated with these external surfaces, or a temporally aligned increase in relevant DAO, bounty, contributor or Chronicle landing-page traffic. Causality should only be stated when supported by referral and timing evidence.
+
+See [`docs/PUBLIC-COMMUNITY-ACTIVITY.md`](docs/PUBLIC-COMMUNITY-ACTIVITY.md) and submit reproducible external evidence through [issue #715](https://github.com/MyZubster-Ecosystem/myzubster/issues/715).
+
+Passive visitors must not be deanonymized or correlated with GitHub identities without an explicit legitimate privacy-respecting basis.
+
+**Transparency note:** Proposed features are not released features; discussions are not partnerships; merges are not payments; and external settlement is not `PAID` until independently verified.
